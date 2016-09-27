@@ -1,0 +1,62 @@
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
+
+body {
+    background: #111;
+    color: #eee;
+    font-size: 10px;
+    font-family: 'Roboto Slab', serif;
+}
+
+.welcome {
+    width: 100em;
+    margin: 10em auto;
+    padding: 5em;
+}
+
+.welcome .logo-wrapper {
+    margin: 0 auto;
+    width: 20em;
+}
+.welcome .logo {
+    width: 20em;
+    margin: 0 auto;
+}
+.welcome h1 {
+    text-align: center;
+    font-size: 6em;
+    font-family: 'Megrim', cursive;
+}
+.welcome .whoareyou {
+    text-align: center;
+    font-size: 2em;
+    color: #aaa;
+    margin-bottom: .2em;
+}
+.welcome .whoareyou-explanation {
+    text-align: center;
+    font-size: 1.2em;
+    color: #aaa;
+    margin-top: 0;
+}
+
+.welcome .email-wrapper {
+    margin: 5em auto 0 auto;
+    width: 40em;
+}
+.welcome .email-wrapper input {
+    box-sizing: border-box;
+    font-size: 2em;
+    width: 100%;
+    padding: 1em;
+    text-align: center;
+    background: transparent;
+    border: none;
+    border-bottom: 1px dotted #eee;
+    color: #fff;
+}
