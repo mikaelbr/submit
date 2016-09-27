@@ -1,8 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import r from 'r-dom';
-import register from './register';
-import submit from './submit';
+import register from './register/index';
+import submit from './submit/index';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import registerStore from './submit/store';
 
 const routes = {
     'register': register,
@@ -18,6 +21,8 @@ function getPage(pageName) {
 
     return page;
 }
+
+const store = createStore(registerStore);
 
 const app = React.createClass({
     componentDidMount() {
@@ -41,4 +46,4 @@ const app = React.createClass({
     }
 });
 
-ReactDOM.render(r(app), document.querySelector('.app'));
+ReactDOM.render(r(Provider, {store: store}, r(app)), document.querySelector('.app'));

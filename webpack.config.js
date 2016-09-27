@@ -12,12 +12,16 @@ module.exports = {
     module: {
         loaders: [
             {
-                test: /.js$/,
+                test: /\.js$/,
                 loader: 'babel',
                 exlude: 'node_modules',
                 query: {
                     presets: ['es2015', 'react']
                 }
+            },
+            {
+                test: /\.json$/,
+                loader: 'json'
             }
         ]
     },
