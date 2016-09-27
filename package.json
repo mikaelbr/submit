@@ -1,34 +1,38 @@
 {
-  "name": "submit",
-  "version": "1.0.0",
-  "description": "Submit",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "webpack-dev-server --progress --colors"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/javaBin/submit.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/javaBin/submit/issues"
-  },
-  "homepage": "https://github.com/javaBin/submit#readme",
-  "devDependencies": {
-    "babel-core": "^6.14.0",
-    "babel-loader": "^6.2.5",
-    "babel-preset-es2015": "^6.14.0",
-    "babel-preset-react": "^6.11.1",
-    "webpack": "^1.13.2",
-    "webpack-dev-server": "^1.16.1"
-  },
-  "dependencies": {
-    "r-dom": "^2.3.0",
-    "react": "^15.3.2",
-    "react-dom": "^15.3.2"
-  }
+    "name": "submit",
+    "version": "1.0.0",
+    "description": "Submit",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "watch": "npm run build-css && webpack-dev-server --progress --colors && npm run watch-css",
+        "build-css": "lessc app/styles/app.less > dest/app.css",
+        "watch-css": "catw -w 'app/styles/**/*.less' -c 'npm run build-css'"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/javaBin/submit.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/javaBin/submit/issues"
+    },
+    "homepage": "https://github.com/javaBin/submit#readme",
+    "devDependencies": {
+        "babel-core": "^6.14.0",
+        "babel-loader": "^6.2.5",
+        "babel-preset-es2015": "^6.14.0",
+        "babel-preset-react": "^6.11.1",
+        "catw": "^1.0.1",
+        "less": "^2.7.1",
+        "webpack": "^1.13.2",
+        "webpack-dev-server": "^1.16.1"
+    },
+    "dependencies": {
+        "r-dom": "^2.3.0",
+        "react": "^15.3.2",
+        "react-dom": "^15.3.2"
+    }
 }
