@@ -103,6 +103,22 @@ body {
     color: #aaa;
 }
 
+.email-success {
+    width: 20em;
+    margin: 1em auto;
+    text-align: center;
+    font-family: 'Philosopher', sans-serif;
+    box-sizing: border-box;
+    font-size: 2.5em;
+    color: #aaa;
+}
+.success-image-wrapper {
+    margin: 0 auto;
+    width: 20em;
+}
+.success-image {
+    width: 20em;
+}
 
 
 /*.welcome .button-wrapper {*/
