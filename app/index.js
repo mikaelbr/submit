@@ -1,12 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import r from 'r-dom';
 
 const Hello = React.createClass({
-    displayName: 'app',
-
-    render: function() {
-        return React.createElement('h1', null, 'Hello!');
-    }
+    render: () => r.h1('Hello')
 });
 
 ReactDOM.render(React.createElement(Hello), document.querySelector('.app'));
