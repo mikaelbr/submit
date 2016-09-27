@@ -1,31 +1,33 @@
 {
-  "name": "submit",
-  "version": "1.0.0",
-  "description": "Submit",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/javaBin/submit.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/javaBin/submit/issues"
-  },
-  "homepage": "https://github.com/javaBin/submit#readme",
-  "devDependencies": {
-    "babel-core": "^6.14.0",
-    "babel-loader": "^6.2.5",
-    "babel-preset-es2015": "^6.14.0",
-    "babel-preset-react": "^6.11.1",
-    "webpack": "^1.13.2"
-  },
-  "dependencies": {
-    "react": "^15.3.2",
-    "react-dom": "^15.3.2"
-  }
+    "name": "submit",
+    "version": "1.0.0",
+    "description": "Submit",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "watch": "webpack-dev-server --progress --colors"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/javaBin/submit.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/javaBin/submit/issues"
+    },
+    "homepage": "https://github.com/javaBin/submit#readme",
+    "devDependencies": {
+        "babel-core": "^6.14.0",
+        "babel-loader": "^6.2.5",
+        "babel-preset-es2015": "^6.14.0",
+        "babel-preset-react": "^6.11.1",
+        "webpack": "^1.13.2",
+        "webpack-dev-server": "^1.16.1"
+    },
+    "dependencies": {
+        "react": "^15.3.2",
+        "react-dom": "^15.3.2"
+    }
 }
