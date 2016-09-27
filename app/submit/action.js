@@ -4,3 +4,10 @@ export const changeTitle = (text) => {
         text
     };
 };
+
+export const changeIngress = (text) => {
+    return {
+        type: 'CHANGE_INGRESS',
+        text
+    }
+};

@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "npm run build-css && webpack-dev-server --progress --colors & npm run watch-css",
-    "build-css": "lessc app/styles/app.less > dest/app.css",
-    "watch-css": "catw -w 'app/styles/**/*.less' -c 'npm run build-css'"
+    "build-css": "lessc app/app.less > dest/app.css",
+    "watch-css": "catw -w 'app/**/*.less' -c 'npm run build-css'"
   },
   "repository": {
     "type": "git",
@@ -33,6 +33,7 @@
     "webpack-dev-server": "^1.16.1"
   },
   "dependencies": {
+    "lodash": "^4.16.2",
     "r-dom": "^2.3.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",

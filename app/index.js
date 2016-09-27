@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import r from 'r-dom';
-import register from './register/index';
-import submit from './submit/index';
+import register from './register';
+import submit from './submit';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import registerStore from './submit/store';
@@ -13,7 +13,6 @@ const routes = {
 };
 
 function getPage(pageName) {
-    console.log(pageName);
     const page = routes[pageName];
     if (!page) {
         return register;

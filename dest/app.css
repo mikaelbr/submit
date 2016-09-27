@@ -60,3 +60,7 @@ body {
   border-bottom: 1px dotted #eee;
   color: #fff;
 }
+.submit {
+  display: flex;
+  flex-direction: row;
+}
