@@ -11,3 +11,10 @@ export const changeIngress = (text) => {
         text
     }
 };
+
+export const changeAbstract = (text) => {
+    return {
+        type: 'CHANGE_ABSTRACT',
+        text
+    }
+};

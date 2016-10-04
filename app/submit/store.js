@@ -2,7 +2,8 @@ import { assign } from 'lodash';
 
 const defaultState = {
     title: '',
-    ingress: ''
+    ingress: '',
+    abstract: ''
 };
 
 const talk = (state = defaultState, action) => {
@@ -13,6 +14,9 @@ const talk = (state = defaultState, action) => {
 
     case 'CHANGE_INGRESS':
         return assign({}, state, { ingress: action.text });
+
+    case 'CHANGE_ABSTRACT':
+        return assign({}, state, { abstract: action.text });
 
     default:
         return state;
