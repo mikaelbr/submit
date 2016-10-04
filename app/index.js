@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import r from 'r-dom';
 import register from './register';
+import registerThanks from './registerThanks';
 import submit from './submit';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
@@ -9,6 +10,7 @@ import registerStore from './submit/store';
 
 const routes = {
     'register': register,
+    'registerThanks': registerThanks,
     'submit': submit
 };
 

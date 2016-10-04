@@ -1,9 +1,11 @@
 import r from 'r-dom';
 
 const text = {
-    whoareyou: 'Start by telling us who you are.',
-    explanation: 'We’ll email you a login link, so you can start editing your talk'
 };
+
+const submitEmail = () => {
+    window.location.hash = 'registerThanks';
+}
 
 const register = () => (
     r.div({className: 'welcome'}, [
@@ -11,10 +13,16 @@ const register = () => (
             r.img({src: 'assets/logo.png', className: 'logo'})
         ]),
         r.h1('Got something interesting to say?'),
-        r.p({className: 'whoareyou'}, text.whoareyou),
-        r.p({className: 'whoareyou-explanation'}, text.explanation),
         r.div({className: 'email-wrapper'}, [
-            r.input({type: 'email', placeholder: 'Your email address'})
+            r.input({type: 'email', className: 'email', placeholder: 'Your email address'}),
+            r.button({className: 'submit', type: 'submit', onClick: submitEmail})
+        ]),
+        r.div({className: 'explanation'}, [
+            r.div({className: 'arrow'}),
+            r.div({className: 'text'}, [
+                r.div({}, 'We\'ll email you a unique login link.'),
+                r.div({}, 'Then you can start creating your talk.')
+            ])
         ])
     ])
 );
