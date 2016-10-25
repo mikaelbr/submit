@@ -4,4 +4,4 @@ server:
     port: 80
   adminConnectors:
   - type: http
-    port: 443
+    port: 9003
