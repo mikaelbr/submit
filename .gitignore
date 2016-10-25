@@ -3,3 +3,8 @@ npm-debug.log
 .idea
 dest/app.css
 target
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

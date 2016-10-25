@@ -1,0 +1,1 @@
+web: java -jar target/submit-1.0-SNAPSHOT.jar
