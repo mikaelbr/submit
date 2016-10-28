@@ -12,3 +12,7 @@ Integrates with [Sleepingpill](https://github.com/javaBin/sleepingPillCore) whic
 * Run the app: `./scripts/start.sh`
 
 This starts a screen. To escape from the screen: `ctrl-x`, `q`, `y`.
+
+# Running it in IntelliJ
+
+Run the class `SubmitApplication`, with the following program arguments: `server backend/configuration-local.yaml`
