@@ -3,6 +3,9 @@ package no.javazone;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
 import no.javazone.api.ForslagResource;
+import no.javazone.api.RotResource;
+
+import static java.util.Arrays.asList;
 
 public class SubmitApplication extends Application<SubmitConfiguration> {
     public static void main(String[] args) throws Exception {
@@ -15,6 +18,9 @@ public class SubmitApplication extends Application<SubmitConfiguration> {
 
     @Override
     public void run(SubmitConfiguration submitConfiguration, Environment environment) throws Exception {
-        environment.jersey().register(new ForslagResource());
+        asList(
+                new RotResource(),
+                new ForslagResource()
+        ).forEach(r -> environment.jersey().register(r));
     }
 }
