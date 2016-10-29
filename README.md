@@ -9,6 +9,7 @@ Integrates with [Sleepingpill](https://github.com/javaBin/sleepingPillCore) whic
 * Check out repo: `git clone git@github.com:javaBin/submit.git`
 * Build backend: `cd backend && mvn clean install`
 * Build frontend: `cd frontend && npm install`
+* Create config file and fill out password: `cp backend/configuration-template.yaml backend/configuration.yaml && vi backend/configuration.yaml`
 * Run the app: `./scripts/start.sh`
 
 This starts a screen. To escape from the screen: `ctrl-x`, `q`, `y`.

@@ -4,6 +4,7 @@ npm-debug.log
 submit.iml
 frontend/dest/app.css
 target
+configuration.yaml
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
