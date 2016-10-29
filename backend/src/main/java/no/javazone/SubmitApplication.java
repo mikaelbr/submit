@@ -2,8 +2,8 @@ package no.javazone;
 
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
-import no.javazone.api.ForslagResource;
-import no.javazone.api.RotResource;
+import no.javazone.resources.RootResource;
+import no.javazone.resources.UserResource;
 
 import static java.util.Arrays.asList;
 
@@ -17,10 +17,10 @@ public class SubmitApplication extends Application<SubmitConfiguration> {
     }
 
     @Override
-    public void run(SubmitConfiguration submitConfiguration, Environment environment) throws Exception {
+    public void run(SubmitConfiguration configuration, Environment environment) throws Exception {
         asList(
-                new RotResource(),
-                new ForslagResource()
+                new RootResource(),
+                new UserResource(configuration)
         ).forEach(r -> environment.jersey().register(r));
     }
 }
