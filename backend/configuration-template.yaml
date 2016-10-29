@@ -1,0 +1,11 @@
+smtpUser: automail@java.no
+smtpPass: <password here>
+tokenLinkPrefix: http://localhost:8080/#usetoken/
+
+server:
+  applicationConnectors:
+  - type: http
+    port: 8081
+  adminConnectors:
+  - type: http
+    port: 9003
