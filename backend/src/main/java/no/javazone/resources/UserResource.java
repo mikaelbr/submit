@@ -18,37 +18,37 @@ import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 @Path("/users")
 public class UserResource {
 
-	@Context
-	private HttpServletRequest request;
+    @Context
+    private HttpServletRequest request;
 
-	private Services services;
+    private Services services;
 
-	public UserResource(Services services) {
-		this.services = services;
-	}
+    public UserResource(Services services) {
+        this.services = services;
+    }
 
-	@GET
-	@Path("/authtoken")
-	public Response sendAuthenticationEmail(@QueryParam("email") EmailAddress email) {
-		Token token = services.authenticationService.createTokenForEmail(email);
-		services.emailService.sendTokenToUser(email, token);
-		return Response.ok().build();
-	}
+    @GET
+    @Path("/authtoken")
+    public Response sendAuthenticationEmail(@QueryParam("email") EmailAddress email) {
+        Token token = services.authenticationService.createTokenForEmail(email);
+        services.emailService.sendTokenToUser(email, token);
+        return Response.ok().build();
+    }
 
-	@GET
-	@Path("/authtoken/use")
-	public Response useAuthenticationEmail(@QueryParam("token") Token token) {
-		return services.authenticationService.validateToken(token).map(user -> {
-			SessionManager.login(request, user);
-			return Response.ok().build();
-		}).orElseGet(() -> Response.status(FORBIDDEN).build());
-	}
+    @GET
+    @Path("/authtoken/use")
+    public Response useAuthenticationEmail(@QueryParam("token") Token token) {
+        return services.authenticationService.validateToken(token).map(user -> {
+            SessionManager.login(request, user);
+            return Response.ok().build();
+        }).orElseGet(() -> Response.status(FORBIDDEN).build());
+    }
 
-	@POST
-	@Path("/logout")
-	public Response logout() {
-		SessionManager.logout(request);
-		return Response.ok().build();
-	}
+    @POST
+    @Path("/logout")
+    public Response logout() {
+        SessionManager.logout(request);
+        return Response.ok().build();
+    }
 
 }

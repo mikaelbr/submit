@@ -5,15 +5,15 @@ import no.javazone.SubmitConfiguration;
 
 public class Services {
 
-	public final SubmitConfiguration configuration;
-	public final Environment environment;
-	public final EmailService emailService;
-	public final AuthenticationService authenticationService;
+    public final SubmitConfiguration configuration;
+    public final Environment environment;
+    public final EmailService emailService;
+    public final AuthenticationService authenticationService;
 
-	public Services(SubmitConfiguration configuration, Environment environment) {
-		this.configuration = configuration;
-		this.environment = environment;
-		emailService = new EmailService(configuration);
-		authenticationService = new AuthenticationService();
-	}
+    public Services(SubmitConfiguration configuration, Environment environment) {
+        this.configuration = configuration;
+        this.environment = environment;
+        emailService = new EmailService(configuration);
+        authenticationService = new AuthenticationService();
+    }
 }

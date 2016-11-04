@@ -4,14 +4,14 @@ import no.javazone.representations.EmailAddress;
 
 public class AuthenticatedUser {
 
-	private EmailAddress emailAddress;
+    private EmailAddress emailAddress;
 
-	public AuthenticatedUser(EmailAddress emailAddress) {
-		this.emailAddress = emailAddress;
-	}
+    public AuthenticatedUser(EmailAddress emailAddress) {
+        this.emailAddress = emailAddress;
+    }
 
-	@Override
-	public String toString() {
-		return emailAddress.toString();
-	}
+    @Override
+    public String toString() {
+        return emailAddress.toString();
+    }
 }

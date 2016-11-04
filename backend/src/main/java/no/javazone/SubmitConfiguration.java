@@ -5,13 +5,13 @@ import io.dropwizard.Configuration;
 
 public class SubmitConfiguration extends Configuration {
 
-	@JsonProperty
-	public String smtpUser;
+    @JsonProperty
+    public String smtpUser;
 
-	@JsonProperty
-	public String smtpPass;
+    @JsonProperty
+    public String smtpPass;
 
-	@JsonProperty
-	public String tokenLinkPrefix;
+    @JsonProperty
+    public String tokenLinkPrefix;
 
 }
