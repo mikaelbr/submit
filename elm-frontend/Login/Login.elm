@@ -3,7 +3,9 @@ module Login.Login exposing (..)
 import Html exposing (..)
 import Html.App exposing (program)
 import Html.Attributes exposing (class, src, type', id, placeholder, value)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onInput)
+import HttpBuilder exposing (..)
+import Task
 
 
 type alias Model =
@@ -21,18 +23,36 @@ initModel =
 
 
 type Msg
-    = Update
+    = Email String
     | SubmitEmail
+    | SubmitFailed (Error ())
+    | SubmitSucceeded (Response ())
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Update ->
-            ( model, Cmd.none )
+        Email email ->
+            ( { model | email = email }, Cmd.none )
 
         SubmitEmail ->
+            ( model, register model.email )
+
+        SubmitSucceeded response ->
             ( model, Cmd.none )
+
+        SubmitFailed response ->
+            ( model, Cmd.none )
+
+
+register : String -> Cmd Msg
+register email =
+    Task.perform SubmitFailed SubmitSucceeded <| registerTask email
+
+
+registerTask : String -> Task.Task (Error ()) (Response ())
+registerTask email =
+    send unitReader unitReader <| post <| url "http://localhost:8081/users/authtoken" [ ( "email", email ) ]
 
 
 view : Model -> Html Msg
@@ -42,7 +62,7 @@ view model =
             [ img [ src "assets/logo.png", class "logo" ] [] ]
         , h1 [] [ text "Got something interesting to say?" ]
         , div [ class "email-wrapper" ]
-            [ input [ value model.email, type' "email", class "email", id "email-address", placeholder "Your email address" ] []
+            [ input [ value model.email, onInput Email, type' "email", class "email", id "email-address", placeholder "Your email address" ] []
             , button [ class "submit", type' "submit", onClick SubmitEmail ] []
             ]
         , div [ class "explanation" ]
