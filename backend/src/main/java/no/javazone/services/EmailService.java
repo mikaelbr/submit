@@ -1,6 +1,8 @@
 package no.javazone.services;
 
 import no.javazone.SubmitConfiguration;
+import no.javazone.representations.EmailAddress;
+import no.javazone.representations.Token;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
@@ -18,12 +20,12 @@ public class EmailService {
 		this.configuration = configuration;
 	}
 
-	public void sendTokenToUser(String emailAddress, String token) {
+	public void sendTokenToUser(EmailAddress emailAddress, Token token) {
 		String emailBody = generateEmailBody(token);
 		sendEmail(emailAddress, emailBody);
 	}
 
-	private void sendEmail(String emailAddress, String emailBody) {
+	private void sendEmail(EmailAddress emailAddress, String emailBody) {
 		try {
 			Email email = new SimpleEmail();
 			email.setHostName("smtp.googlemail.com");
@@ -33,7 +35,7 @@ public class EmailService {
 			email.setFrom("program@java.no");
 			email.setSubject("JavaZone submission login");
 			email.setMsg(emailBody);
-			email.addTo(emailAddress);
+			email.addTo(emailAddress.toString());
 			email.send();
 			log.info("Token email was sent to: " + emailAddress);
 		} catch (EmailException e) {
@@ -41,7 +43,7 @@ public class EmailService {
 		}
 	}
 
-	private String generateEmailBody(String token) {
+	private String generateEmailBody(Token token) {
 		StringBuilder b = new StringBuilder();
 		b.append("Ready to submit a talk to JavaZone, or editing your talk?\n\n");
 		b.append("Use this link to log your browser in to our submitting system:\n");
