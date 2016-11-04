@@ -6,7 +6,6 @@ import no.javazone.services.Services;
 import no.javazone.session.SessionManager;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -27,7 +26,7 @@ public class UserResource {
         this.services = services;
     }
 
-    @GET
+    @POST
     @Path("/authtoken")
     public Response sendAuthenticationEmail(@QueryParam("email") EmailAddress email) {
         Token token = services.authenticationService.createTokenForEmail(email);
@@ -35,7 +34,7 @@ public class UserResource {
         return Response.ok().build();
     }
 
-    @GET
+    @POST
     @Path("/authtoken/use")
     public Response useAuthenticationEmail(@QueryParam("token") Token token) {
         return services.authenticationService.validateToken(token).map(user -> {
