@@ -9,4 +9,9 @@ public class AuthenticatedUser {
 	public AuthenticatedUser(EmailAddress emailAddress) {
 		this.emailAddress = emailAddress;
 	}
+
+	@Override
+	public String toString() {
+		return emailAddress.toString();
+	}
 }

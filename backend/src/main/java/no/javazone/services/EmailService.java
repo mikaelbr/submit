@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 public class EmailService {
 
-	private static final Logger log = LoggerFactory.getLogger(EmailService.class);
+	private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
 	private SubmitConfiguration configuration;
 
@@ -22,10 +22,7 @@ public class EmailService {
 
 	public void sendTokenToUser(EmailAddress emailAddress, Token token) {
 		String emailBody = generateEmailBody(token);
-		sendEmail(emailAddress, emailBody);
-	}
 
-	private void sendEmail(EmailAddress emailAddress, String emailBody) {
 		try {
 			Email email = new SimpleEmail();
 			email.setHostName("smtp.googlemail.com");
@@ -37,9 +34,9 @@ public class EmailService {
 			email.setMsg(emailBody);
 			email.addTo(emailAddress.toString());
 			email.send();
-			log.info("Token email was sent to: " + emailAddress);
+			LOG.info("Token " + token + " was sent to: " + emailAddress);
 		} catch (EmailException e) {
-			log.warn("Couldn't send email to " + emailAddress, e);
+			LOG.warn("Couldn't send token " + token + " to " + emailAddress, e);
 		}
 	}
 

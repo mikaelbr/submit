@@ -3,18 +3,23 @@ package no.javazone.resources;
 import no.javazone.representations.EmailAddress;
 import no.javazone.representations.Token;
 import no.javazone.services.Services;
-import no.javazone.session.AuthenticatedUser;
+import no.javazone.session.SessionManager;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import java.util.Optional;
 
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 
 @Path("/users")
 public class UserResource {
+
+	@Context
+	private HttpServletRequest request;
 
 	private Services services;
 
@@ -33,13 +38,17 @@ public class UserResource {
 	@GET
 	@Path("/authtoken/use")
 	public Response useAuthenticationEmail(@QueryParam("token") Token token) {
-		Optional<AuthenticatedUser> authenticatedUser = services.authenticationService.validateToken(token);
-		if(authenticatedUser.isPresent()) {
-			// TODO (EHH): Init session
+		return services.authenticationService.validateToken(token).map(user -> {
+			SessionManager.login(request, user);
 			return Response.ok().build();
-		} else {
-			return Response.status(FORBIDDEN).build();
-		}
+		}).orElseGet(() -> Response.status(FORBIDDEN).build());
+	}
+
+	@POST
+	@Path("/logout")
+	public Response logout() {
+		SessionManager.logout(request);
+		return Response.ok().build();
 	}
 
 }
