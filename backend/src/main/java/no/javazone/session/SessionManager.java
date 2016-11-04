@@ -6,6 +6,10 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
+
 public class SessionManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(SessionManager.class);
@@ -22,5 +26,10 @@ public class SessionManager {
         HttpSession session = request.getSession();
         LOG.info("Logged out user with session id " + session.getId());
         session.invalidate();
+    }
+
+    public static Optional<AuthenticatedUser> getLoggedInUser(HttpServletRequest request) {
+        return ofNullable(request.getSession(false))
+                .map(s -> (AuthenticatedUser) s.getAttribute(AUTHENTICATED_USER_SESSION_KEY));
     }
 }

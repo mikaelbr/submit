@@ -4,6 +4,7 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
 import no.javazone.filters.CorsFilter;
 import no.javazone.resources.RootResource;
+import no.javazone.resources.SubmissionResource;
 import no.javazone.resources.UserResource;
 import no.javazone.services.Services;
 import org.slf4j.Logger;
@@ -40,7 +41,8 @@ public class SubmitApplication extends Application<SubmitConfiguration> {
     private List<Object> resources(Services services) {
         return asList(
                 new RootResource(),
-                new UserResource(services)
+                new UserResource(services),
+                new SubmissionResource(services)
         );
     }
 
