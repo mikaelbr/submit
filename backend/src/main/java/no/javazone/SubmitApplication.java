@@ -20,7 +20,7 @@ public class SubmitApplication extends Application<SubmitConfiguration> {
     public static void main(String[] args) throws Exception {
         System.out.println("Starter submit");
         if (args.length == 0) {
-            args = new String[]{"server", "backend/configuration.yaml"};
+            args = new String[]{"server", "configuration.yaml"};
         }
         new SubmitApplication().run(args);
 
