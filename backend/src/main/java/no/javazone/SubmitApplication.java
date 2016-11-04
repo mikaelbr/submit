@@ -6,18 +6,28 @@ import no.javazone.filters.CorsFilter;
 import no.javazone.resources.RootResource;
 import no.javazone.resources.UserResource;
 import no.javazone.services.Services;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
 
 public class SubmitApplication extends Application<SubmitConfiguration> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SubmitApplication.class);
+
     public static void main(String[] args) throws Exception {
         System.out.println("Starter submit");
         if (args.length == 0) {
             args = new String[]{"server", "backend/configuration.yaml"};
         }
         new SubmitApplication().run(args);
+
+        LOG.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        LOG.info("@@@@@@@@@@@@@@@@@ STARTUP OK @@@@@@@@@@@@@@@@@@@");
+        LOG.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
     }
 
     @Override
