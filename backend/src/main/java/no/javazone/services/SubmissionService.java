@@ -3,6 +3,7 @@ package no.javazone.services;
 import no.javazone.representations.Submission;
 import no.javazone.session.AuthenticatedUser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,5 +17,9 @@ public class SubmissionService {
 
     public List<Submission> getSubmissionsForUser(AuthenticatedUser authenticatedUser) {
         return submissions.getOrDefault(authenticatedUser, emptyList());
+    }
+
+    public void submitNewTalk(AuthenticatedUser authenticatedUser, Submission submission) {
+        submissions.computeIfAbsent(authenticatedUser, (a) -> new ArrayList<>()).add(submission);
     }
 }
