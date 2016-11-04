@@ -10,3 +10,6 @@ configuration.yaml
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+
+# Elm stuff
+elm-stuff
