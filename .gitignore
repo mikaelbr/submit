@@ -13,3 +13,5 @@ configuration.yaml
 
 # Elm stuff
 elm-stuff
+dist/main.cs
+dist/app.js
