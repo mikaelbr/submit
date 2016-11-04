@@ -16,7 +16,7 @@ This starts a screen. To escape from the screen: `ctrl-x`, `q`, `y`.
 
 # Running it in IntelliJ
 
-Run the class `SubmitApplication`, with the following program arguments: `server backend/configuration-local.yaml`
+Run the class `SubmitApplication`. Couldn't be easier ;)
 
 # Debugging in Postman
 
