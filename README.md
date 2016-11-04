@@ -17,3 +17,11 @@ This starts a screen. To escape from the screen: `ctrl-x`, `q`, `y`.
 # Running it in IntelliJ
 
 Run the class `SubmitApplication`, with the following program arguments: `server backend/configuration-local.yaml`
+
+# Debugging in Postman
+
+We have created a Postman Collection to make it easy to test all the API calls of Submit when developing.
+
+* Install [Postman](https://www.getpostman.com)
+* Import the collection `submit.postman_collection.json`
+* Start by running the `POST – DEBUG login`, then you can do any other call.

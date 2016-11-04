@@ -1,0 +1,87 @@
+{
+	"variables": [],
+	"info": {
+		"name": "submit",
+		"_postman_id": "1dd4bce5-3858-4390-871f-45593f8146d6",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Generate token",
+			"request": {
+				"url": "http://localhost:8081/users/authtoken?email=espenhh@gmail.com",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Use token",
+			"request": {
+				"url": "http://localhost:8081/users/authtoken/use?token=TOKEN",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get all submissions",
+			"request": {
+				"url": "http://localhost:8081/submissions",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create submission",
+			"request": {
+				"url": "http://localhost:8081/submissions",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"Ny talk 123\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "DEBUG login",
+			"request": {
+				"url": "http://localhost:8081/users/authtoken/use?token=test-token",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
