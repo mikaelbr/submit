@@ -5,6 +5,7 @@ import io.dropwizard.setup.Environment;
 import no.javazone.filters.CorsFilter;
 import no.javazone.resources.RootResource;
 import no.javazone.resources.UserResource;
+import no.javazone.services.Services;
 
 import java.util.List;
 
@@ -21,18 +22,19 @@ public class SubmitApplication extends Application<SubmitConfiguration> {
 
     @Override
     public void run(SubmitConfiguration configuration, Environment environment) throws Exception {
-        resources(configuration).forEach(resource -> environment.jersey().register(resource));
-        filters(configuration).forEach(filter -> environment.jersey().register(filter));
+        Services services = new Services(configuration, environment);
+        resources(services).forEach(resource -> environment.jersey().register(resource));
+        filters(services).forEach(filter -> environment.jersey().register(filter));
     }
 
-    private List<Object> resources(SubmitConfiguration configuration) {
+    private List<Object> resources(Services services) {
         return asList(
                 new RootResource(),
-                new UserResource(configuration)
+                new UserResource(services)
         );
     }
 
-    private List<Object> filters(SubmitConfiguration configuration) {
+    private List<Object> filters(Services services) {
         return asList(
                 new CorsFilter()
         );
