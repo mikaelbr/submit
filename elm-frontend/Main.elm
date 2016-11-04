@@ -1,23 +1,28 @@
 module Main exposing (..)
 
-import Html exposing (..)
-import Html.App exposing (program, map)
+import Html exposing (Html, div)
+import Html.App exposing (map)
+import Navigation
+import UrlParser exposing (Parser, oneOf, format, s)
+import String exposing (dropLeft)
 import Html.Attributes exposing (class)
 import Login.Login as Login
 
 
 type alias Model =
-    { login : Login.Model }
+    { login : Login.Model
+    , page : Page
+    }
 
 
 initModel : Model
 initModel =
-    Model (Login.initModel)
+    Model (Login.initModel) Register
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( initModel, Cmd.none )
+init : Result String Page -> ( Model, Cmd Msg )
+init result =
+    urlUpdate result initModel
 
 
 type Msg
@@ -48,6 +53,44 @@ subscriptions model =
     Sub.none
 
 
+type Page
+    = Register
+
+
+toHash : Page -> String
+toHash page =
+    case page of
+        Register ->
+            "#"
+
+
+hashParser : Navigation.Location -> Result String Page
+hashParser location =
+    UrlParser.parse identity pageParser (dropLeft 1 location.hash)
+
+
+pageParser : Parser (Page -> a) a
+pageParser =
+    oneOf
+        [ format Register (s "") ]
+
+
+urlUpdate : Result String Page -> Model -> ( Model, Cmd Msg )
+urlUpdate result model =
+    case result of
+        Err _ ->
+            ( model, Navigation.modifyUrl (toHash model.page) )
+
+        Ok page ->
+            ( { model | page = page }, Cmd.none )
+
+
 main : Program Never
 main =
-    program { init = init, update = update, view = view, subscriptions = subscriptions }
+    Navigation.program (Navigation.makeParser hashParser)
+        { init = init
+        , update = update
+        , view = view
+        , subscriptions = subscriptions
+        , urlUpdate = urlUpdate
+        }
