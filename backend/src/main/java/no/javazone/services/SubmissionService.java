@@ -22,4 +22,10 @@ public class SubmissionService {
     public void submitNewTalk(AuthenticatedUser authenticatedUser, Submission submission) {
         submissions.computeIfAbsent(authenticatedUser, (a) -> new ArrayList<>()).add(submission);
     }
+
+    public void debugDataset(AuthenticatedUser authenticatedUser) {
+        submitNewTalk(authenticatedUser, new Submission("Test-talk #1"));
+        submitNewTalk(authenticatedUser, new Submission("Test-talk #2"));
+        submitNewTalk(authenticatedUser, new Submission("Test-talk #3"));
+    }
 }

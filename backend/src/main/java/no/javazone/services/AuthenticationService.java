@@ -30,4 +30,9 @@ public class AuthenticationService {
         return ofNullable(tokens.getOrDefault(token, null)).map(AuthenticatedUser::new);
     }
 
+    public AuthenticatedUser debugDataset() {
+        Token token = new Token("test-token");
+        tokens.put(token, new EmailAddress("example@example.com"));
+        return validateToken(token).get();
+    }
 }

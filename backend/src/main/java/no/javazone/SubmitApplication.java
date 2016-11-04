@@ -14,6 +14,7 @@ import no.javazone.resources.RootResource;
 import no.javazone.resources.SubmissionResource;
 import no.javazone.resources.UserResource;
 import no.javazone.services.Services;
+import no.javazone.session.AuthenticatedUser;
 import org.eclipse.jetty.server.session.HashSessionManager;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.slf4j.Logger;
@@ -50,6 +51,13 @@ public class SubmitApplication extends Application<SubmitConfiguration> {
         filters(services).forEach(filter -> environment.jersey().register(filter));
         sessionHandler(environment);
         objectmapper(environment);
+
+        debugDataset(services);
+    }
+
+    private void debugDataset(Services services) {
+        AuthenticatedUser authenticatedUser = services.authenticationService.debugDataset();
+        services.submissionService.debugDataset(authenticatedUser);
     }
 
     private void objectmapper(Environment environment) {
