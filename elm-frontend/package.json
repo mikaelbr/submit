@@ -1,0 +1,21 @@
+{
+  "name": "elm-frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch-elm": "elm-live Main.elm --port=8001 --output dist/app.js --dir=dist",
+    "start": "npm run watch-elm & npm run watch-css",
+    "watch-css": "less-watch-compiler . dist main.less"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "catw": "^1.0.1",
+    "elm-live": "^2.6.0",
+    "less": "^2.7.1",
+    "watch": "^1.0.1"
+  }
+}
