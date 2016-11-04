@@ -3,21 +3,21 @@ module Main exposing (..)
 import Html exposing (Html, div)
 import Html.App exposing (map)
 import Navigation
-import UrlParser exposing (Parser, oneOf, format, s)
-import String exposing (dropLeft)
 import Html.Attributes exposing (class)
+import Login.Update as Login
+import Nav.Nav exposing (urlUpdate, hashParser)
+import Model exposing (Model)
+import Message exposing (Msg(..))
+import Nav.Model exposing (Page(..))
 import Login.Login as Login
-
-
-type alias Model =
-    { login : Login.Model
-    , page : Page
-    }
+import Login.Update as LoginUpdate
+import Thanks.Thanks as Thanks
+import Debug
 
 
 initModel : Model
 initModel =
-    Model (Login.initModel) Register
+    Model (Login.initModel) (Thanks.initModel) Register
 
 
 init : Result String Page -> ( Model, Cmd Msg )
@@ -25,64 +25,46 @@ init result =
     urlUpdate result initModel
 
 
-type Msg
-    = Login Login.Msg
-
-
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        Login loginMsg ->
-            let
-                ( newLogin, loginCmd ) =
-                    Login.update loginMsg model.login
+    Debug.log (toString model) <|
+        case msg of
+            LoginMsg loginMsg ->
+                let
+                    ( newLogin, loginCmd ) =
+                        LoginUpdate.update loginMsg model.login
 
-                mappedCmd =
-                    Cmd.map Login loginCmd
-            in
-                ( { model | login = newLogin }, mappedCmd )
+                    mappedCmd =
+                        Cmd.map LoginMsg loginCmd
+                in
+                    ( { model | login = newLogin }, mappedCmd )
+
+            ThanksMsg thanksMsg ->
+                let
+                    newThanks =
+                        Thanks.update thanksMsg model.thanks
+                in
+                    ( { model | thanks = newThanks }, Cmd.none )
 
 
 view : Model -> Html Msg
 view model =
-    div [ class "app" ] [ map Login (Login.view model.login) ]
+    div [ class "app" ] [ pageView model ]
+
+
+pageView : Model -> Html Msg
+pageView model =
+    case model.page of
+        Register ->
+            map LoginMsg (Login.view model.login)
+
+        Thanks ->
+            map ThanksMsg (Thanks.view model.thanks)
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none
-
-
-type Page
-    = Register
-
-
-toHash : Page -> String
-toHash page =
-    case page of
-        Register ->
-            "#"
-
-
-hashParser : Navigation.Location -> Result String Page
-hashParser location =
-    UrlParser.parse identity pageParser (dropLeft 1 location.hash)
-
-
-pageParser : Parser (Page -> a) a
-pageParser =
-    oneOf
-        [ format Register (s "") ]
-
-
-urlUpdate : Result String Page -> Model -> ( Model, Cmd Msg )
-urlUpdate result model =
-    case result of
-        Err _ ->
-            ( model, Navigation.modifyUrl (toHash model.page) )
-
-        Ok page ->
-            ( { model | page = page }, Cmd.none )
 
 
 main : Program Never
