@@ -1,10 +1,9 @@
 module Login.Message exposing (Msg(..))
 
-import HttpBuilder exposing (..)
+import Http exposing (Error)
 
 
 type Msg
     = Email String
     | SubmitEmail
-    | SubmitFailed (Error ())
-    | SubmitSucceeded (Response ())
+    | Submit (Result Error ())

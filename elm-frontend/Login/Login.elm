@@ -1,7 +1,7 @@
 module Login.Login exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (class, src, type', id, placeholder, value)
+import Html.Attributes exposing (class, src, type_, id, placeholder, value)
 import Html.Events exposing (onClick, onInput)
 import Login.Model exposing (Model)
 import Login.Message exposing (Msg(..))
@@ -24,8 +24,8 @@ view model =
             [ img [ src "assets/logo.png", class "logo" ] [] ]
         , h1 [] [ text "Got something interesting to say?" ]
         , div [ class "email-wrapper" ]
-            [ input [ value model.email, onInput Email, type' "email", class "email", id "email-address", placeholder "Your email address" ] []
-            , button [ class "submit", type' "submit", onClick SubmitEmail ] []
+            [ input [ value model.email, onInput Email, type_ "email", class "email", id "email-address", placeholder "Your email address" ] []
+            , button [ class "submit", type_ "submit", onClick SubmitEmail ] []
             ]
         , div [ class "explanation" ]
             [ div [ class "arrow" ] []

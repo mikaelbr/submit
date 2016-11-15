@@ -1,11 +1,11 @@
 module Nav.Nav exposing (..)
 
 import Navigation
-import UrlParser exposing (Parser, oneOf, format, s, parse)
-import String exposing (dropLeft)
+import UrlParser exposing (Parser, oneOf, map, s, parseHash, top)
 import Model exposing (Model)
 import Message exposing (Msg)
 import Nav.Model exposing (Page(..))
+import Maybe
 import Debug
 
 
@@ -19,24 +19,24 @@ toHash page =
             "#thanks"
 
 
-hashParser : Navigation.Location -> Result String Page
+hashParser : Navigation.Location -> Page
 hashParser location =
-    parse identity pageParser (dropLeft 1 location.hash)
+    Maybe.withDefault Register <| parseHash pageParser location
 
 
 pageParser : Parser (Page -> a) a
 pageParser =
     oneOf
-        [ format Register (s "")
-        , format Thanks (s "thanks")
+        [ map Register top
+        , map Thanks (s "thanks")
         ]
 
 
-urlUpdate : Result String Page -> Model -> ( Model, Cmd Msg )
-urlUpdate result model =
-    case Debug.log "urlUpdate" result of
-        Err a ->
-            ( model, Navigation.modifyUrl (toHash model.page) )
 
-        Ok newPage ->
-            { model | page = newPage } ! []
+-- urlUpdate : Result String Page -> Model -> ( Model, Cmd Msg )
+-- urlUpdate result model =
+--     case Debug.log "urlUpdate" result of
+--         Err a ->
+--             ( model, Navigation.modifyUrl (toHash model.page) )
+--         Ok newPage ->
+--             { model | page = newPage } ! []

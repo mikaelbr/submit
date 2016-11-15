@@ -4,8 +4,8 @@ import Login.Model exposing (Model)
 import Login.Message exposing (Msg(..))
 import Nav.Nav exposing (toHash)
 import Nav.Model exposing (Page(..))
-import HttpBuilder exposing (..)
-import Task exposing (..)
+import Http exposing (Error, Response)
+import Json.Decode exposing (succeed)
 import Navigation
 
 
@@ -18,18 +18,13 @@ update msg model =
         SubmitEmail ->
             ( model, register model.email )
 
-        SubmitSucceeded response ->
-            ( model, Navigation.newUrl <| toHash Thanks )
-
-        SubmitFailed response ->
+        Submit (Err _) ->
             ( model, Cmd.none )
+
+        Submit (Ok _) ->
+            ( model, Navigation.newUrl <| toHash Thanks )
 
 
 register : String -> Cmd Msg
 register email =
-    Task.perform SubmitFailed SubmitSucceeded <| registerTask email
-
-
-registerTask : String -> Task.Task (Error ()) (Response ())
-registerTask email =
-    send unitReader unitReader <| post <| url "http://localhost:8081/users/authtoken" [ ( "email", email ) ]
+    Http.send Submit <| Http.post "http://localhost:8081/users/authtoken" Http.emptyBody <| succeed ()
