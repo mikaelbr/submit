@@ -13,4 +13,4 @@ configuration.yaml
 
 # Elm stuff
 elm-stuff
-elm-frontend/dist/*
+frontend/dist/*
