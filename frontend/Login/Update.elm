@@ -27,4 +27,4 @@ update msg model =
 
 register : String -> Cmd Msg
 register email =
-    Http.send Submit <| Http.post "http://localhost:8081/users/authtoken" Http.emptyBody <| succeed ()
+    Http.send Submit <| Http.post ("http://localhost:8081/users/authtoken?email=" ++ email) Http.emptyBody <| succeed ()
