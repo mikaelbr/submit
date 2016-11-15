@@ -4,10 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "watch-elm": "elm-live Main.elm --port=8001 --output dist/app.js --dir=dist",
-    "start": "npm run watch-elm & npm run watch-css",
-    "watch-css": "less-watch-compiler . dist main.less"
+    "clean": "rm -rf dist",
+    "copy": "cp -a static/. dist/",
+    "build-elm": "elm-make Main.elm --output dist/app.js",
+    "watch-elm": "elm-live Main.elm --output dist/app.js --dir=dist",
+    "build-less": "lessc styles/main.less > dist/main.css",
+    "watch-less": "catw -w 'styles/**/*.less' -c 'npm run build-less'",
+    "build": "npm-run-all clean copy build-elm build-less",
+    "watch": "npm-run-all clean copy --parallel watch-elm watch-less",
+    "start": "npm run watch"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +21,7 @@
     "catw": "^1.0.1",
     "elm-live": "^2.6.0",
     "less": "^2.7.1",
+    "npm-run-all": "^3.1.1",
     "watch": "^1.0.1"
   }
 }
