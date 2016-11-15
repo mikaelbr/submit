@@ -5,7 +5,6 @@ import Login.Message exposing (Msg(..))
 import Nav.Nav exposing (toHash)
 import Nav.Model exposing (Page(..))
 import Http exposing (Error, Response)
-import Json.Decode exposing (succeed)
 import Navigation
 
 
@@ -27,4 +26,17 @@ update msg model =
 
 register : String -> Cmd Msg
 register email =
-    Http.send Submit <| Http.post ("http://localhost:8081/users/authtoken?email=" ++ email) Http.emptyBody <| succeed ()
+    Http.send Submit << emptyPost <| "http://localhost:8081/users/authtoken?email=" ++ email
+
+
+emptyPost : String -> Http.Request String
+emptyPost url =
+    Http.request
+        { method = "POST"
+        , headers = []
+        , url = url
+        , body = Http.emptyBody
+        , expect = Http.expectString
+        , timeout = Nothing
+        , withCredentials = False
+        }

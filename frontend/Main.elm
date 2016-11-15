@@ -14,9 +14,9 @@ import Thanks.Thanks as Thanks
 import Debug
 
 
-initModel : Model
-initModel =
-    Model (Login.initModel) (Thanks.initModel) Register
+initModel : Page -> Model
+initModel page =
+    Model (Login.initModel) (Thanks.initModel) page
 
 
 init : Navigation.Location -> ( Model, Cmd Msg )
@@ -25,22 +25,15 @@ init location =
         page =
             hashParser location
     in
-        urlUpdate page initModel
-
-
-urlUpdate : Page -> Model -> ( Model, Cmd Msg )
-urlUpdate newPage model =
-    case newPage of
-        page ->
-            ( { model | page = page }, Cmd.none )
+        ( initModel page, Cmd.none )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    Debug.log (toString model) <|
+    Debug.log (toString msg) <|
         case msg of
             UpdateUrl page ->
-                urlUpdate page model
+                ( { model | page = page }, Cmd.none )
 
             LoginMsg loginMsg ->
                 let
@@ -82,7 +75,7 @@ subscriptions model =
 
 main : Program Never Model Msg
 main =
-    Navigation.program (hashParser >> UpdateUrl)
+    Navigation.program (UpdateUrl << hashParser)
         { init = init
         , update = update
         , view = view
