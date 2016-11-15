@@ -127,7 +127,7 @@
                     <mainClass>no.javazone.SubmitApplication</mainClass>
                     <arguments>
                         <argument>server</argument>
-                        <argument>configuration-local.yaml</argument>
+                        <argument>configuration.yaml</argument>
                     </arguments>
                     <systemProperties>
                     </systemProperties>
