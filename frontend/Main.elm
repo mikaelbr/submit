@@ -11,7 +11,6 @@ import Nav.Model exposing (Page(..))
 import Login.Login as Login
 import Login.Update as LoginUpdate
 import Thanks.Thanks as Thanks
-import Debug
 
 
 initModel : Page -> Model
@@ -30,27 +29,26 @@ init location =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    Debug.log (toString msg) <|
-        case msg of
-            UpdateUrl page ->
-                ( { model | page = page }, Cmd.none )
+    case msg of
+        UpdateUrl page ->
+            ( { model | page = page }, Cmd.none )
 
-            LoginMsg loginMsg ->
-                let
-                    ( newLogin, loginCmd ) =
-                        LoginUpdate.update loginMsg model.login
+        LoginMsg loginMsg ->
+            let
+                ( newLogin, loginCmd ) =
+                    LoginUpdate.update loginMsg model.login
 
-                    mappedCmd =
-                        Cmd.map LoginMsg loginCmd
-                in
-                    ( { model | login = newLogin }, mappedCmd )
+                mappedCmd =
+                    Cmd.map LoginMsg loginCmd
+            in
+                ( { model | login = newLogin }, mappedCmd )
 
-            ThanksMsg thanksMsg ->
-                let
-                    newThanks =
-                        Thanks.update thanksMsg model.thanks
-                in
-                    ( { model | thanks = newThanks }, Cmd.none )
+        ThanksMsg thanksMsg ->
+            let
+                newThanks =
+                    Thanks.update thanksMsg model.thanks
+            in
+                ( { model | thanks = newThanks }, Cmd.none )
 
 
 view : Model -> Html Msg
