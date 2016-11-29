@@ -3,10 +3,12 @@ package no.javazone.services;
 import no.javazone.representations.Submission;
 import no.javazone.representations.SubmissionsForUser;
 import no.javazone.session.AuthenticatedUser;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Service
 public class SubmissionService {
 
     // TODO (EHH): This concept needs to be nuked, probably when we integrate with sleepingpill

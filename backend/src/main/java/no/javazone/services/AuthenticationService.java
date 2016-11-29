@@ -5,6 +5,7 @@ import no.javazone.representations.Token;
 import no.javazone.session.AuthenticatedUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,12 +13,18 @@ import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 
+@Service
 public class AuthenticationService {
 
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     // TODO: move this to persistent storage
     private Map<Token, EmailAddress> tokens = new HashMap<>();
+
+    public AuthenticationService() {
+        // TODO (EHH): Remove debug data sometime :)
+        debugDataset();
+    }
 
     public Token createTokenForEmail(EmailAddress email) {
         Token token = Token.generate();
