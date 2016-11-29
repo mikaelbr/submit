@@ -38,7 +38,7 @@ brew install eb
 Configure a AWS profile for javabin:
 
 
-`~.aws/credentials`
+`~/.aws/credentials`
 
 ```
 [javabin]
@@ -46,14 +46,14 @@ aws_access_key_id = <ADD YOURS HERE>
 aws_secret_access_key = <ADD YOURS HERE>
 ```
 
-`~.aws/config`
+`~/.aws/config`
 
 ```
 [default]
 region = eu-central-1
 ```
 
-Run `eb init` in /backend
+Run `eb init` in `/backend`
 
 ## Deployment
 
