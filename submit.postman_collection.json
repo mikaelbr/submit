@@ -10,7 +10,7 @@
 		{
 			"name": "Generate token",
 			"request": {
-				"url": "http://localhost:8081/users/authtoken?email=espenhh@gmail.com",
+				"url": "http://localhost:8080/api/users/authtoken?email=espenhh@gmail.com",
 				"method": "POST",
 				"header": [],
 				"body": {
@@ -24,7 +24,7 @@
 		{
 			"name": "Use token",
 			"request": {
-				"url": "http://localhost:8081/users/authtoken/use?token=TOKEN",
+				"url": "http://localhost:8080/api/users/authtoken/use?token=TOKEN",
 				"method": "POST",
 				"header": [],
 				"body": {
@@ -38,7 +38,7 @@
 		{
 			"name": "Get all submissions",
 			"request": {
-				"url": "http://localhost:8081/submissions",
+				"url": "http://localhost:8080/api/submissions",
 				"method": "GET",
 				"header": [],
 				"body": {
@@ -52,7 +52,7 @@
 		{
 			"name": "Create submission",
 			"request": {
-				"url": "http://localhost:8081/submissions",
+				"url": "http://localhost:8080/api/submissions",
 				"method": "POST",
 				"header": [
 					{
@@ -72,7 +72,7 @@
 		{
 			"name": "DEBUG login",
 			"request": {
-				"url": "http://localhost:8081/users/authtoken/use?token=test-token",
+				"url": "http://localhost:8080/api/users/authtoken/use?token=test-token",
 				"method": "POST",
 				"header": [],
 				"body": {
