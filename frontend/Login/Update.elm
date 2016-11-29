@@ -26,7 +26,7 @@ update msg model =
 
 register : String -> Cmd Msg
 register email =
-    Http.send Submit << emptyPost <| "http://localhost:8081/users/authtoken?email=" ++ email
+    Http.send Submit << emptyPost <| "/api/users/authtoken?email=" ++ email
 
 
 emptyPost : String -> Http.Request String
