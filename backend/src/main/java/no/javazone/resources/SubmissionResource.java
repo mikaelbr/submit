@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 
-@Path("/submissions")
+@Path("/api/submissions")
 @Component
 public class SubmissionResource {
 

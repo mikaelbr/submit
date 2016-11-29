@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 
-@Path("/users")
+@Path("/api/users")
 @Component
 public class UserResource {
 
