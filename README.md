@@ -53,7 +53,7 @@ aws_secret_access_key = <ADD YOURS HERE>
 region = eu-central-1
 ```
 
-Run `eb init` in `/backend`
+Run `eb init --profile javabin` in `/backend`
 
 ## Deployment
 
