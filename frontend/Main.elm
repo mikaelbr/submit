@@ -6,6 +6,7 @@ import Html.Attributes exposing (class)
 import Login.Update as Login
 import Nav.Nav exposing (hashParser)
 import Model exposing (Model)
+import Flags exposing (Flags)
 import Message exposing (Msg(..))
 import Nav.Model exposing (Page(..))
 import Login.Login as Login
@@ -13,18 +14,18 @@ import Login.Update as LoginUpdate
 import Thanks.Thanks as Thanks
 
 
-initModel : Page -> Model
-initModel page =
-    Model (Login.initModel) (Thanks.initModel) page
+initModel : Flags -> Page -> Model
+initModel flags page =
+    Model flags (Login.initModel flags) (Thanks.initModel) page
 
 
-init : Navigation.Location -> ( Model, Cmd Msg )
-init location =
+init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
+init flags location =
     let
         page =
             hashParser location
     in
-        ( initModel page, Cmd.none )
+        ( initModel flags page, Cmd.none )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -71,9 +72,9 @@ subscriptions model =
     Sub.none
 
 
-main : Program Never Model Msg
+main : Program Flags Model Msg
 main =
-    Navigation.program (UpdateUrl << hashParser)
+    Navigation.programWithFlags (UpdateUrl << hashParser)
         { init = init
         , update = update
         , view = view

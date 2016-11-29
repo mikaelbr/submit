@@ -1,5 +1,9 @@
 module Login.Model exposing (Model)
 
+import Flags exposing (Flags)
+
 
 type alias Model =
-    { email : String }
+    { flags : Flags
+    , email : String
+    }
