@@ -46,13 +46,6 @@ aws_access_key_id = <ADD YOURS HERE>
 aws_secret_access_key = <ADD YOURS HERE>
 ```
 
-`~/.aws/config`
-
-```
-[default]
-region = eu-central-1
-```
-
 Run `eb init --profile javabin` in `/backend`
 
 ## Deployment
