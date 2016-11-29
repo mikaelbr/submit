@@ -25,3 +25,39 @@ We have created a Postman Collection to make it easy to test all the API calls o
 * Install [Postman](https://www.getpostman.com)
 * Import the collection `submit.postman_collection.json`
 * Start by running the `POST – DEBUG login`, then you can do any other call.
+
+# Configure AWS
+
+Install `aws` and `eb` command line tools:
+
+```
+brew install aws
+brew install eb
+```
+
+Configure a AWS profile for javabin:
+
+
+`~.aws/credentials`
+
+```
+[javabin]
+aws_access_key_id = <ADD YOURS HERE>
+aws_secret_access_key = <ADD YOURS HERE>
+```
+
+`~.aws/config`
+
+```
+[default]
+region = eu-central-1
+```
+
+Run `eb init` in /backend
+
+## Deployment
+
+See the "Configure AWS" section first
+
+- `cd frontend && ./deploy.sh`
+- `cd backend && ./deploy.sh`
