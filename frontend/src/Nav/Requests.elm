@@ -1,7 +1,6 @@
 module Nav.Requests exposing (getLoginCookie)
 
 import Http
-import Json.Decode exposing (string)
 import Usetoken.Messages
 
 
@@ -14,7 +13,15 @@ getLoginCookie baseUrl token =
                 ++ token
     in
         Http.send Usetoken.Messages.Get <|
-            Http.post cookieUrl Http.emptyBody string
+            Http.request
+                { method = "POST"
+                , headers = []
+                , url = cookieUrl
+                , body = Http.emptyBody
+                , expect = Http.expectString
+                , timeout = Nothing
+                , withCredentials = False
+                }
 
 
 url : List String -> String

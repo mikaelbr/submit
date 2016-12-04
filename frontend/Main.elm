@@ -15,12 +15,20 @@ import Thanks.Thanks as Thanks
 import Usetoken.View
 import Usetoken.Model
 import Usetoken.Update
+import Submissions.View
+import Submissions.Model
+import Submissions.Update
 import Nav.Requests exposing (getLoginCookie)
 
 
 initModel : Flags -> Page -> Model
 initModel flags page =
-    Model flags (Login.initModel flags) (Thanks.initModel) (Usetoken.Model.initModel flags "") page
+    Model flags
+        (Login.initModel flags)
+        (Thanks.initModel)
+        (Usetoken.Model.initModel flags "")
+        (Submissions.Model.initModel)
+        page
 
 
 init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
@@ -65,6 +73,16 @@ update msg model =
             in
                 ( { model | usetoken = newUsetoken }, mappedCmd )
 
+        SubmissionsMsg submissionsMsg ->
+            let
+                ( newSubmissions, submissionsCmd ) =
+                    Submissions.Update.update submissionsMsg model.submissions
+
+                mappedCmd =
+                    Cmd.map SubmissionsMsg submissionsCmd
+            in
+                ( { model | submissions = newSubmissions }, mappedCmd )
+
 
 updatePage : Page -> Model -> ( Model, Cmd Msg )
 updatePage page m =
@@ -89,7 +107,7 @@ view model =
 
 pageView : Model -> Html Msg
 pageView model =
-    case Debug.log "page" model.page of
+    case model.page of
         Register ->
             map LoginMsg (Login.view model.login)
 
@@ -100,7 +118,7 @@ pageView model =
             map UsetokenMsg (Usetoken.View.view model.usetoken)
 
         Submissions ->
-            map UsetokenMsg (Usetoken.View.view model.usetoken)
+            map SubmissionsMsg (Submissions.View.view model.submissions)
 
 
 subscriptions : Model -> Sub Msg
