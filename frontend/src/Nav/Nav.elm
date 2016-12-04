@@ -1,7 +1,7 @@
 module Nav.Nav exposing (..)
 
 import Navigation
-import UrlParser exposing (Parser, oneOf, map, s, parseHash, top)
+import UrlParser exposing (Parser, oneOf, map, s, parseHash, top, (</>), string)
 import Nav.Model exposing (Page(..))
 import Maybe
 
@@ -15,6 +15,12 @@ toHash page =
         Thanks ->
             "#thanks"
 
+        UseToken token ->
+            "#usetoken/" ++ token
+
+        Submissions ->
+            "#submissions"
+
 
 hashParser : Navigation.Location -> Page
 hashParser location =
@@ -26,4 +32,6 @@ pageParser =
     oneOf
         [ map Register top
         , map Thanks (s "thanks")
+        , map UseToken (s "usetoken" </> string)
+        , map Submissions (s "submissions")
         ]
