@@ -18,6 +18,9 @@ import Usetoken.Update
 import Submissions.View
 import Submissions.Model
 import Submissions.Update
+import Submission.View
+import Submission.Model
+import Submission.Update
 import Nav.Requests exposing (getLoginCookie, getSubmissions)
 
 
@@ -28,6 +31,7 @@ initModel flags page =
         (Thanks.initModel)
         (Usetoken.Model.initModel flags "")
         (Submissions.Model.initModel)
+        (Submission.Model.initModel)
         page
 
 
@@ -83,6 +87,16 @@ update msg model =
             in
                 ( { model | submissions = newSubmissions }, mappedCmd )
 
+        SubmissionMsg submissionMsg ->
+            let
+                ( newSubmission, submissionCmd ) =
+                    Submission.Update.update submissionMsg model.submission
+
+                mappedCmd =
+                    Cmd.map SubmissionMsg submissionCmd
+            in
+                ( { model | submission = newSubmission }, mappedCmd )
+
 
 updatePage : Page -> Model -> ( Model, Cmd Msg )
 updatePage page m =
@@ -122,6 +136,9 @@ pageView model =
 
         Submissions ->
             map SubmissionsMsg (Submissions.View.view model.submissions)
+
+        Submission _ ->
+            map SubmissionMsg (Submission.View.view model.submission)
 
 
 subscriptions : Model -> Sub Msg

@@ -4,6 +4,8 @@ import Http
 import Usetoken.Messages
 import Submissions.Messages
 import Submissions.Decoder
+import Submission.Messages
+import Submission.Decoder
 
 
 getLoginCookie : String -> String -> Cmd Usetoken.Messages.Msg
@@ -34,6 +36,16 @@ getSubmissions baseUrl =
     in
         Http.send Submissions.Messages.Get <|
             Http.get getSubmissionsUrl Submissions.Decoder.decoder
+
+
+getSubmission : String -> Int -> Cmd Submission.Messages.Msg
+getSubmission baseUrl id =
+    let
+        getSubmissionUrl =
+            url [ baseUrl, "submissions", toString id ]
+    in
+        Http.send Submission.Messages.Get <|
+            Http.get getSubmissionUrl Submission.Decoder.decoder
 
 
 url : List String -> String

@@ -4,6 +4,7 @@ import Login.Message
 import Thanks.Thanks
 import Usetoken.Messages
 import Submissions.Messages
+import Submission.Messages
 import Nav.Model exposing (Page)
 
 
@@ -13,3 +14,4 @@ type Msg
     | ThanksMsg Thanks.Thanks.Msg
     | UsetokenMsg Usetoken.Messages.Msg
     | SubmissionsMsg Submissions.Messages.Msg
+    | SubmissionMsg Submission.Messages.Msg
