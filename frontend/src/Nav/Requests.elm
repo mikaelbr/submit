@@ -11,22 +11,11 @@ import Json.Decode
 
 getLoginCookie : String -> String -> Cmd Usetoken.Messages.Msg
 getLoginCookie baseUrl token =
-    let
-        cookieUrl =
+    Http.send Usetoken.Messages.Get <|
+        postWithoutBody Json.Decode.string <|
             url [ baseUrl, "users", "authtoken", "use" ]
                 ++ "?token="
                 ++ token
-    in
-        Http.send Usetoken.Messages.Get <|
-            Http.request
-                { method = "POST"
-                , headers = []
-                , url = cookieUrl
-                , body = Http.emptyBody
-                , expect = Http.expectString
-                , timeout = Nothing
-                , withCredentials = False
-                }
 
 
 getSubmissions : String -> Cmd Submissions.Messages.Msg
