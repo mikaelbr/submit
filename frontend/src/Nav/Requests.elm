@@ -53,6 +53,19 @@ get =
     flip Http.get
 
 
+postWithoutBody : Json.Decode.Decoder a -> String -> Http.Request a
+postWithoutBody decoder url =
+    Http.request
+        { method = "POST"
+        , headers = []
+        , url = url
+        , body = Http.emptyBody
+        , expect = Http.expectJson decoder
+        , timeout = Nothing
+        , withCredentials = False
+        }
+
+
 
 -- jsonGet : Decoder a -> String -> Http.Request a
 -- jsonGet decoder url =
