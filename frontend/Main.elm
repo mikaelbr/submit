@@ -6,7 +6,6 @@ import Html.Attributes exposing (class)
 import Login.Update as Login
 import Nav.Nav exposing (hashParser, toHash)
 import Model exposing (Model)
-import Flags exposing (Flags)
 import Message exposing (Msg(..))
 import Nav.Model exposing (Page(..))
 import Login.Login as Login
@@ -24,24 +23,24 @@ import Submission.Update
 import Nav.Requests exposing (getLoginCookie, getSubmissions, getSubmission)
 
 
-initModel : Flags -> Page -> Model
-initModel flags page =
-    Model flags
-        (Login.initModel flags)
+initModel : Page -> Model
+initModel page =
+    Model
+        (Login.initModel)
         (Thanks.initModel)
-        (Usetoken.Model.initModel flags "")
+        (Usetoken.Model.initModel "")
         (Submissions.Model.initModel)
         (Submission.Model.initModel)
         page
 
 
-init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
-init flags location =
+init : Navigation.Location -> ( Model, Cmd Msg )
+init location =
     let
         page =
             hashParser location
     in
-        ( initModel flags page, Navigation.newUrl <| toHash page )
+        ( initModel page, Navigation.newUrl <| toHash page )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -106,15 +105,15 @@ updatePage page m =
     in
         case page of
             UseToken token ->
-                ( { model | usetoken = Usetoken.Model.initModel model.flags token }
-                , Cmd.map UsetokenMsg <| getLoginCookie model.flags.url token
+                ( { model | usetoken = Usetoken.Model.initModel token }
+                , Cmd.map UsetokenMsg <| getLoginCookie token
                 )
 
             Submissions ->
-                ( model, Cmd.map SubmissionsMsg <| getSubmissions model.flags.url )
+                ( model, Cmd.map SubmissionsMsg <| getSubmissions )
 
             Submission id ->
-                ( model, Cmd.map SubmissionMsg <| getSubmission model.flags.url id )
+                ( model, Cmd.map SubmissionMsg <| getSubmission id )
 
             _ ->
                 ( { model | page = page }, Cmd.none )
@@ -149,9 +148,9 @@ subscriptions model =
     Sub.none
 
 
-main : Program Flags Model Msg
+main : Program Never Model Msg
 main =
-    Navigation.programWithFlags (UpdateUrl << hashParser)
+    Navigation.program (UpdateUrl << hashParser)
         { init = init
         , update = update
         , view = view

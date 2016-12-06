@@ -9,27 +9,27 @@ import Submission.Decoder
 import Json.Decode
 
 
-getLoginCookie : String -> String -> Cmd Usetoken.Messages.Msg
-getLoginCookie baseUrl token =
+getLoginCookie : String -> Cmd Usetoken.Messages.Msg
+getLoginCookie token =
     Http.send Usetoken.Messages.Get <|
         postWithoutBody Json.Decode.string <|
-            url [ baseUrl, "users", "authtoken", "use" ]
+            url [ "users", "authtoken", "use" ]
                 ++ "?token="
                 ++ token
 
 
-getSubmissions : String -> Cmd Submissions.Messages.Msg
-getSubmissions baseUrl =
+getSubmissions : Cmd Submissions.Messages.Msg
+getSubmissions =
     Http.send Submissions.Messages.Get <|
         get Submissions.Decoder.decoder <|
-            url [ baseUrl, "submissions" ]
+            url [ "submissions" ]
 
 
-getSubmission : String -> Int -> Cmd Submission.Messages.Msg
-getSubmission baseUrl id =
+getSubmission : Int -> Cmd Submission.Messages.Msg
+getSubmission id =
     Http.send Submission.Messages.Get <|
         get Submission.Decoder.decoder <|
-            url [ baseUrl, "submissions", toString id ]
+            url [ "submissions", toString id ]
 
 
 createSubmission : Cmd Submissions.Messages.Msg
@@ -39,8 +39,8 @@ createSubmission =
 
 
 url : List String -> String
-url =
-    String.join "/"
+url ls =
+    "api/" ++ String.join "/" ls
 
 
 get : Json.Decode.Decoder a -> String -> Http.Request a

@@ -29,7 +29,7 @@ register : Model -> Cmd Msg
 register model =
     Http.send Submit <|
         emptyPost <|
-            join "" [ model.flags.url, "/users/authtoken?email=", model.email ]
+            join "" [ "/users/authtoken?email=", model.email ]
 
 
 emptyPost : String -> Http.Request String

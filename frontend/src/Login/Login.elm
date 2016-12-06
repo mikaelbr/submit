@@ -5,17 +5,16 @@ import Html.Attributes exposing (class, src, type_, id, placeholder, value)
 import Html.Events exposing (onClick, onInput)
 import Login.Model exposing (Model)
 import Login.Message exposing (Msg(..))
-import Flags exposing (Flags)
 
 
-init : Flags -> ( Model, Cmd Msg )
-init flags =
-    ( initModel flags, Cmd.none )
+init : ( Model, Cmd Msg )
+init =
+    ( initModel, Cmd.none )
 
 
-initModel : Flags -> Model
-initModel flags =
-    Model flags ""
+initModel : Model
+initModel =
+    Model ""
 
 
 view : Model -> Html Msg

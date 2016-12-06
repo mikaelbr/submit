@@ -1,20 +1,18 @@
 module Usetoken.Model exposing (Model, init, initModel)
 
 import Usetoken.Messages exposing (..)
-import Flags exposing (Flags)
 
 
-initModel : Flags -> String -> Model
-initModel flags token =
-    Model flags token
+initModel : String -> Model
+initModel token =
+    Model token
 
 
-init : Flags -> String -> ( Model, Cmd Msg )
-init flags token =
-    ( Model flags token, Cmd.none )
+init : String -> ( Model, Cmd Msg )
+init token =
+    ( Model token, Cmd.none )
 
 
 type alias Model =
-    { flags : Flags
-    , token : String
+    { token : String
     }

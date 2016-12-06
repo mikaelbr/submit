@@ -6,12 +6,10 @@ import Thanks.Thanks as Thanks
 import Usetoken.Model
 import Submissions.Model
 import Submission.Model
-import Flags exposing (Flags)
 
 
 type alias Model =
-    { flags : Flags
-    , login : Login.Model
+    { login : Login.Model
     , thanks : Thanks.Model
     , usetoken : Usetoken.Model.Model
     , submissions : Submissions.Model.Model
