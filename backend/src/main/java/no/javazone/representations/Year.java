@@ -5,7 +5,12 @@ import java.util.List;
 
 public class Year {
 
+    public String year;
     public List<Submission> submissions = new ArrayList<>();
+
+    public Year(String year) {
+        this.year = year;
+    }
 
     public void addSubmission(Submission submission) {
         submissions.add(submission);
