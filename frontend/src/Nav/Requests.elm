@@ -43,6 +43,12 @@ getSubmission baseUrl id =
             url [ baseUrl, "submissions", toString id ]
 
 
+createSubmission : Cmd Submissions.Messages.Msg
+createSubmission =
+    Http.send Submissions.Messages.Created <|
+        postWithoutBody Json.Decode.int "insert-url-here"
+
+
 url : List String -> String
 url =
     String.join "/"
