@@ -12,7 +12,7 @@ import Json.Decode
 getLoginCookie : String -> Cmd Usetoken.Messages.Msg
 getLoginCookie token =
     Http.send Usetoken.Messages.Get <|
-        postWithoutBody Json.Decode.string <|
+        postWithoutBody (Http.expectString) <|
             url [ "users", "authtoken", "use" ]
                 ++ "?token="
                 ++ token
@@ -35,7 +35,7 @@ getSubmission id =
 createSubmission : Cmd Submissions.Messages.Msg
 createSubmission =
     Http.send Submissions.Messages.Created <|
-        postWithoutBody Json.Decode.int "insert-url-here"
+        postWithoutBody (Http.expectJson Json.Decode.int) "insert-url-here"
 
 
 url : List String -> String
@@ -48,14 +48,14 @@ get =
     flip Http.get
 
 
-postWithoutBody : Json.Decode.Decoder a -> String -> Http.Request a
-postWithoutBody decoder url =
+postWithoutBody : Http.Expect a -> String -> Http.Request a
+postWithoutBody expect url =
     Http.request
         { method = "POST"
         , headers = []
         , url = url
         , body = Http.emptyBody
-        , expect = Http.expectJson decoder
+        , expect = expect
         , timeout = Nothing
         , withCredentials = False
         }
