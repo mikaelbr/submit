@@ -2,6 +2,7 @@ package no.javazone.services;
 
 import no.javazone.representations.Submission;
 import no.javazone.representations.SubmissionsForUser;
+import no.javazone.representations.Year;
 import no.javazone.session.AuthenticatedUser;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,19 @@ public class SubmissionService {
 
     public SubmissionsForUser getSubmissionsForUser(AuthenticatedUser authenticatedUser) {
         return submissions.getOrDefault(authenticatedUser, new SubmissionsForUser());
+    }
+
+    public Submission getSubmissionForUser(AuthenticatedUser authenticatedUser, long submissionId) {
+        // TODO (EHH): Yuck!
+        SubmissionsForUser all = getSubmissionsForUser(authenticatedUser);
+        for(Year year : all.years) {
+            for(Submission s : year.submissions) {
+                if(s.id == submissionId) {
+                    return s;
+                }
+            }
+        }
+        return null;
     }
 
     public void submitNewTalk(AuthenticatedUser authenticatedUser, Submission submission) {

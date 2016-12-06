@@ -35,6 +35,15 @@ public class SubmissionResource {
                 .orElseGet(() -> Response.status(FORBIDDEN).build());
     }
 
+    @GET
+    @Path("/{submissionId}")
+    @Produces(APPLICATION_JSON)
+    public Response getSingleSubmissionsForLoggedInUser(@PathParam("submissionId") long submissionId) {
+        return SessionManager.getLoggedInUser(request)
+                .map(authenticatedUser -> Response.ok(submissionService.getSubmissionForUser(authenticatedUser, submissionId)).build())
+                .orElseGet(() -> Response.status(FORBIDDEN).build());
+    }
+
     @POST
     @Consumes(APPLICATION_JSON)
     public Response newSubmission(Submission submission) {
