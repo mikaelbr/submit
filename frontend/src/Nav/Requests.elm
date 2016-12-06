@@ -6,6 +6,7 @@ import Submissions.Messages
 import Submissions.Decoder
 import Submission.Messages
 import Submission.Decoder
+import Json.Decode
 
 
 getLoginCookie : String -> String -> Cmd Usetoken.Messages.Msg
@@ -30,27 +31,26 @@ getLoginCookie baseUrl token =
 
 getSubmissions : String -> Cmd Submissions.Messages.Msg
 getSubmissions baseUrl =
-    let
-        getSubmissionsUrl =
+    Http.send Submissions.Messages.Get <|
+        get Submissions.Decoder.decoder <|
             url [ baseUrl, "submissions" ]
-    in
-        Http.send Submissions.Messages.Get <|
-            Http.get getSubmissionsUrl Submissions.Decoder.decoder
 
 
 getSubmission : String -> Int -> Cmd Submission.Messages.Msg
 getSubmission baseUrl id =
-    let
-        getSubmissionUrl =
+    Http.send Submission.Messages.Get <|
+        get Submission.Decoder.decoder <|
             url [ baseUrl, "submissions", toString id ]
-    in
-        Http.send Submission.Messages.Get <|
-            Http.get getSubmissionUrl Submission.Decoder.decoder
 
 
 url : List String -> String
 url =
     String.join "/"
+
+
+get : Json.Decode.Decoder a -> String -> Http.Request a
+get =
+    flip Http.get
 
 
 
