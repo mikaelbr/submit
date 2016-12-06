@@ -1,13 +1,23 @@
-module Submissions.Model exposing (Model, initModel)
-
-import Submissions.Messages exposing (..)
+module Submissions.Model exposing (Model, Year, Submission, initModel)
 
 
 type alias Model =
-    { entry : String
+    { years : List Year
+    }
+
+
+type alias Year =
+    { year : Int
+    , submissions : List Submission
+    }
+
+
+type alias Submission =
+    { id : String
+    , name : String
     }
 
 
 initModel : Model
 initModel =
-    Model ""
+    Model []
