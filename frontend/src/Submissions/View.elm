@@ -14,7 +14,7 @@ view model =
     in
         div []
             [ h1 [] [ text "Your Talks" ]
-            , div [] years
+            , div [ class "submissions" ] years
             ]
 
 

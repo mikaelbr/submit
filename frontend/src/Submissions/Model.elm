@@ -7,13 +7,13 @@ type alias Model =
 
 
 type alias Year =
-    { year : Int
+    { year : String
     , submissions : List Submission
     }
 
 
 type alias Submission =
-    { id : String
+    { id : Int
     , name : String
     }
 
