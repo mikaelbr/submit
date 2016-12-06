@@ -2,8 +2,10 @@ module Submissions.View exposing (view)
 
 import Submissions.Model exposing (..)
 import Submissions.Messages exposing (..)
-import Html exposing (Html, div, h1, h2, text)
-import Html.Attributes exposing (class)
+import Html exposing (Html, div, h1, h2, text, a)
+import Html.Attributes exposing (class, href)
+import Nav.Nav exposing (toHash)
+import Nav.Model
 
 
 view : Model -> Html Msg
@@ -33,4 +35,6 @@ viewYear year =
 viewSubmission : Submission -> Html Msg
 viewSubmission submission =
     div [ class "submissions__submission" ]
-        [ text submission.name ]
+        [ a [ href << toHash <| Nav.Model.Submission submission.id ]
+            [ text submission.name ]
+        ]
