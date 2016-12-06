@@ -1,7 +1,9 @@
-module Nav.Requests exposing (getLoginCookie)
+module Nav.Requests exposing (getLoginCookie, getSubmissions)
 
 import Http
 import Usetoken.Messages
+import Submissions.Messages
+import Submissions.Decoder
 
 
 getLoginCookie : String -> String -> Cmd Usetoken.Messages.Msg
@@ -22,6 +24,16 @@ getLoginCookie baseUrl token =
                 , timeout = Nothing
                 , withCredentials = False
                 }
+
+
+getSubmissions : String -> Cmd Submissions.Messages.Msg
+getSubmissions baseUrl =
+    let
+        getSubmissionsUrl =
+            url [ baseUrl, "submissions" ]
+    in
+        Http.send Submissions.Messages.Get <|
+            Http.get getSubmissionsUrl Submissions.Decoder.decoder
 
 
 url : List String -> String

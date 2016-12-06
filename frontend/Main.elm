@@ -18,7 +18,7 @@ import Usetoken.Update
 import Submissions.View
 import Submissions.Model
 import Submissions.Update
-import Nav.Requests exposing (getLoginCookie)
+import Nav.Requests exposing (getLoginCookie, getSubmissions)
 
 
 initModel : Flags -> Page -> Model
@@ -95,6 +95,9 @@ updatePage page m =
                 ( { model | usetoken = Usetoken.Model.initModel model.flags token }
                 , Cmd.map UsetokenMsg <| getLoginCookie model.flags.url token
                 )
+
+            Submissions ->
+                ( model, Cmd.map SubmissionsMsg <| getSubmissions model.flags.url )
 
             _ ->
                 ( { model | page = page }, Cmd.none )

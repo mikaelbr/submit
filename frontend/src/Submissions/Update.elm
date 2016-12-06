@@ -4,8 +4,14 @@ import Submissions.Model exposing (..)
 import Submissions.Messages exposing (..)
 
 
-update : Msg -> Model -> (Model, Cmd Msg)
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Message ->
-            (model, Cmd.none)
+            ( model, Cmd.none )
+
+        Get (Err _) ->
+            ( model, Cmd.none )
+
+        Get (Ok data) ->
+            ( data, Cmd.none )
