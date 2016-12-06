@@ -1,12 +1,28 @@
-module Nav.Requests exposing (getLoginCookie, getSubmissions, getSubmission)
+module Nav.Requests
+    exposing
+        ( getLoginCookie
+        , getSubmissions
+        , getSubmission
+        , getLoginToken
+        )
 
 import Http
+import Login.Message
 import Usetoken.Messages
 import Submissions.Messages
 import Submissions.Decoder
 import Submission.Messages
 import Submission.Decoder
 import Json.Decode
+
+
+getLoginToken : String -> Cmd Login.Message.Msg
+getLoginToken email =
+    Http.send Login.Message.Submit <|
+        postWithoutBody (Http.expectString) <|
+            url [ "users", "authtoken" ]
+                ++ "?email="
+                ++ email
 
 
 getLoginCookie : String -> Cmd Usetoken.Messages.Msg

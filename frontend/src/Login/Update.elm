@@ -4,8 +4,7 @@ import Login.Model exposing (Model)
 import Login.Message exposing (Msg(..))
 import Nav.Nav exposing (toHash)
 import Nav.Model exposing (Page(..))
-import Http exposing (Error, Response)
-import String exposing (join)
+import Nav.Requests exposing (getLoginToken)
 import Navigation
 
 
@@ -16,30 +15,10 @@ update msg model =
             ( { model | email = email }, Cmd.none )
 
         SubmitEmail ->
-            ( model, register model )
+            ( model, getLoginToken model.email )
 
         Submit (Err _) ->
             ( model, Cmd.none )
 
         Submit (Ok _) ->
             ( model, Navigation.newUrl <| toHash Thanks )
-
-
-register : Model -> Cmd Msg
-register model =
-    Http.send Submit <|
-        emptyPost <|
-            join "" [ "/users/authtoken?email=", model.email ]
-
-
-emptyPost : String -> Http.Request String
-emptyPost url =
-    Http.request
-        { method = "POST"
-        , headers = []
-        , url = url
-        , body = Http.emptyBody
-        , expect = Http.expectString
-        , timeout = Nothing
-        , withCredentials = False
-        }
