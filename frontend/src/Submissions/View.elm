@@ -27,7 +27,7 @@ viewYear year =
             List.map viewSubmission year.submissions
     in
         div [ class "submissions__year" ]
-            [ h2 [] [ text <| toString year.year ]
+            [ h2 [] [ text year.year ]
             , div [] submissions
             ]
 
