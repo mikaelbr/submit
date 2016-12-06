@@ -21,7 +21,7 @@ import Submissions.Update
 import Submission.View
 import Submission.Model
 import Submission.Update
-import Nav.Requests exposing (getLoginCookie, getSubmissions)
+import Nav.Requests exposing (getLoginCookie, getSubmissions, getSubmission)
 
 
 initModel : Flags -> Page -> Model
@@ -112,6 +112,9 @@ updatePage page m =
 
             Submissions ->
                 ( model, Cmd.map SubmissionsMsg <| getSubmissions model.flags.url )
+
+            Submission id ->
+                ( model, Cmd.map SubmissionMsg <| getSubmission model.flags.url id )
 
             _ ->
                 ( { model | page = page }, Cmd.none )

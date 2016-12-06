@@ -1,4 +1,4 @@
-module Nav.Requests exposing (getLoginCookie, getSubmissions)
+module Nav.Requests exposing (getLoginCookie, getSubmissions, getSubmission)
 
 import Http
 import Usetoken.Messages
