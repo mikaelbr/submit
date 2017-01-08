@@ -15,6 +15,9 @@ ENVS=$(eb list --profile javabin | sed 's/^\* //')
 
 if [[ ${1} != submit-* ]]; then
   echo "Usage: ${0} submit-<environment>"
+  echo
+  echo "Available environments:"
+  echo "$ENVS"
   exit 1
 elif [ $(echo "$ENVS" | grep "^$1$" -c) -eq 0 ]; then
   echo "Environment not recognized: '$1'. Use one of the following:"
