@@ -21,11 +21,6 @@ public class AuthenticationService {
     // TODO: move this to persistent storage
     private Map<Token, EmailAddress> tokens = new HashMap<>();
 
-    public AuthenticationService() {
-        // TODO (EHH): Remove debug data sometime :)
-        debugDataset();
-    }
-
     public Token createTokenForEmail(EmailAddress email) {
         Token token = Token.generate();
         tokens.put(token, email);
@@ -35,11 +30,5 @@ public class AuthenticationService {
 
     public Optional<AuthenticatedUser> validateToken(Token token) {
         return ofNullable(tokens.getOrDefault(token, null)).map(AuthenticatedUser::new);
-    }
-
-    public AuthenticatedUser debugDataset() {
-        Token token = new Token("test-token");
-        tokens.put(token, new EmailAddress("example@example.com"));
-        return validateToken(token).get();
     }
 }

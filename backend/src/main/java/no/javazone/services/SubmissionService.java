@@ -57,7 +57,7 @@ public class SubmissionService {
     private Year sleepingpillYearToOurYear(Map.Entry<String, List<Session>> e) {
         return new Year(
                 conferences.getNameFromId(e.getKey()),
-                e.getValue().stream().map(s -> new Submission(s.sessionId, "title")).collect(toList())
+                e.getValue().stream().map(Submission::fromSleepingPillSession).collect(toList())
         );
     }
 
@@ -80,15 +80,5 @@ public class SubmissionService {
 
     private void submitNewTalkForYear(AuthenticatedUser authenticatedUser, Submission submission, String year) {
         submissions.computeIfAbsent(authenticatedUser, (a) -> new SubmissionsForUser(new ArrayList<>())).addForYear(year, submission);
-    }
-
-    public void debugDataset(AuthenticatedUser authenticatedUser) {
-        submitNewTalkForYear(authenticatedUser, new Submission("1", "Why Hibernate is Awezome!"), "2010");
-        submitNewTalkForYear(authenticatedUser, new Submission("2", "I still think Hibernate is awezome, even though my colleagues tease me!"), "2011");
-        submitNewTalkForYear(authenticatedUser, new Submission("3", "Well, now it's getting awkward, they really hate hibernate? WHY!?!"), "2012");
-        submitNewTalkForYear(authenticatedUser, new Submission("4", "Actually, hibernate kinda sucks!"), "2014");
-        submitNewTalkForYear(authenticatedUser, new Submission("5", "Databases? Pfft, that's sooo last year! Frontend is my new passion!"), "2016");
-        submitNewTalkForYear(authenticatedUser, new Submission("6", "React is the new Hibernate!"), "2016");
-        submitNewTalkForYear(authenticatedUser, new Submission("7", "Haaaaave you met Elm?!"), "2017");
     }
 }
