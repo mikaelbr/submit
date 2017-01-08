@@ -8,6 +8,10 @@ public class SubmissionsForUser {
 
     public List<Year> years = new ArrayList<>();
 
+    public SubmissionsForUser(List<Year> years) {
+        this.years = years;
+    }
+
     public void addForYear(String year, Submission submission) {
         // TODO (EHH): refactor this mess!
         Optional<Year> foundYear = years.stream().filter(y -> y.year.equals(year)).findFirst();

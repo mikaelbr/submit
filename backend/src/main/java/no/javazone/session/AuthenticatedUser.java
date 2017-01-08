@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class AuthenticatedUser {
 
-    private EmailAddress emailAddress;
+    public final EmailAddress emailAddress;
 
     public AuthenticatedUser(EmailAddress emailAddress) {
         this.emailAddress = emailAddress;
