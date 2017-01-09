@@ -36,7 +36,7 @@ public class AuthenticatedWithTokenFilter implements ContainerRequestFilter {
         Optional<AuthenticatedUser> authenticatedUser = authenticationService.validateToken(token);
 
         if (authenticatedUser.isPresent()) {
-            LOG.info(String.format("Checked the token against user service. User %s authenticated OK", authenticatedUser.get().emailAddress));
+            LOG.info(String.format("User %s authenticated OK with token %s", authenticatedUser.get().emailAddress, token.toString()));
             requestContext.setProperty(AUTHENTICATED_USER_PROPERTY, authenticatedUser.get());
         } else {
             LOG.info(String.format("Denied request due to invalid token. Token %s", token.toString()));
