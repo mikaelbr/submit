@@ -81,7 +81,7 @@ public class SubmissionService {
         NewSession draft = NewSession.draft(authenticatedUser.emailAddress);
         String conferenceId = conferences.getIdFromSlug(SUBMIT_YEAR);
         CreatedSession createdSession = sleepingPill.createSession(conferenceId, draft);
-        return Submission.fromSleepingPillCreatedSession(conferenceId, draft, createdSession);
+        return getSubmissionForUser(authenticatedUser, createdSession.id);
     }
 
     public Submission updateSubmission(AuthenticatedUser authenticatedUser, String submissionId, Submission submission) {
