@@ -10,7 +10,6 @@ Integrates with [Sleepingpill](https://github.com/javaBin/sleepingPillCore) whic
 * Build backend: `cd backend && mvn clean install`
 * Build frontend: `cd frontend && npm install`
 * Build nodeproxy: `cd scripts/proxy && npm install`
-* Create config file and fill out password: `cp backend/configuration-template.yaml backend/configuration.yaml && vi backend/configuration.yaml`
 * Run the app: `./scripts/start.sh`
 
 This starts a screen. To escape from the screen: `ctrl-x`, `q`, `y`.
@@ -25,21 +24,24 @@ We have created a Postman Collection to make it easy to test all the API calls o
 
 * Install [Postman](https://www.getpostman.com)
 * Import the collection `submit.postman_collection.json`
-* Start by running the `POST – DEBUG login`, then you can do any other call.
+* Setup Postman environment with key-value: `baseurl=https://submit.javazone.no` or `baseurl=http://localhost:8080`
+* Start by running the `POST – Generate token` with your email address.
+* Then you can do any other call using the token you got in an email in an `X-token` header.
 
-# Configure AWS
+
+# Deployment to AWS
+
+## First time: configure AWS
 
 Install `aws` and `eb` command line tools:
 
 ```
-brew install aws
-brew install eb
+brew install awscli
+brew install aws-elasticbeanstalk
 ```
 
-Configure a AWS profile for javabin:
 
-
-`~/.aws/credentials`
+Edit/add the file `~/.aws/credentials` and add these lines
 
 ```
 [javabin]
@@ -47,11 +49,28 @@ aws_access_key_id = <ADD YOURS HERE>
 aws_secret_access_key = <ADD YOURS HERE>
 ```
 
-Run `eb init --profile javabin` in `/backend`
+Initialize your Elastic Beanstalk environment: 
+```
+cd backend
+eb init --region eu-central-1 --profile javabin
+```
 
-## Deployment
+Just select the existing submit environment
 
-See the "Configure AWS" section first
+## Every time: deployment
 
 - `cd frontend && ./deploy.sh`
 - `cd backend && ./deploy.sh`
+
+Backend deploy needs vault password. Ask around to get it :)
+
+## Creating a new environment
+
+You could probably just use test/prod which exists. 
+
+If you need a new, do this and follow the instructions to get a backend environment up and running
+```
+eb create --region eu-central-1 --profile javabin
+```
+
+You need to setup a database + property files for backend + a frontend S3 bucket + load balancer as well. For now, this is a "manual process". Ask around... ;)
