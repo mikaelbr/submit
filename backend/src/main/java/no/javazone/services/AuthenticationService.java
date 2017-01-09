@@ -33,6 +33,7 @@ public class AuthenticationService {
     }
 
     public void removeToken(Token token) {
+        LOG.info("Removing token " + token.toString());
         tokens.remove(token);
     }
 }
