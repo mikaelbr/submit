@@ -10,12 +10,16 @@ import no.javazone.representations.Submission;
 import no.javazone.representations.SubmissionsForUser;
 import no.javazone.representations.Year;
 import no.javazone.session.AuthenticatedUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.String.format;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
@@ -23,7 +27,10 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class SubmissionService {
 
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+
     public static final String SUBMIT_YEAR = "javazone_2016";
+
     private final SleepingPillClient sleepingPill;
 
     private final Conferences conferences;
@@ -57,16 +64,13 @@ public class SubmissionService {
     }
 
     public Submission getSubmissionForUser(AuthenticatedUser authenticatedUser, String submissionId) {
-        // TODO (EHH): Yuck!
-        SubmissionsForUser all = getSubmissionsForUser(authenticatedUser);
-        for (Year year : all.years) {
-            for (Submission s : year.submissions) {
-                if (submissionId.equals(s.id)) {
-                    return s;
-                }
-            }
+        Session session = sleepingPill.getSession(submissionId);
+        if(session.speakers.stream().anyMatch(s -> s.email.equals(authenticatedUser.emailAddress.toString()))) {
+            return Submission.fromSleepingPillSession(session);
+        } else {
+            LOG.warn(format("User %s tried to access session %s, which the user is not a speaker for...", authenticatedUser.emailAddress.toString(), submissionId));
+            throw new NotFoundException("Session with ID " + submissionId + " not found");
         }
-        return null;
     }
 
     public Submission createNewDraft(AuthenticatedUser authenticatedUser) {
