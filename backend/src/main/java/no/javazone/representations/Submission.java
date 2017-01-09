@@ -1,7 +1,7 @@
 package no.javazone.representations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import no.javazone.integrations.sleepingpill.model.Session;
+import no.javazone.integrations.sleepingpill.model.get.Session;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class Submission {
         return new Submission(
                 session.sessionId,
                 session.conferenceId,
-                session.status,
+                session.status.name(),
                 session.getTitle(),
                 session.getAbstract(),
                 session.getIntendedAudience(),

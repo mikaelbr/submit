@@ -1,4 +1,4 @@
-package no.javazone.integrations.sleepingpill.model;
+package no.javazone.integrations.sleepingpill.model.get;
 
 public class Conference {
 

@@ -1,12 +1,17 @@
-package no.javazone.integrations.sleepingpill.model;
+package no.javazone.integrations.sleepingpill.model.get;
+
+import no.javazone.integrations.sleepingpill.model.common.SessionData;
+import no.javazone.integrations.sleepingpill.model.common.SessionStatus;
+import no.javazone.integrations.sleepingpill.model.common.Speaker;
 
 import java.util.List;
 
 public class Session {
 
     public String sessionId;
+    public String postedBy;
     public String conferenceId;
-    public String status;
+    public SessionStatus status;
     public List<Speaker> speakers;
     public SessionData data;
 
@@ -46,8 +51,9 @@ public class Session {
     public String toString() {
         return "Session{" +
                 "sessionId='" + sessionId + '\'' +
+                ", postedBy='" + postedBy + '\'' +
                 ", conferenceId='" + conferenceId + '\'' +
-                ", status='" + status + '\'' +
+                ", status=" + status +
                 ", speakers=" + speakers +
                 ", data=" + data +
                 '}';

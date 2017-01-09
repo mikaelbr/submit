@@ -13,7 +13,7 @@ public class Speaker {
         this.bio = bio;
     }
 
-    public static Speaker fromSleepingPillSpeaker(no.javazone.integrations.sleepingpill.model.Speaker speaker) {
+    public static Speaker fromSleepingPillSpeaker(no.javazone.integrations.sleepingpill.model.common.Speaker speaker) {
         return new Speaker(
                 speaker.id,
                 speaker.name,

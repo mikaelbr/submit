@@ -1,4 +1,4 @@
-package no.javazone.integrations.sleepingpill.model;
+package no.javazone.integrations.sleepingpill.model.get;
 
 import java.util.List;
 
@@ -10,6 +10,14 @@ public class Conferences {
         return conferences.stream()
                 .filter(c -> c.id.equals(id))
                 .map(c -> c.name)
+                .findAny()
+                .orElse("unknown");
+    }
+
+    public String getIdFromSlug(String slug) {
+        return conferences.stream()
+                .filter(c -> c.slug.equals(slug))
+                .map(c -> c.id)
                 .findAny()
                 .orElse("unknown");
     }

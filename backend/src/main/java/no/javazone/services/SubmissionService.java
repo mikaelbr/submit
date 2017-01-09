@@ -1,9 +1,9 @@
 package no.javazone.services;
 
 import no.javazone.integrations.sleepingpill.SleepingPillClient;
-import no.javazone.integrations.sleepingpill.model.Conferences;
-import no.javazone.integrations.sleepingpill.model.Session;
-import no.javazone.integrations.sleepingpill.model.Sessions;
+import no.javazone.integrations.sleepingpill.model.get.Conferences;
+import no.javazone.integrations.sleepingpill.model.get.Session;
+import no.javazone.integrations.sleepingpill.model.get.Sessions;
 import no.javazone.representations.Submission;
 import no.javazone.representations.SubmissionsForUser;
 import no.javazone.representations.Year;
