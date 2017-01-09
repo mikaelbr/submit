@@ -4,18 +4,14 @@ import no.javazone.representations.EmailAddress;
 import no.javazone.representations.Token;
 import no.javazone.services.AuthenticationService;
 import no.javazone.services.EmailService;
-import no.javazone.session.SessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-
-import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 
 @Path("/api/users")
 @Component
@@ -23,8 +19,6 @@ public class UserResource {
 
     private final AuthenticationService authenticationService;
     private final EmailService emailService;
-    @Context
-    private HttpServletRequest request;
 
     @Autowired
     public UserResource(AuthenticationService authenticationService, EmailService emailService) {
@@ -40,20 +34,10 @@ public class UserResource {
         return Response.ok().build();
     }
 
-    @POST
-    @Path("/authtoken/use")
-    public Response useAuthenticationEmail(@QueryParam("token") Token token) {
-        return authenticationService.validateToken(token).map(user -> {
-            SessionManager.login(request, user);
-            return Response.ok().build();
-        }).orElseGet(() -> Response.status(FORBIDDEN).build());
-    }
-
-    @POST
-    @Path("/logout")
-    public Response logout() {
-        SessionManager.logout(request);
-        return Response.ok().build();
+    @DELETE
+    @Path("/authtoken")
+    public void useAuthenticationEmail(@QueryParam("token") Token token) {
+        authenticationService.removeToken(token);
     }
 
 }

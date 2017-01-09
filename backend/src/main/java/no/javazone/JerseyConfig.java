@@ -1,5 +1,6 @@
 package no.javazone;
 
+import no.javazone.filters.AuthenticatedWithTokenFilter;
 import no.javazone.resources.RootResource;
 import no.javazone.resources.SubmissionResource;
 import no.javazone.resources.UserResource;
@@ -13,6 +14,8 @@ public class JerseyConfig extends ResourceConfig {
         register(RootResource.class);
         register(SubmissionResource.class);
         register(UserResource.class);
+
+        register(AuthenticatedWithTokenFilter.class);
     }
 
 }

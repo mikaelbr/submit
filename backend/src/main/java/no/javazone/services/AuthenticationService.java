@@ -31,4 +31,8 @@ public class AuthenticationService {
     public Optional<AuthenticatedUser> validateToken(Token token) {
         return ofNullable(tokens.getOrDefault(token, null)).map(AuthenticatedUser::new);
     }
+
+    public void removeToken(Token token) {
+        tokens.remove(token);
+    }
 }
