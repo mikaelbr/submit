@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.Map;
@@ -85,7 +86,7 @@ public class SubmissionService {
     public Submission updateSubmission(AuthenticatedUser authenticatedUser, String submissionId, Submission submission) {
         // TODO (EHH): add missing things: keywords, speakers etc...
         UpdatedSession updatedSession = new UpdatedSession(
-                SessionStatus.valueOf(submission.status),
+                parseAndValidateStatus(authenticatedUser, submission),
                 submission.title,
                 submission.theAbstract,
                 submission.intendedAudience,
@@ -96,5 +97,15 @@ public class SubmissionService {
         sleepingPill.updateSession(submissionId, updatedSession);
 
         return getSubmissionForUser(authenticatedUser, submissionId);
+    }
+
+    private SessionStatus parseAndValidateStatus(AuthenticatedUser authenticatedUser, Submission submission) {
+        SessionStatus status = SessionStatus.valueOf(submission.status);
+        if(status == SessionStatus.DRAFT || status == SessionStatus.SUBMITTED) {
+            return status;
+        } else {
+            LOG.warn(String.format("%s tried to set the status %s that the user isn't allowed to set...", authenticatedUser.emailAddress.toString(), status.name()));
+            throw new ForbiddenException("Tried to set a status that the user isn't allowed to set...");
+        }
     }
 }
