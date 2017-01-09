@@ -1,11 +1,13 @@
 package no.javazone.services;
 
 import no.javazone.integrations.sleepingpill.SleepingPillClient;
+import no.javazone.integrations.sleepingpill.model.common.SessionStatus;
 import no.javazone.integrations.sleepingpill.model.create.CreatedSession;
 import no.javazone.integrations.sleepingpill.model.create.NewSession;
 import no.javazone.integrations.sleepingpill.model.get.Conferences;
 import no.javazone.integrations.sleepingpill.model.get.Session;
 import no.javazone.integrations.sleepingpill.model.get.Sessions;
+import no.javazone.integrations.sleepingpill.model.update.UpdatedSession;
 import no.javazone.representations.Submission;
 import no.javazone.representations.SubmissionsForUser;
 import no.javazone.representations.Year;
@@ -80,4 +82,19 @@ public class SubmissionService {
         return Submission.fromSleepingPillCreatedSession(conferenceId, draft, createdSession);
     }
 
+    public Submission updateSubmission(AuthenticatedUser authenticatedUser, String submissionId, Submission submission) {
+        // TODO (EHH): add missing things: keywords, speakers etc...
+        UpdatedSession updatedSession = new UpdatedSession(
+                SessionStatus.valueOf(submission.status),
+                submission.title,
+                submission.theAbstract,
+                submission.intendedAudience,
+                submission.format,
+                submission.language,
+                submission.outline
+        );
+        sleepingPill.updateSession(submissionId, updatedSession);
+
+        return getSubmissionForUser(authenticatedUser, submissionId);
+    }
 }

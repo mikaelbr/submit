@@ -8,6 +8,9 @@ public class Speaker {
     public String email;
     public String bio;
 
+    @SuppressWarnings("unused")
+    private Speaker() { }
+
     public Speaker(String id, String name, String email, String bio) {
         this.id = id;
         this.name = name;
