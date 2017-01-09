@@ -1,5 +1,7 @@
 package no.javazone.representations;
 
+import no.javazone.integrations.sleepingpill.model.create.NewSpeaker;
+
 public class Speaker {
     public String id;
     public String name;
@@ -16,6 +18,15 @@ public class Speaker {
     public static Speaker fromSleepingPillSpeaker(no.javazone.integrations.sleepingpill.model.common.Speaker speaker) {
         return new Speaker(
                 speaker.id,
+                speaker.name,
+                speaker.email,
+                speaker.getBio()
+        );
+    }
+
+    public static Speaker fromSleepingPillNewSpeaker(NewSpeaker speaker) {
+        return new Speaker(
+                null,
                 speaker.name,
                 speaker.email,
                 speaker.getBio()

@@ -1,6 +1,7 @@
 package no.javazone.integrations.sleepingpill.model.create;
 
 import no.javazone.integrations.sleepingpill.model.common.SpeakerData;
+import no.javazone.representations.EmailAddress;
 
 public class NewSpeaker {
 
@@ -17,5 +18,17 @@ public class NewSpeaker {
 
         data = new SpeakerData();
         data.setBio(bio);
+    }
+
+    public String getBio() {
+        return data.bio != null ? data.bio.value : null;
+    }
+
+    public static NewSpeaker draft(EmailAddress postedBy) {
+        return new NewSpeaker(
+                "",
+                postedBy.toString(),
+                ""
+        );
     }
 }

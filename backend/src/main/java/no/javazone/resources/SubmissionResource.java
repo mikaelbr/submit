@@ -1,7 +1,6 @@
 package no.javazone.resources;
 
 import no.javazone.filters.AuthenticatedWithToken;
-import no.javazone.representations.Submission;
 import no.javazone.services.SubmissionService;
 import no.javazone.session.AuthenticatedUser;
 import org.slf4j.Logger;
@@ -56,12 +55,10 @@ public class SubmissionResource {
     }
 
     @POST
-    @Consumes(APPLICATION_JSON)
-    public Response newSubmission(Submission submission) {
-        return assertLoggedInUser(authenticatedUser -> {
-                    submissionService.submitNewTalk(authenticatedUser, submission);
-                    return Response.ok().build();
-                }
+    @Produces(APPLICATION_JSON)
+    public Response newDraft() {
+        return assertLoggedInUser(authenticatedUser ->
+                Response.ok(submissionService.createNewDraft(authenticatedUser)).build()
         );
     }
 

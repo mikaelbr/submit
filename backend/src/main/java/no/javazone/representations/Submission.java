@@ -1,6 +1,8 @@
 package no.javazone.representations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import no.javazone.integrations.sleepingpill.model.create.CreatedSession;
+import no.javazone.integrations.sleepingpill.model.create.NewSession;
 import no.javazone.integrations.sleepingpill.model.get.Session;
 
 import java.util.List;
@@ -59,6 +61,23 @@ public class Submission {
                 session.getKeywords(),
                 session.getOutline(),
                 session.speakers.stream().map(Speaker::fromSleepingPillSpeaker).collect(toList())
+        );
+    }
+
+    public static Submission fromSleepingPillCreatedSession(String conferenceId, NewSession draft, CreatedSession createdSession) {
+        return new Submission(
+                createdSession.id,
+                conferenceId,
+                draft.status.name(),
+                draft.getTitle(),
+                draft.getAbstract(),
+                draft.getIntendedAudience(),
+                draft.getFormat(),
+                draft.getLanguage(),
+                draft.getPublished(),
+                draft.getKeywords(),
+                draft.getOutline(),
+                draft.speakers.stream().map(Speaker::fromSleepingPillNewSpeaker).collect(toList())
         );
     }
 }

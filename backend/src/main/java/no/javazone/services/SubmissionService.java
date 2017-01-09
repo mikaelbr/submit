@@ -1,6 +1,8 @@
 package no.javazone.services;
 
 import no.javazone.integrations.sleepingpill.SleepingPillClient;
+import no.javazone.integrations.sleepingpill.model.create.CreatedSession;
+import no.javazone.integrations.sleepingpill.model.create.NewSession;
 import no.javazone.integrations.sleepingpill.model.get.Conferences;
 import no.javazone.integrations.sleepingpill.model.get.Session;
 import no.javazone.integrations.sleepingpill.model.get.Sessions;
@@ -11,8 +13,6 @@ import no.javazone.session.AuthenticatedUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,13 +23,8 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class SubmissionService {
 
-    // TODO (EHH): This concept needs to be nuked, probably when we integrate with sleepingpill
-    public static final String CURRENT_YEAR = "2017";
-
+    public static final String SUBMIT_YEAR = "javazone_2016";
     private final SleepingPillClient sleepingPill;
-
-    // TODO (EHH): Integrate with sleepingpill instead of in memory store...
-    private Map<AuthenticatedUser, SubmissionsForUser> submissions = new HashMap<>();
 
     private final Conferences conferences;
 
@@ -74,11 +69,11 @@ public class SubmissionService {
         return null;
     }
 
-    public void submitNewTalk(AuthenticatedUser authenticatedUser, Submission submission) {
-        submitNewTalkForYear(authenticatedUser, submission, CURRENT_YEAR);
+    public Submission createNewDraft(AuthenticatedUser authenticatedUser) {
+        NewSession draft = NewSession.draft(authenticatedUser.emailAddress);
+        String conferenceId = conferences.getIdFromSlug(SUBMIT_YEAR);
+        CreatedSession createdSession = sleepingPill.createSession(conferenceId, draft);
+        return Submission.fromSleepingPillCreatedSession(conferenceId, draft, createdSession);
     }
 
-    private void submitNewTalkForYear(AuthenticatedUser authenticatedUser, Submission submission, String year) {
-        submissions.computeIfAbsent(authenticatedUser, (a) -> new SubmissionsForUser(new ArrayList<>())).addForYear(year, submission);
-    }
 }
