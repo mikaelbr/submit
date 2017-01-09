@@ -10,7 +10,7 @@
 		{
 			"name": "Generate token",
 			"request": {
-				"url": "http://localhost:8080/api/users/authtoken?email=espenhh@gmail.com",
+				"url": "{{baseurl}}/api/users/authtoken?email=espenhh@gmail.com",
 				"method": "POST",
 				"header": [],
 				"body": {
@@ -24,7 +24,7 @@
 		{
 			"name": "Invalidate token",
 			"request": {
-				"url": "http://localhost:8080/api/users/authtoken?token=f800959c-2b8d-44e1-b56b-a561225e3a52",
+				"url": "{{baseurl}}/api/users/authtoken?token=f800959c-2b8d-44e1-b56b-a561225e3a52",
 				"method": "DELETE",
 				"header": [],
 				"body": {
@@ -38,7 +38,7 @@
 		{
 			"name": "Get all submissions",
 			"request": {
-				"url": "http://localhost:8080/api/submissions",
+				"url": "{{baseurl}}/api/submissions",
 				"method": "GET",
 				"header": [
 					{
@@ -58,7 +58,7 @@
 		{
 			"name": "Get single submission",
 			"request": {
-				"url": "http://localhost:8080/api/submissions/f4610423194d463983669adfab80c986",
+				"url": "{{baseurl}}/api/submissions/f4610423194d463983669adfab80c986",
 				"method": "GET",
 				"header": [
 					{
@@ -78,7 +78,7 @@
 		{
 			"name": "Create empty draft",
 			"request": {
-				"url": "http://localhost:8080/api/submissions",
+				"url": "{{baseurl}}/api/submissions",
 				"method": "POST",
 				"header": [
 					{
@@ -98,7 +98,7 @@
 		{
 			"name": "Update subscription",
 			"request": {
-				"url": "http://localhost:8080/api/submissions/2bd95155579048ceb5b8f131bfa6f7f1",
+				"url": "{{baseurl}}/api/submissions/2bd95155579048ceb5b8f131bfa6f7f1",
 				"method": "PUT",
 				"header": [
 					{
