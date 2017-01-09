@@ -32,6 +32,7 @@ public class SubmissionService {
 
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
+    // TODO (EHH): change to javazone 2017 when it exists in sleepingpill...
     public static final String SUBMIT_YEAR = "javazone_2016";
 
     private final SleepingPillClient sleepingPill;
