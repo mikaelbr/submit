@@ -30,17 +30,17 @@ We have created a Postman Collection to make it easy to test all the API calls o
 * Then you can do any other call using the token you got in an email in an `X-token` header.
 
 
-# Deployment to AWS
+# Application deployment to AWS
 
-## First time: configure AWS
+## First time: set up software and configure credentials
 
-Install `aws` and `eb` command line tools:
+Install `aws` and `eb` command line tools, as well as `ansible`:
 
 ```
 brew install awscli
 brew install aws-elasticbeanstalk
+brew install ansible
 ```
-
 
 Edit/add the file `~/.aws/credentials` and add these lines
 
@@ -50,26 +50,42 @@ aws_access_key_id = <ADD YOURS HERE>
 aws_secret_access_key = <ADD YOURS HERE>
 ```
 
-Initialize your Elastic Beanstalk environment: 
+## Every time: deploy the app to AWS
+
+- `cd frontend && ./deploy.sh` (you'll be asked about which bucket to deploy to)
+- `cd backend && ./deploy.sh submit-<env>`
+
+The deploy needs the ansible vault password to be able to decrypt the property file. Ask around to get it :)
+
+# Cloud tips and tricks :)
+
+## SSH to the instance
+
+You need the ssh key. Get the files `aws-eb` and `aws-eb.pub` from someone who have them already, and place them in `~/.ssh`
+
+Then you just do:
 ```
-cd backend
-eb init --region eu-central-1 --profile javabin
+eb ssh sleepingPillCore-<env>
 ```
 
-Just select the existing submit environment
+- Logs: `cd /var/log && tail -f web*.log nginx/*log`
+- App files: `cd /var/app/current/`
 
-## Every time: deployment
+## App property files for AWS
 
-- `cd frontend && ./deploy.sh`
-- `cd backend && ./deploy.sh`
+To edit which properties are used for deployment to AWS, edit the files in the `config` folder:
 
-Backend deploy needs vault password. Ask around to get it :)
+```
+ansible-vault edit config/<env>.properties.encrypted
+```
 
-## Creating a new environment
+You need the vault password for this. Ask around to get access to it :)
+
+## Create a new environment
 
 You could probably just use test/prod which exists. 
 
-If you need a new, do this and follow the instructions to get a backend environment up and running
+If you need a new, do this and follow the instructions to get an environment up and running
 ```
 eb create --region eu-central-1 --profile javabin
 ```
