@@ -1,39 +1,42 @@
 package no.javazone.services;
 
+import no.javazone.dao.LoginTokenDao;
 import no.javazone.representations.EmailAddress;
 import no.javazone.representations.Token;
 import no.javazone.session.AuthenticatedUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
-
-import static java.util.Optional.ofNullable;
 
 @Service
 public class AuthenticationService {
 
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private final LoginTokenDao loginTokenDao;
 
-    // TODO: move this to persistent storage
-    private Map<Token, EmailAddress> tokens = new HashMap<>();
+    @Autowired
+    public AuthenticationService(LoginTokenDao loginTokenDao) {
+        this.loginTokenDao = loginTokenDao;
+    }
 
     public Token createTokenForEmail(EmailAddress email) {
         Token token = Token.generate();
-        tokens.put(token, email);
+        loginTokenDao.addLoginToken(email, token);
         LOG.info("Created token " + token + " for user " + email);
         return token;
     }
 
     public Optional<AuthenticatedUser> validateToken(Token token) {
-        return ofNullable(tokens.getOrDefault(token, null)).map(AuthenticatedUser::new);
+        return loginTokenDao.getByToken(token)
+                .map(t -> t.email)
+                .map(AuthenticatedUser::new);
     }
 
     public void removeToken(Token token) {
         LOG.info("Removing token " + token.toString());
-        tokens.remove(token);
+        loginTokenDao.removeToken(token);
     }
 }
