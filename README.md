@@ -10,6 +10,7 @@ Integrates with [Sleepingpill](https://github.com/javaBin/sleepingPillCore) whic
 * Build backend: `cd backend && mvn clean install`
 * Build frontend: `cd frontend && npm install`
 * Build nodeproxy: `cd scripts/proxy && npm install`
+* Start local postgres: `cd localpostgres && vagrant up`
 * Run the app: `./scripts/start.sh`
 
 This starts a screen. To escape from the screen: `ctrl-x`, `q`, `y`.
