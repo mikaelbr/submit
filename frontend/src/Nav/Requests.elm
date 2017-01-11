@@ -5,6 +5,7 @@ module Nav.Requests
         , getLoginToken
         , createSubmission
         , saveSubmission
+        , deleteLoginToken
         )
 
 import Http
@@ -17,6 +18,7 @@ import Submission.Decoder
 import Submission.Encoder
 import Json.Decode exposing (Decoder)
 import LocalStorage
+import Lazy
 
 
 getLoginToken : String -> Cmd Login.Message.Msg
@@ -28,11 +30,29 @@ getLoginToken email =
                 ++ email
 
 
-getSubmissions : String -> Cmd Submissions.Messages.Msg
-getSubmissions s =
-    Http.send Submissions.Messages.Get <|
-        jsonGet Submissions.Decoder.decoder <|
-            url [ "submissions" ]
+deleteLoginToken : Lazy.Lazy (Cmd Submissions.Messages.Msg)
+deleteLoginToken =
+    Lazy.lazy <|
+        \() ->
+            Http.send Submissions.Messages.LoggedOut <|
+                Http.request
+                    { method = "DELETE"
+                    , headers = headers []
+                    , url = url [ "users", "authtoken" ] ++ "?token=" ++ (Maybe.withDefault "" <| LocalStorage.get "login_token")
+                    , body = Http.emptyBody
+                    , expect = Http.expectString
+                    , timeout = Nothing
+                    , withCredentials = False
+                    }
+
+
+getSubmissions : Lazy.Lazy (Cmd Submissions.Messages.Msg)
+getSubmissions =
+    Lazy.lazy <|
+        \() ->
+            Http.send Submissions.Messages.Get <|
+                jsonGet Submissions.Decoder.decoder <|
+                    url [ "submissions" ]
 
 
 getSubmission : String -> Cmd Submission.Messages.Msg
@@ -52,11 +72,13 @@ saveSubmission submission =
             url [ "submissions", submission.id ]
 
 
-createSubmission : Cmd Submissions.Messages.Msg
+createSubmission : Lazy.Lazy (Cmd Submissions.Messages.Msg)
 createSubmission =
-    Http.send Submissions.Messages.Created <|
-        jsonPost (Http.expectJson Json.Decode.string) Http.emptyBody <|
-            url [ "submissions" ]
+    Lazy.lazy <|
+        \() ->
+            Http.send Submissions.Messages.Created <|
+                jsonPost (Http.expectJson Json.Decode.string) Http.emptyBody <|
+                    url [ "submissions" ]
 
 
 url : List String -> String

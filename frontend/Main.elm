@@ -21,6 +21,7 @@ import Submission.View
 import Submission.Model
 import Submission.Update
 import Nav.Requests exposing (getSubmissions, getSubmission)
+import Lazy
 
 
 initModel : Page -> Model
@@ -110,7 +111,7 @@ updatePage page m =
                 )
 
             Submissions ->
-                ( model, Cmd.map SubmissionsMsg <| getSubmissions "" )
+                ( model, Cmd.map SubmissionsMsg <| Lazy.force getSubmissions )
 
             Submission id ->
                 ( model, Cmd.map SubmissionMsg <| getSubmission id )
