@@ -42,6 +42,9 @@ parseLoggedIn page =
         Register ->
             Submissions
 
+        UseToken _ ->
+            Submissions
+
         _ ->
             page
 
