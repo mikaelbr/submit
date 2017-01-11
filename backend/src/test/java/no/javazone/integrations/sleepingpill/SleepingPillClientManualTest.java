@@ -7,6 +7,7 @@ import no.javazone.integrations.sleepingpill.model.create.NewSession;
 import no.javazone.integrations.sleepingpill.model.create.NewSpeaker;
 import no.javazone.integrations.sleepingpill.model.get.Session;
 import no.javazone.integrations.sleepingpill.model.update.UpdatedSession;
+import no.javazone.integrations.sleepingpill.model.update.UpdatedSpeaker;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -39,7 +40,7 @@ public class SleepingPillClientManualTest {
 
     @Test
     public void get_session() {
-        Session session = client.getSession("b9d4c352911841a097314e254bf5d643");
+        Session session = client.getSession("cd2ae79db7f3459b9b59def7730aff79");
         System.out.println(session);
     }
 
@@ -72,8 +73,16 @@ public class SleepingPillClientManualTest {
 
     @Test
     public void update_session() {
-        String sessionId = "b9d4c352911841a097314e254bf5d643";
+        String sessionId = "cd2ae79db7f3459b9b59def7730aff79";
 
+        List<UpdatedSpeaker> speakers = asList(
+                new UpdatedSpeaker(
+                        "3006c2cf0fc34c4293d5474eb8242aec",
+                        "Espen Updated Halvorsen",
+                        "espenhh@example.com",
+                        "Espens flotte bio"
+                )
+        );
         UpdatedSession session = new UpdatedSession(
                 SessionStatus.SUBMITTED,
                 "New title",
@@ -81,7 +90,8 @@ public class SleepingPillClientManualTest {
                 "New intended audience",
                 "presentation",
                 "en",
-                "New outline"
+                "New outline",
+                speakers
         );
         client.updateSession(sessionId, session);
 

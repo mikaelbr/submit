@@ -8,6 +8,7 @@ import no.javazone.integrations.sleepingpill.model.get.Conferences;
 import no.javazone.integrations.sleepingpill.model.get.Session;
 import no.javazone.integrations.sleepingpill.model.get.Sessions;
 import no.javazone.integrations.sleepingpill.model.update.UpdatedSession;
+import no.javazone.integrations.sleepingpill.model.update.UpdatedSpeaker;
 import no.javazone.representations.Submission;
 import no.javazone.representations.SubmissionsForUser;
 import no.javazone.representations.Year;
@@ -93,7 +94,8 @@ public class SubmissionService {
                 submission.intendedAudience,
                 submission.format,
                 submission.language,
-                submission.outline
+                submission.outline,
+                submission.speakers.stream().map(UpdatedSpeaker::fromApiObject).collect(toList())
         );
         sleepingPill.updateSession(submissionId, updatedSession);
 
