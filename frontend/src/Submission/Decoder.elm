@@ -1,9 +1,31 @@
 module Submission.Decoder exposing (decoder)
 
 import Submission.Model exposing (..)
-import Json.Decode exposing (Decoder, string, field, map)
+import Json.Decode exposing (Decoder, string, list)
+import Json.Decode.Pipeline exposing (decode, required)
 
 
-decoder : Decoder Model
+decoder : Decoder Submission
 decoder =
-    map Model <| field "entry" string
+    decode Submission
+        |> required "abstract" string
+        |> required "conferenceId" string
+        |> required "format" string
+        |> required "id" string
+        |> required "intendedAudience" string
+        |> required "keywords" (list string)
+        |> required "language" string
+        |> required "outline" string
+        |> required "published" string
+        |> required "speakers" (list decodeSpeaker)
+        |> required "status" string
+        |> required "title" string
+
+
+decodeSpeaker : Decoder Speaker
+decodeSpeaker =
+    decode Speaker
+        |> required "bio" string
+        |> required "email" string
+        |> required "id" string
+        |> required "name" string

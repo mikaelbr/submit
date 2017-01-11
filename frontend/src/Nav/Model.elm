@@ -6,4 +6,4 @@ type Page
     | Thanks
     | UseToken String
     | Submissions
-    | Submission Int
+    | Submission String

@@ -13,14 +13,14 @@ import Login.Update as LoginUpdate
 import Thanks.Thanks as Thanks
 import Usetoken.View
 import Usetoken.Model
-import Usetoken.Update
+import Usetoken.Update exposing (saveToken)
 import Submissions.View
 import Submissions.Model
 import Submissions.Update
 import Submission.View
 import Submission.Model
 import Submission.Update
-import Nav.Requests exposing (getLoginCookie, getSubmissions, getSubmission)
+import Nav.Requests exposing (getSubmissions, getSubmission)
 
 
 initModel : Page -> Model
@@ -106,7 +106,7 @@ updatePage page m =
         case page of
             UseToken token ->
                 ( { model | usetoken = Usetoken.Model.initModel token }
-                , Cmd.map UsetokenMsg <| getLoginCookie token
+                , Cmd.map UsetokenMsg <| saveToken token
                 )
 
             Submissions ->

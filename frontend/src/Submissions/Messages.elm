@@ -6,5 +6,6 @@ import Http
 
 type Msg
     = Message
-    | Get (Result Http.Error Model)
-    | Created (Result Http.Error Int)
+    | Get (Result Http.Error Submissions)
+    | CreateTalk
+    | Created (Result Http.Error String)

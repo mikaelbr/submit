@@ -1,62 +1,67 @@
 module Nav.Requests
     exposing
-        ( getLoginCookie
-        , getSubmissions
+        ( getSubmissions
         , getSubmission
         , getLoginToken
+        , createSubmission
+        , saveSubmission
         )
 
 import Http
 import Login.Message
-import Usetoken.Messages
 import Submissions.Messages
 import Submissions.Decoder
 import Submission.Messages
+import Submission.Model
 import Submission.Decoder
-import Json.Decode
+import Submission.Encoder
+import Json.Decode exposing (Decoder)
+import LocalStorage
 
 
 getLoginToken : String -> Cmd Login.Message.Msg
 getLoginToken email =
     Http.send Login.Message.Submit <|
-        postWithoutBody (Http.expectString) <|
+        jsonPost Http.expectString Http.emptyBody <|
             url [ "users", "authtoken" ]
                 ++ "?email="
                 ++ email
 
 
-getLoginCookie : String -> Cmd Usetoken.Messages.Msg
-getLoginCookie token =
-    Http.send Usetoken.Messages.Get <|
-        postWithoutBody (Http.expectString) <|
-            url [ "users", "authtoken", "use" ]
-                ++ "?token="
-                ++ token
-
-
 getSubmissions : Cmd Submissions.Messages.Msg
 getSubmissions =
     Http.send Submissions.Messages.Get <|
-        get Submissions.Decoder.decoder <|
+        jsonGet Submissions.Decoder.decoder <|
             url [ "submissions" ]
 
 
-getSubmission : Int -> Cmd Submission.Messages.Msg
+getSubmission : String -> Cmd Submission.Messages.Msg
 getSubmission id =
     Http.send Submission.Messages.Get <|
-        get Submission.Decoder.decoder <|
-            url [ "submissions", toString id ]
+        jsonGet Submission.Decoder.decoder <|
+            url [ "submissions", id ]
+
+
+saveSubmission : Submission.Model.Submission -> Cmd Submission.Messages.Msg
+saveSubmission submission =
+    Http.send Submission.Messages.Saved <|
+        jsonPut
+            (Http.expectJson Submission.Decoder.decoder)
+            (Http.jsonBody <| Submission.Encoder.encoder submission)
+        <|
+            url [ "submissions", submission.id ]
 
 
 createSubmission : Cmd Submissions.Messages.Msg
 createSubmission =
     Http.send Submissions.Messages.Created <|
-        postWithoutBody (Http.expectJson Json.Decode.int) "insert-url-here"
+        jsonPost (Http.expectJson Json.Decode.string) Http.emptyBody <|
+            url [ "submissions" ]
 
 
 url : List String -> String
 url ls =
-    "api/" ++ String.join "/" ls
+    "https://submit.javazone.no/api/" ++ String.join "/" ls
 
 
 get : Json.Decode.Decoder a -> String -> Http.Request a
@@ -64,28 +69,50 @@ get =
     flip Http.get
 
 
-postWithoutBody : Http.Expect a -> String -> Http.Request a
-postWithoutBody expect url =
+jsonPost : Http.Expect a -> Http.Body -> String -> Http.Request a
+jsonPost expect body url =
     Http.request
         { method = "POST"
-        , headers = []
+        , headers = headers [ Http.header "Accept" "application/json" ]
         , url = url
-        , body = Http.emptyBody
+        , body = body
         , expect = expect
         , timeout = Nothing
         , withCredentials = False
         }
 
 
+jsonPut : Http.Expect a -> Http.Body -> String -> Http.Request a
+jsonPut expect body url =
+    Http.request
+        { method = "PUT"
+        , headers = headers [ Http.header "Accept" "application/json" ]
+        , url = url
+        , body = body
+        , expect = expect
+        , timeout = Nothing
+        , withCredentials = False
+        }
 
--- jsonGet : Decoder a -> String -> Http.Request a
--- jsonGet decoder url =
---     Http.request
---         { method = "GET"
---         , headers = [ Http.header "Accept" "application/json" ]
---         , url = url
---         , body = Http.emptyBody
---         , expect = Http.expectJson decoder
---         , timeout = Nothing
---         , withCredentials = False
---         }
+
+jsonGet : Decoder a -> String -> Http.Request a
+jsonGet decoder url =
+    Http.request
+        { method = "GET"
+        , headers = headers [ Http.header "Accept" "application/json" ]
+        , url = url
+        , body = Http.emptyBody
+        , expect = Http.expectJson decoder
+        , timeout = Nothing
+        , withCredentials = False
+        }
+
+
+headers : List Http.Header -> List Http.Header
+headers ls =
+    case LocalStorage.get "login_token" of
+        Just token ->
+            Http.header "X-token" token :: ls
+
+        _ ->
+            ls

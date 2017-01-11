@@ -5,6 +5,8 @@ import Submissions.Messages exposing (..)
 import Navigation
 import Nav.Nav exposing (toHash)
 import Nav.Model
+import Nav.Requests exposing (createSubmission)
+import Backend.Network exposing (RequestStatus(..))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -13,11 +15,14 @@ update msg model =
         Message ->
             ( model, Cmd.none )
 
-        Get (Err _) ->
-            ( model, Cmd.none )
+        CreateTalk ->
+            ( model, createSubmission )
 
-        Get (Ok data) ->
-            ( data, Cmd.none )
+        Get (Err message) ->
+            ( { model | submissions = Error <| toString message }, Cmd.none )
+
+        Get (Ok submissions) ->
+            ( { model | submissions = Complete submissions }, Cmd.none )
 
         Created (Err _) ->
             ( model, Cmd.none )

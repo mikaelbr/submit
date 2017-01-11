@@ -1,7 +1,14 @@
-module Submissions.Model exposing (Model, Year, Submission, initModel)
+module Submissions.Model exposing (Model, Year, Submission, initModel, Submissions)
+
+import Backend.Network exposing (RequestStatus(..))
 
 
 type alias Model =
+    { submissions : RequestStatus Submissions
+    }
+
+
+type alias Submissions =
     { years : List Year
     }
 
@@ -13,11 +20,11 @@ type alias Year =
 
 
 type alias Submission =
-    { id : Int
+    { id : String
     , name : String
     }
 
 
 initModel : Model
 initModel =
-    Model []
+    Model Initial

@@ -22,7 +22,7 @@ toHash page =
             "#submissions"
 
         Submission id ->
-            "#submissions/" ++ (toString id)
+            "#submissions/" ++ id
 
 
 hashParser : Navigation.Location -> Page
@@ -37,5 +37,5 @@ pageParser =
         , map Thanks (s "thanks")
         , map UseToken (s "usetoken" </> string)
         , map Submissions (s "submissions")
-        , map Submission (s "submissions" </> int)
+        , map Submission (s "submissions" </> string)
         ]

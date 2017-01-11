@@ -1,23 +1,25 @@
 module Submissions.Decoder exposing (decoder)
 
-import Submissions.Model exposing (Model, Year, Submission)
+import Submissions.Model exposing (..)
 import Json.Decode exposing (Decoder, string, field, map, map2, int, list)
+import Json.Decode.Pipeline exposing (decode, required)
 
 
-decoder : Decoder Model
+decoder : Decoder Submissions
 decoder =
-    map Model <| field "years" (list decodeYear)
+    decode Submissions
+        |> required "years" (list decodeYear)
 
 
 decodeYear : Decoder Year
 decodeYear =
-    map2 Year
-        (field "year" string)
-        (field "submissions" (list decodeSubmission))
+    decode Year
+        |> required "year" string
+        |> required "submissions" (list decodeSubmission)
 
 
 decodeSubmission : Decoder Submission
 decodeSubmission =
-    map2 Submission
-        (field "id" int)
-        (field "title" string)
+    decode Submission
+        |> required "id" string
+        |> required "title" string
