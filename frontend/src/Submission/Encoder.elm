@@ -13,7 +13,6 @@ encoder submission =
         , ( "intendedAudience", string submission.intendedAudience )
         , ( "format", string submission.format )
         , ( "language", string submission.language )
-        , ( "keywords", list <| List.map string submission.keywords )
         , ( "outline", string submission.outline )
         , ( "speakers", list <| List.map encodeSpeaker submission.speakers )
         ]

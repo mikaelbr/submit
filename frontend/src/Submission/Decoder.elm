@@ -13,7 +13,6 @@ decoder =
         |> required "format" string
         |> required "id" string
         |> required "intendedAudience" string
-        |> optional "keywords" (list string) []
         |> required "language" string
         |> required "outline" string
         |> required "speakers" (list decodeSpeaker)

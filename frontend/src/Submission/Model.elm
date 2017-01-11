@@ -16,7 +16,6 @@ type alias Submission =
     , format : String
     , id : String
     , intendedAudience : String
-    , keywords : List String
     , language : String
     , outline : String
     , speakers : List Speaker
