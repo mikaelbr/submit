@@ -2,7 +2,7 @@ module Submission.Decoder exposing (decoder)
 
 import Submission.Model exposing (..)
 import Json.Decode exposing (Decoder, string, list)
-import Json.Decode.Pipeline exposing (decode, required)
+import Json.Decode.Pipeline exposing (decode, required, optional)
 
 
 decoder : Decoder Submission
@@ -13,10 +13,9 @@ decoder =
         |> required "format" string
         |> required "id" string
         |> required "intendedAudience" string
-        |> required "keywords" (list string)
+        |> optional "keywords" (list string) []
         |> required "language" string
         |> required "outline" string
-        |> required "published" string
         |> required "speakers" (list decodeSpeaker)
         |> required "status" string
         |> required "title" string

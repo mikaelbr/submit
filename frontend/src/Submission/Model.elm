@@ -19,7 +19,6 @@ type alias Submission =
     , keywords : List String
     , language : String
     , outline : String
-    , published : String
     , speakers : List Speaker
     , status : String
     , title : String
