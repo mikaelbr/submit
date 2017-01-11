@@ -22,4 +22,5 @@ type Msg
     | SpeakerName Int String
     | SpeakerEmail Int String
     | SpeakerBio Int String
+    | SpeakerZipCode Int String
     | RemoveSpeaker Int

@@ -26,4 +26,5 @@ encodeSpeaker ( i, speaker ) =
         , ( "name", string speaker.name )
         , ( "email", string speaker.email )
         , ( "bio", string speaker.bio )
+        , ( "zipCode", string speaker.zipCode )
         ]

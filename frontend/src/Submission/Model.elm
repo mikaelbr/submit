@@ -30,6 +30,7 @@ type alias Speaker =
     , email : String
     , id : String
     , name : String
+    , zipCode : String
     }
 
 
@@ -49,4 +50,4 @@ initSpeaker speakers =
                 _ ->
                     0
     in
-        ( nextInt, Speaker "" "" "" "" )
+        ( nextInt, Speaker "" "" "" "" "" )

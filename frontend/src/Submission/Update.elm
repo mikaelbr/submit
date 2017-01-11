@@ -102,6 +102,17 @@ update msg model =
                     in
                         { s | speakers = updatedSpeakers }
 
+        SpeakerZipCode i zipCode ->
+            updateField model <|
+                \s ->
+                    let
+                        speakers =
+                            List.map
+                                (\speaker -> updateSpeaker i speaker (\sp -> { sp | zipCode = zipCode }))
+                                s.speakers
+                    in
+                        { s | speakers = speakers }
+
         RemoveSpeaker i ->
             updateField model <|
                 \s ->

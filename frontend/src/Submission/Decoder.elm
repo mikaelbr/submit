@@ -33,3 +33,4 @@ decodeSpeaker =
         |> required "email" string
         |> required "id" string
         |> required "name" string
+        |> optional "zipCode" string ""

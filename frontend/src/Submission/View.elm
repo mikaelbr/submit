@@ -110,6 +110,13 @@ viewSpeaker ( i, speaker ) =
             , onInput <| SpeakerEmail i
             ]
             []
+        , input
+            [ type_ "text"
+            , value speaker.zipCode
+            , placeholder "Zip Code"
+            , onInput <| SpeakerZipCode i
+            ]
+            []
         , textarea
             [ value speaker.bio
             , placeholder "Speaker bio"
