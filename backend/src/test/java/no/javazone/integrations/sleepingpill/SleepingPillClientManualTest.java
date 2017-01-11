@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 @Ignore
 public class SleepingPillClientManualTest {
@@ -40,7 +40,7 @@ public class SleepingPillClientManualTest {
 
     @Test
     public void get_session() {
-        Session session = client.getSession("7018c57f36ff46aebd55961a63a80604");
+        Session session = client.getSession("5f38466d0b5e43c0a26e1cde537151bf");
         System.out.println(session);
     }
 
@@ -48,11 +48,12 @@ public class SleepingPillClientManualTest {
     public void create_session() {
         String conferenceId = client.getConferences().getIdFromSlug("javazone_2016");
 
-        List<NewSpeaker> speakers = asList(
+        List<NewSpeaker> speakers = singletonList(
                 new NewSpeaker(
                         "Espen Herseth Halvorsen",
                         "espenhh@example.com",
-                        "Espens flotte bio"
+                        "Espens flotte bio",
+                        "1234"
                 )
         );
         NewSession session = new NewSession(
@@ -75,14 +76,15 @@ public class SleepingPillClientManualTest {
 
     @Test
     public void update_session() {
-        String sessionId = "cd2ae79db7f3459b9b59def7730aff79";
+        String sessionId = "35c404712dd54ae0a81f9765ec14dace";
 
-        List<UpdatedSpeaker> speakers = asList(
+        List<UpdatedSpeaker> speakers = singletonList(
                 new UpdatedSpeaker(
                         "3006c2cf0fc34c4293d5474eb8242aec",
                         "Espen Updated Halvorsen",
                         "espenhh@example.com",
-                        "Espens flotte bio"
+                        "Espens flotte bio",
+                        "1234"
                 )
         );
         UpdatedSession session = new UpdatedSession(

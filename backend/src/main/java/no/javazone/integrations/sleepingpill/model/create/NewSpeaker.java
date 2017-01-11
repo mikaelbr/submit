@@ -12,18 +12,20 @@ public class NewSpeaker {
     @SuppressWarnings("unused")
     private NewSpeaker() { }
 
-    public NewSpeaker(String name, String email, String bio) {
+    public NewSpeaker(String name, String email, String bio, String zipCode) {
         this.name = name;
         this.email = email;
 
         data = new SpeakerData();
         data.setBio(bio);
+        data.setZipCode(zipCode);
     }
 
     public static NewSpeaker draft(EmailAddress postedBy) {
         return new NewSpeaker(
                 "",
                 postedBy.toString(),
+                "",
                 ""
         );
     }

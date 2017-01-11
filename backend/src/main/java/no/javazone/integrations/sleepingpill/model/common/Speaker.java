@@ -11,6 +11,10 @@ public class Speaker {
         return data.bio != null ? data.bio.value : null;
     }
 
+    public String getZipCode() {
+        return data.zipCode != null ? data.zipCode.value : null;
+    }
+
     @Override
     public String toString() {
         return "Speaker{" +
