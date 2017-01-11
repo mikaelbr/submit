@@ -20,11 +20,11 @@ import org.springframework.stereotype.Service;
 
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotFoundException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
-import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
@@ -56,7 +56,7 @@ public class SubmissionService {
         return new SubmissionsForUser(
                 groupedByConference.entrySet().stream()
                         .map(this::sleepingpillYearToOurYear)
-                        .sorted(comparing(y -> y.year))
+                        .sorted(Comparator.<Year, String>comparing(y -> y.year).reversed())
                         .collect(toList())
         );
     }
