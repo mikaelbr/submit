@@ -13,6 +13,7 @@ type Msg
     | TimeUpdated Time.Time
     | Title String
     | Abstract String
+    | Equipment String
     | Format String
     | IntendedAudience String
     | Language String

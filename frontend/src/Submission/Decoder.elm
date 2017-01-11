@@ -10,6 +10,7 @@ decoder =
     decode Submission
         |> required "abstract" string
         |> required "conferenceId" string
+        |> required "equipment" string
         |> required "format" string
         |> required "id" string
         |> required "intendedAudience" string

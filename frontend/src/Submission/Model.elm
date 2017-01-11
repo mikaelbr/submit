@@ -13,6 +13,7 @@ type alias Model =
 type alias Submission =
     { abstract : String
     , conferenceId : String
+    , equipment : String
     , format : String
     , id : String
     , intendedAudience : String

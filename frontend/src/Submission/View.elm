@@ -73,6 +73,11 @@ viewSubmission submission =
                 , textarea [ value submission.outline, onInput Outline ] []
                 ]
             , div [ class "input-section" ]
+                [ h2 [] [ text "Equipment (not public)" ]
+                , p [ class "input-description" ] [ text "The information will be used by the Program Committee to review the details of your talk. The outline should be rough agenda for the talk, with a few keywords for each section, and with a rough estimate of the time spent on each." ]
+                , textarea [ value submission.equipment, onInput Equipment ] []
+                ]
+            , div [ class "input-section" ]
                 [ h2 [] [ text "Who are you?" ]
                 , p [ class "input-description" ] [ text "Please give us a little bit of information about yourself. You can also add any additional speakers here. All of you will be shown in the program." ]
                 , ul [] <|

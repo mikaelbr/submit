@@ -45,6 +45,10 @@ update msg model =
             updateField model <|
                 \s -> { s | abstract = abstract }
 
+        Equipment equipment ->
+            updateField model <|
+                \s -> { s | equipment = equipment }
+
         Format format ->
             updateField model <|
                 \s -> { s | format = format }

@@ -11,6 +11,7 @@ encoder submission =
         , ( "title", string submission.title )
         , ( "abstract", string submission.abstract )
         , ( "intendedAudience", string submission.intendedAudience )
+        , ( "equipment", string submission.equipment )
         , ( "format", string submission.format )
         , ( "language", string submission.language )
         , ( "outline", string submission.outline )
