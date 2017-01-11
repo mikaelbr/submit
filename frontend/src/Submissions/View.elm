@@ -43,7 +43,7 @@ viewSubmissions submissions =
             , div [ class "submissions-list" ]
                 [ div [ class "submissions-header" ]
                     [ h1 [] [ text "Your JavaZone Talks" ]
-                    , div [ class "new-submission-button" ] [ button [ onClick CreateTalk, class "new-talk" ] [ text "New talk" ] ]
+                    , div [ class "new-submission-button" ] [ button [ onClick CreateTalk, class "new-talk" ] [ text "Create new talk" ] ]
                     ]
                 , p [ class "intro-text" ] [ text "These are all JavaZone talks you have submitted or participated on. You can edit all talks from the currect year. All earlier talks are also available for your reference, but you can't edit those." ]
                 , div [ class "submissions" ] years

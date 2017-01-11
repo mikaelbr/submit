@@ -2,7 +2,18 @@ module Submission.View exposing (view)
 
 import Submission.Model exposing (..)
 import Submission.Messages exposing (..)
-import Html exposing (Html, div, text, input, textarea, button, img)
+import Html
+    exposing
+        ( Html
+        , div
+        , text
+        , input
+        , textarea
+        , button
+        , img
+        , h2
+        , p
+        )
 import Html.Attributes exposing (class, type_, value, src)
 import Html.Events exposing (onInput, onClick)
 import Backend.Network exposing (RequestStatus(..))
@@ -29,13 +40,41 @@ viewSubmission submission =
     div [ class "wrapper" ]
         [ div [ class "logo-wrapper" ] [ img [ src "assets/logo.png", class "logo" ] [] ]
         , div [ class "edit-submission" ]
-            [ input [ type_ "text", value submission.title, onInput Title ] []
-            , textarea [ value submission.abstract, onInput Abstract ] []
-            , input [ type_ "text", value submission.format, onInput Format ] []
-            , textarea [ value submission.intendedAudience, onInput IntendedAudience ] []
-            , input [ type_ "text", value submission.language, onInput Language ] []
-            , textarea [ value submission.outline, onInput Outline ] []
-            , button [ onClick Save ] [ text "Save" ]
+            [ div [ class "input-section" ]
+                [ h2 [] [ text "Title" ]
+                , p [ class "input-description" ] [ text "Select an expressive and snappy title that captures the content of your talk without being too long. Remember that the title must be attractive and should make people curious." ]
+                , input [ type_ "text", value submission.title, onInput Title ] []
+                ]
+            , div [ class "input-section" ]
+                [ h2 [] [ text "Full Abstract" ]
+                , p [ class "input-description" ] [ text "Give a concise description of the content and goals of your talk. Try not to exceed 300 words, as shorter and more to-the-point descriptions are more likely to be read by the participants." ]
+                , textarea [ value submission.abstract, onInput Abstract ] []
+                ]
+            , div [ class "input-section" ]
+                [ h2 [] [ text "Expected audience and code level" ]
+                , p [ class "input-description" ] [ text "Who should attend this session? How will the participants benefit from attending? Explicitly state what your audience needs to know in order to get the most out of your presentation." ]
+                , textarea [ value submission.intendedAudience, onInput IntendedAudience ] []
+                ]
+            , div [ class "input-section" ]
+                [ h2 [] [ text "Presentation Format" ]
+                , p [ class "input-description" ] [ text "In which format are you presenting your talk?" ]
+                , input [ type_ "text", value submission.format, onInput Format ] []
+                ]
+            , div [ class "input-section" ]
+                [ h2 [] [ text "Language" ]
+                , p [ class "input-description" ] [ text "Which language will you be holding the talk in? Note it is permitted to use English in your slides, even though you may be talking in Norwegian. We generally recommend that you hold the talk in the language you are most comfortable with." ]
+                , input [ type_ "text", value submission.language, onInput Language ] []
+                ]
+            , div [ class "input-section" ]
+                [ h2 [] [ text "Outline (not public)" ]
+                , p [ class "input-description" ] [ text "The information will be used by the Program Committee to review the details of your talk. The outline should be rough agenda for the talk, with a few keywords for each section, and with a rough estimate of the time spent on each." ]
+                , textarea [ value submission.outline, onInput Outline ] []
+                ]
+            , div [ class "input-section" ]
+                [ h2 [] [ text "Ready to save?" ]
+                , p [ class "input-description" ] [ text "Push that button! Don't worry, you'll be able to come back and edit your talk at any time :)" ]
+                , button [ onClick Save ] [ text "Save" ]
+                ]
             ]
         ]
 
