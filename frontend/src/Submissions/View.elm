@@ -48,7 +48,10 @@ viewSubmissions submissions =
                 , p [ class "intro-text" ] [ text "These are all JavaZone talks you have submitted or participated on. You can edit all talks from the currect year. All earlier talks are also available for your reference, but you can't edit those." ]
                 , div [ class "submissions" ] years
                 , div [ class "logout" ]
-                    [ button [ onClick Logout ] [ text "Log out" ] ]
+                    [
+                    p [] [ text "We'll keep you signed in on this machine for your convenience. If you don't want us to remember you on this computer, that's okay to. Use the button :)" ]
+                    , button [ onClick Logout ] [ text "Forget me on this computer" ]
+                    ]
                 ]
             ]
 
