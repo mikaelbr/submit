@@ -77,7 +77,7 @@ createSubmission =
     Lazy.lazy <|
         \() ->
             Http.send Submissions.Messages.Created <|
-                jsonPost (Http.expectJson Json.Decode.string) Http.emptyBody <|
+                jsonPost (Http.expectJson Submission.Decoder.decoder) Http.emptyBody <|
                     url [ "submissions" ]
 
 

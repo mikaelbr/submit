@@ -30,8 +30,8 @@ update msg model =
         Created (Err _) ->
             ( model, Lazy.force getSubmissions )
 
-        Created (Ok id) ->
-            ( model, Navigation.newUrl << toHash <| Nav.Model.Submission id )
+        Created (Ok submission) ->
+            ( model, Navigation.newUrl << toHash <| Nav.Model.Submission submission.id )
 
         Logout ->
             ( model, Lazy.force deleteLoginToken )
