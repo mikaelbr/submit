@@ -28,8 +28,8 @@ getLoginToken email =
                 ++ email
 
 
-getSubmissions : Cmd Submissions.Messages.Msg
-getSubmissions =
+getSubmissions : String -> Cmd Submissions.Messages.Msg
+getSubmissions s =
     Http.send Submissions.Messages.Get <|
         jsonGet Submissions.Decoder.decoder <|
             url [ "submissions" ]

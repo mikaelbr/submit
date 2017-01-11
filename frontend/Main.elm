@@ -110,7 +110,7 @@ updatePage page m =
                 )
 
             Submissions ->
-                ( model, Cmd.map SubmissionsMsg <| getSubmissions )
+                ( model, Cmd.map SubmissionsMsg <| getSubmissions "" )
 
             Submission id ->
                 ( model, Cmd.map SubmissionMsg <| getSubmission id )
