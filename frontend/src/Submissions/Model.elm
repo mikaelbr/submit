@@ -22,6 +22,7 @@ type alias Year =
 type alias Submission =
     { id : String
     , name : String
+    , status: String
     }
 
 

@@ -23,3 +23,4 @@ decodeSubmission =
     decode Submission
         |> required "id" string
         |> required "title" string
+        |> required "status" string

@@ -40,8 +40,10 @@ viewSubmissions submissions =
         div [ class "wrapper" ]
             [ div [ class "logo-wrapper" ] [ img [ src "assets/logo.png", class "logo" ] [] ]
             , div [ class "submissions-list" ]
-                [ button [ onClick CreateTalk, class "new-talk" ] [ text "New talk" ]
-                , h1 [] [ text "Your Talks" ]
+                [ div [ class "submissions-header" ] [
+                h1 [] [ text "Your Talks" ]
+                , div[ class "submission-new" ][button [ onClick CreateTalk, class "new-talk" ] [ text "New talk" ]]
+                                          ]
                 , div [ class "submissions" ] years
                 ]
             ]
@@ -62,6 +64,9 @@ viewYear year =
 viewSubmission : Submission -> Html Msg
 viewSubmission submission =
     div [ class "submissions__submission" ]
-        [ a [ href << toHash <| Nav.Model.Submission submission.id ]
-            [ text submission.name ]
+        [ a [ class "submission", href << toHash <| Nav.Model.Submission submission.id ]
+            [ div [ class "title" ] [ text submission.name ]
+            ,  div [ class "status" ] [ text submission.status ]
+            ,  div [ class "open-arrow" ] [ text ">" ]
+            ]
         ]
