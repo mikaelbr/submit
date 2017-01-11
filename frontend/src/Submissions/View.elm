@@ -2,7 +2,7 @@ module Submissions.View exposing (view)
 
 import Submissions.Model exposing (..)
 import Submissions.Messages exposing (..)
-import Html exposing (Html, div, h1, h2, text, a, button, img)
+import Html exposing (Html, div, h1, h2, p, text, a, button, img)
 import Html.Attributes exposing (class, href, src)
 import Html.Events exposing (onClick)
 import Nav.Nav exposing (toHash)
@@ -45,6 +45,7 @@ viewSubmissions submissions =
                     [ h1 [] [ text "Your JavaZone Talks" ]
                     , div [ class "new-submission-button" ] [ button [ onClick CreateTalk, class "new-talk" ] [ text "New talk" ] ]
                     ]
+                , p [ class "intro-text" ] [ text "These are all JavaZone talks you have submitted or participated on. You can edit all talks from the currect year. All earlier talks are also available for your reference, but you can't edit those." ]
                 , div [ class "submissions" ] years
                 ]
             ]
