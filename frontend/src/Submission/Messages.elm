@@ -11,6 +11,9 @@ type Msg
     | Save
     | Saved (Result Http.Error Submission)
     | TimeUpdated Time.Time
+    | Title String
     | Abstract String
+    | Format String
     | IntendedAudience String
+    | Language String
     | Outline String

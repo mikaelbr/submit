@@ -37,17 +37,29 @@ update msg model =
         TimeUpdated time ->
             ( { model | lastSaved = Just time }, Cmd.none )
 
+        Title title ->
+            updateField model <|
+                \s -> { s | title = title }
+
         Abstract abstract ->
             updateField model <|
-                \submission -> { submission | abstract = abstract }
+                \s -> { s | abstract = abstract }
+
+        Format format ->
+            updateField model <|
+                \s -> { s | format = format }
 
         IntendedAudience intendedAudience ->
             updateField model <|
-                \submission -> { submission | intendedAudience = intendedAudience }
+                \s -> { s | intendedAudience = intendedAudience }
+
+        Language language ->
+            updateField model <|
+                \s -> { s | language = language }
 
         Outline outline ->
             updateField model <|
-                \submission -> { submission | outline = outline }
+                \s -> { s | outline = outline }
 
 
 updateField : Model -> (Submission -> Submission) -> ( Model, Cmd Msg )
