@@ -4,6 +4,7 @@ import Navigation
 import UrlParser exposing (Parser, oneOf, map, s, parseHash, top, (</>), string, int)
 import Nav.Model exposing (Page(..))
 import Maybe
+import LocalStorage
 
 
 toHash : Page -> String
@@ -27,7 +28,22 @@ toHash page =
 
 hashParser : Navigation.Location -> Page
 hashParser location =
-    Maybe.withDefault Register <| parseHash pageParser location
+    case LocalStorage.get "login_token" of
+        Just _ ->
+            parseLoggedIn <| Maybe.withDefault Submissions <| parseHash pageParser location
+
+        Nothing ->
+            Register
+
+
+parseLoggedIn : Page -> Page
+parseLoggedIn page =
+    case page of
+        Register ->
+            Submissions
+
+        _ ->
+            page
 
 
 pageParser : Parser (Page -> a) a
