@@ -11,7 +11,7 @@ var _javabin$submit$Native_LocalStorage = (function() {
 
     var setItem = function(item) {
         return function(val) {
-            localStorage.setItem(item, JSON.stringify(val));
+            localStorage.setItem(item, val);
             return Task.succeed(Tuple0);
         };
     };
