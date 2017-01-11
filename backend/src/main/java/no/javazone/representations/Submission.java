@@ -20,8 +20,6 @@ public class Submission {
     public String intendedAudience;
     public String format;
     public String language;
-    public String published;
-    public List<String> keywords;
     public String outline;
     public List<Speaker> speakers;
 
@@ -29,8 +27,7 @@ public class Submission {
     private Submission() { }
 
     public Submission(String sessionId, String conferenceId, String status, String title, String theAbstract,
-                      String intendedAudience, String format, String language, String published, List<String> keywords,
-                      String outline, List<Speaker> speakers) {
+                      String intendedAudience, String format, String language, String outline, List<Speaker> speakers) {
         this.id = sessionId;
         this.conferenceId = conferenceId;
         this.status = status;
@@ -39,8 +36,6 @@ public class Submission {
         this.intendedAudience = intendedAudience;
         this.format = format;
         this.language = language;
-        this.published = published;
-        this.keywords = keywords;
         this.outline = outline;
         this.speakers = speakers;
     }
@@ -55,8 +50,6 @@ public class Submission {
                 session.getIntendedAudience(),
                 session.getFormat(),
                 session.getLanguage(),
-                session.getPublished(),
-                session.getKeywords(),
                 session.getOutline(),
                 session.speakers.stream().map(Speaker::fromSleepingPillSpeaker).collect(toList())
         );

@@ -35,10 +35,16 @@ public class Session {
         return data.language != null ? data.language.value : null;
     }
 
+    /**
+     * Legazy field, not used anymore
+     */
     public String getPublished() {
         return data.published != null ? data.published.value : null;
     }
 
+    /**
+     * Legazy field, not used anymore
+     */
     public List<String> getKeywords() {
         return data.keywords != null ? data.keywords.value : null;
     }

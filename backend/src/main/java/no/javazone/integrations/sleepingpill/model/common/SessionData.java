@@ -11,8 +11,18 @@ public class SessionData {
     public StringDataField format;
     public StringDataField intendedAudience;
     public StringDataField language;
+
+    /**
+     * Legazy field, not used anymore
+     */
     public StringDataField published;
+    /**
+     * Legazy field, not used anymore
+     */
     public StringDataField slug;
+    /**
+     * Legazy field, not used anymore
+     */
     public StringListDataField keywords;
 
     public StringListDataField tags;
