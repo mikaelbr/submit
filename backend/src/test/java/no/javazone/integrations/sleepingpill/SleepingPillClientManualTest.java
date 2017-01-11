@@ -40,7 +40,7 @@ public class SleepingPillClientManualTest {
 
     @Test
     public void get_session() {
-        Session session = client.getSession("cd2ae79db7f3459b9b59def7730aff79");
+        Session session = client.getSession("7018c57f36ff46aebd55961a63a80604");
         System.out.println(session);
     }
 
@@ -64,6 +64,8 @@ public class SleepingPillClientManualTest {
                 "presentation",
                 "no",
                 "Har en fin outline",
+                "Equipment",
+                "60",
                 speakers
         );
         CreatedSession createdSession = client.createSession(conferenceId, session);
@@ -91,6 +93,8 @@ public class SleepingPillClientManualTest {
                 "presentation",
                 "en",
                 "New outline",
+                "New Equipment",
+                "60",
                 speakers
         );
         client.updateSession(sessionId, session);

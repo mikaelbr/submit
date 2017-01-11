@@ -35,6 +35,14 @@ public class Session {
         return data.language != null ? data.language.value : null;
     }
 
+    public String getEquipment() {
+        return data.language != null ? data.language.value : null;
+    }
+
+    public String getLength() {
+        return data.length != null ? data.length.value : null;
+    }
+
     /**
      * Legazy field, not used anymore
      */

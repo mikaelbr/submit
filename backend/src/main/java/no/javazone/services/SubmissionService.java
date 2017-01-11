@@ -95,6 +95,8 @@ public class SubmissionService {
                 submission.format,
                 submission.language,
                 submission.outline,
+                submission.equipment,
+                submission.length,
                 submission.speakers.stream().map(UpdatedSpeaker::fromApiObject).collect(toList())
         );
         sleepingPill.updateSession(submissionId, updatedSession);

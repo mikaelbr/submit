@@ -11,6 +11,8 @@ public class SessionData {
     public StringDataField format;
     public StringDataField intendedAudience;
     public StringDataField language;
+    public StringDataField equipment;
+    public StringDataField length;
 
     /**
      * Legazy field, not used anymore
@@ -53,6 +55,14 @@ public class SessionData {
         this.outline = new StringDataField(true, outline);
     }
 
+    public void setEquipment(String equipment) {
+        this.equipment = new StringDataField(true, equipment);
+    }
+
+    public void setLength(String length) {
+        this.length = new StringDataField(false, length);
+    }
+
     @Override
     public String toString() {
         return "SessionData{" +
@@ -61,6 +71,8 @@ public class SessionData {
                 ", format=" + format +
                 ", intendedAudience=" + intendedAudience +
                 ", language=" + language +
+                ", equipment=" + equipment +
+                ", length=" + length +
                 ", published=" + published +
                 ", slug=" + slug +
                 ", keywords=" + keywords +

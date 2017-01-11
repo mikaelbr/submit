@@ -19,7 +19,7 @@ public class NewSession {
     private NewSession() { }
 
     public NewSession(SessionStatus status, String postedBy, String title, String theAbstract, String intendedAudience,
-                      String format, String language, String outline, List<NewSpeaker> speakers) {
+                      String format, String language, String outline, String equipment, String length, List<NewSpeaker> speakers) {
 
         this.status = status;
         this.postedBy = postedBy;
@@ -32,18 +32,22 @@ public class NewSession {
         data.setFormat(format);
         data.setLanguage(language);
         data.setOutline(outline);
+        data.setEquipment(equipment);
+        data.setLength(length);
     }
 
     public static NewSession draft(EmailAddress postedBy) {
         return new NewSession(
                 SessionStatus.DRAFT,
                 postedBy.toString(),
-                "Draft",
+                "New draft, let the magic happen!",
                 "",
                 "",
+                "presentation",
+                "en",
                 "",
                 "",
-                "",
+                "60",
                 singletonList(NewSpeaker.draft(postedBy))
         );
     }
