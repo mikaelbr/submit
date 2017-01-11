@@ -18,8 +18,8 @@ encoder submission =
         ]
 
 
-encodeSpeaker : Speaker -> Value
-encodeSpeaker speaker =
+encodeSpeaker : ( Int, Speaker ) -> Value
+encodeSpeaker ( i, speaker ) =
     object
         [ ( "id", string speaker.id )
         , ( "name", string speaker.name )

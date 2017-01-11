@@ -17,3 +17,8 @@ type Msg
     | IntendedAudience String
     | Language String
     | Outline String
+    | AddSpeaker
+    | SpeakerName Int String
+    | SpeakerEmail Int String
+    | SpeakerBio Int String
+    | RemoveSpeaker Int

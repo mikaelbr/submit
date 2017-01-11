@@ -1,7 +1,7 @@
 module Submission.Decoder exposing (decoder)
 
 import Submission.Model exposing (..)
-import Json.Decode exposing (Decoder, string, list)
+import Json.Decode exposing (Decoder, string, list, map)
 import Json.Decode.Pipeline exposing (decode, required, optional)
 
 
@@ -15,9 +15,14 @@ decoder =
         |> required "intendedAudience" string
         |> required "language" string
         |> required "outline" string
-        |> required "speakers" (list decodeSpeaker)
+        |> required "speakers" (map toTuples <| list decodeSpeaker)
         |> required "status" string
         |> required "title" string
+
+
+toTuples : List Speaker -> List ( Int, Speaker )
+toTuples speakers =
+    List.map2 (,) (List.range 0 (List.length speakers)) speakers
 
 
 decodeSpeaker : Decoder Speaker

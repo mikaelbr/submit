@@ -61,6 +61,54 @@ update msg model =
             updateField model <|
                 \s -> { s | outline = outline }
 
+        AddSpeaker ->
+            updateField model <|
+                \s -> { s | speakers = s.speakers ++ [ initSpeaker s.speakers ] }
+
+        SpeakerName i name ->
+            updateField model <|
+                \s ->
+                    let
+                        updatedSpeakers =
+                            List.map
+                                (\speaker -> updateSpeaker i speaker (\sp -> { sp | name = name }))
+                                s.speakers
+                    in
+                        { s | speakers = updatedSpeakers }
+
+        SpeakerEmail i email ->
+            updateField model <|
+                \s ->
+                    let
+                        updatedSpeakers =
+                            List.map
+                                (\speaker -> updateSpeaker i speaker (\sp -> { sp | email = email }))
+                                s.speakers
+                    in
+                        { s | speakers = updatedSpeakers }
+
+        SpeakerBio i bio ->
+            updateField model <|
+                \s ->
+                    let
+                        updatedSpeakers =
+                            List.map
+                                (\speaker -> updateSpeaker i speaker (\sp -> { sp | bio = bio }))
+                                s.speakers
+                    in
+                        { s | speakers = updatedSpeakers }
+
+        RemoveSpeaker i ->
+            updateField model <|
+                \s ->
+                    let
+                        speakers =
+                            List.filter
+                                (\( j, _ ) -> j /= i)
+                                s.speakers
+                    in
+                        { s | speakers = speakers }
+
 
 updateField : Model -> (Submission -> Submission) -> ( Model, Cmd Msg )
 updateField model updateFunction =
@@ -70,3 +118,11 @@ updateField model updateFunction =
 
         _ ->
             ( model, Cmd.none )
+
+
+updateSpeaker : Int -> ( Int, Speaker ) -> (Speaker -> Speaker) -> ( Int, Speaker )
+updateSpeaker i ( j, speaker ) updateFunction =
+    if i == j then
+        ( j, updateFunction speaker )
+    else
+        ( j, speaker )

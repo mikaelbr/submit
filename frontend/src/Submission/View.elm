@@ -13,8 +13,10 @@ import Html
         , img
         , h2
         , p
+        , ul
+        , li
         )
-import Html.Attributes exposing (class, type_, value, src)
+import Html.Attributes exposing (class, type_, value, src, placeholder)
 import Html.Events exposing (onInput, onClick)
 import Backend.Network exposing (RequestStatus(..))
 
@@ -71,11 +73,45 @@ viewSubmission submission =
                 , textarea [ value submission.outline, onInput Outline ] []
                 ]
             , div [ class "input-section" ]
+                [ h2 [] [ text "Who are you?" ]
+                , p [ class "input-description" ] [ text "Please give us a little bit of information about yourself. You can also add any additional speakers here. All of you will be shown in the program." ]
+                , ul [] <|
+                    List.map viewSpeaker submission.speakers
+                , button [ onClick AddSpeaker ] [ text "Add speaker" ]
+                ]
+            , div [ class "input-section" ]
                 [ h2 [] [ text "Ready to save?" ]
                 , p [ class "input-description" ] [ text "Push that button! Don't worry, you'll be able to come back and edit your talk at any time :)" ]
                 , button [ onClick Save ] [ text "Save" ]
                 ]
             ]
+        ]
+
+
+viewSpeaker : ( Int, Speaker ) -> Html Msg
+viewSpeaker ( i, speaker ) =
+    li [ class "speaker" ]
+        [ input
+            [ type_ "text"
+            , value speaker.name
+            , placeholder "Speaker name"
+            , onInput <| SpeakerName i
+            ]
+            []
+        , input
+            [ type_ "text"
+            , value speaker.email
+            , placeholder "Speaker email"
+            , onInput <| SpeakerEmail i
+            ]
+            []
+        , textarea
+            [ value speaker.bio
+            , placeholder "Speaker bio"
+            , onInput <| SpeakerBio i
+            ]
+            []
+        , button [ onClick (RemoveSpeaker i) ] [ text "Remove speaker" ]
         ]
 
 

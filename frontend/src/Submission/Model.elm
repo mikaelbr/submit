@@ -1,4 +1,4 @@
-module Submission.Model exposing (Model, initModel, Submission, Speaker)
+module Submission.Model exposing (Model, initModel, Submission, Speaker, initSpeaker)
 
 import Backend.Network exposing (RequestStatus(..))
 import Time
@@ -18,7 +18,7 @@ type alias Submission =
     , intendedAudience : String
     , language : String
     , outline : String
-    , speakers : List Speaker
+    , speakers : List ( Int, Speaker )
     , status : String
     , title : String
     }
@@ -35,3 +35,17 @@ type alias Speaker =
 initModel : Model
 initModel =
     Model Initial Nothing
+
+
+initSpeaker : List ( Int, Speaker ) -> ( Int, Speaker )
+initSpeaker speakers =
+    let
+        nextInt =
+            case List.head (List.reverse speakers) of
+                Just ( i, s ) ->
+                    i + 1
+
+                _ ->
+                    0
+    in
+        ( nextInt, Speaker "" "" "" "" )
