@@ -86,7 +86,6 @@ public class SubmissionService {
     }
 
     public Submission updateSubmission(AuthenticatedUser authenticatedUser, String submissionId, Submission submission) {
-        // TODO (EHH): add missing things: keywords, speakers etc...
         UpdatedSession updatedSession = new UpdatedSession(
                 parseAndValidateStatus(authenticatedUser, submission),
                 submission.title,
