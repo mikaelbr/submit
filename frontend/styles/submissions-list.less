@@ -1,5 +1,5 @@
 .submissions-list {
-  background: #fff;
+  background: @white;
   padding: 2em;
 }
 
@@ -9,32 +9,68 @@
 }
 .submissions-list .submissions-header h1 {
 }
-.submissions-list .submissions-header .submissions-new {
-  width: 20em;
+.submissions-list .submissions-header .new-submission-button {
+  display: flex;
+  align-items: center;
+}
+
+.submissions-list .submissions-year {
+  margin-bottom: 5em;
 }
 
 .submissions-list .submission {
   display: flex;
   text-decoration: none;
-  color: #333;
-  padding: 1em;
-  font-size: 2em;
+  color: @black;
+  background: @list;
+  border-bottom: 1px solid @white;
 }
 
 .submissions-list .submission:hover {
-  background-color: #ddd;
+  background-color: @list--hover;
 }
 
-.submissions-list .submission .title {
+.submissions-list .submission .status-light {
+  width: .5%;
+  background: @black;
+}
+.submissions-list .submission .status-light.status-light-draft {
+  background: @orange;
+}
+.submissions-list .submission .status-light.status-light-submitted {
+  background: @yellow;
+}
+.submissions-list .submission .status-light.status-light-approved {
+  background: @green--light;
+}
+.submissions-list .submission .status-light.status-light-rejected {
+  background: @red--light;
+}
+.submissions-list .submission .status-light.status-light-historic {
+  background: @green--light;
+}
+
+.submissions-list .submission .submission-details {
+  display: flex;
+  align-items: center;
+  font-size: 2em;
+  padding: 1em;
+  width: 99.5%;
+}
+
+.submissions-list .submission .submission-details  .title {
   width: 80%;
 }
 
-.submissions-list .submission .status {
+.submissions-list .submission .submission-details  .status {
   text-transform: uppercase;
+  text-align: right;
   width: 15%;
+  font-weight: 700;
+  font-size: .7em;
 }
 
-.submissions-list .submission .open-arrow {
+.submissions-list .submission .submission-details  .open-arrow {
   width: 5%;
   text-align: right;
 }
