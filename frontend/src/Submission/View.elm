@@ -74,7 +74,7 @@ viewSubmission submission =
                 ]
             , div [ class "input-section" ]
                 [ h2 [] [ text "Equipment (not public)" ]
-                , p [ class "input-description" ] [ text "The information will be used by the Program Committee to review the details of your talk. The outline should be rough agenda for the talk, with a few keywords for each section, and with a rough estimate of the time spent on each." ]
+                , p [ class "input-description" ] [ text "Please specify any additional special equipment you may need. Note that all get access to a slide projector, video projection facilities, computer tables, paper boards, etc." ]
                 , textarea [ value submission.equipment, onInput Equipment ] []
                 ]
             , div [ class "input-section" ]
