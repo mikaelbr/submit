@@ -33,7 +33,7 @@ hashParser location =
             parseLoggedIn <| Maybe.withDefault Submissions <| parseHash pageParser location
 
         Nothing ->
-            Register
+            parseLoggedOut <| Maybe.withDefault Register <| parseHash pageParser location
 
 
 parseLoggedIn : Page -> Page
@@ -42,11 +42,24 @@ parseLoggedIn page =
         Register ->
             Submissions
 
-        UseToken _ ->
-            Submissions
-
         _ ->
             page
+
+
+parseLoggedOut : Page -> Page
+parseLoggedOut page =
+    case page of
+        Register ->
+            Register
+
+        Thanks ->
+            Thanks
+
+        UseToken a ->
+            UseToken a
+
+        _ ->
+            Register
 
 
 pageParser : Parser (Page -> a) a
