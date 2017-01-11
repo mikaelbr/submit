@@ -26,7 +26,7 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ class "login " ]
+    div [ class "wrapper login " ]
         [ div [ class "logo-wrapper" ]
             [ img [ src "assets/logo.png", class "logo" ] []
             ]
