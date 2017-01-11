@@ -20,10 +20,6 @@ public class NewSpeaker {
         data.setBio(bio);
     }
 
-    public String getBio() {
-        return data.bio != null ? data.bio.value : null;
-    }
-
     public static NewSpeaker draft(EmailAddress postedBy) {
         return new NewSpeaker(
                 "",
