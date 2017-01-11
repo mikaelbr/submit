@@ -2,8 +2,8 @@ module Submissions.View exposing (view)
 
 import Submissions.Model exposing (..)
 import Submissions.Messages exposing (..)
-import Html exposing (Html, div, h1, h2, text, a, button)
-import Html.Attributes exposing (class, href)
+import Html exposing (Html, div, h1, h2, text, a, button, img)
+import Html.Attributes exposing (class, href, src)
 import Html.Events exposing (onClick)
 import Nav.Nav exposing (toHash)
 import Nav.Model
@@ -37,10 +37,13 @@ viewSubmissions submissions =
         years =
             List.map viewYear submissions.years
     in
-        div []
-            [ button [ onClick CreateTalk, class "new-talk" ] [ text "New talk" ]
-            , h1 [] [ text "Your Talks" ]
-            , div [ class "submissions" ] years
+        div [ class "wrapper" ]
+            [ div [ class "logo-wrapper" ] [ img [ src "assets/logo.png", class "logo" ] [] ]
+            , div [ class "submissions-list" ]
+                [ button [ onClick CreateTalk, class "new-talk" ] [ text "New talk" ]
+                , h1 [] [ text "Your Talks" ]
+                , div [ class "submissions" ] years
+                ]
             ]
 
 

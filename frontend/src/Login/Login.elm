@@ -19,7 +19,7 @@ initModel =
 
 view : Model -> Html Msg
 view model =
-    div [ class "welcome" ]
+    div [ class "wrapper login" ]
         [ div [ class "logo-wrapper" ]
             [ img [ src "assets/logo.png", class "logo" ] [] ]
         , h1 [] [ text "Got something interesting to say?" ]
