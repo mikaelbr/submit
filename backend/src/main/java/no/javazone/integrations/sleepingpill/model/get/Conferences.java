@@ -14,6 +14,14 @@ public class Conferences {
                 .orElse("unknown");
     }
 
+    public String getSlugFromId(String id) {
+        return conferences.stream()
+                .filter(c -> c.id.equals(id))
+                .map(c -> c.slug)
+                .findAny()
+                .orElse("unknown");
+    }
+
     public String getIdFromSlug(String slug) {
         return conferences.stream()
                 .filter(c -> c.slug.equals(slug))

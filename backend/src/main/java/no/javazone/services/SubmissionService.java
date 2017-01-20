@@ -10,6 +10,7 @@ import no.javazone.integrations.sleepingpill.model.get.Session;
 import no.javazone.integrations.sleepingpill.model.get.Sessions;
 import no.javazone.integrations.sleepingpill.model.update.UpdatedSession;
 import no.javazone.integrations.sleepingpill.model.update.UpdatedSpeaker;
+import no.javazone.representations.Speaker;
 import no.javazone.representations.Submission;
 import no.javazone.representations.SubmissionsForUser;
 import no.javazone.representations.Year;
@@ -65,14 +66,14 @@ public class SubmissionService {
     private Year sleepingpillYearToOurYear(Map.Entry<String, List<Session>> e) {
         return new Year(
                 conferences.getNameFromId(e.getKey()),
-                e.getValue().stream().map(Submission::fromSleepingPillSession).collect(toList())
+                e.getValue().stream().map((session) -> fromSleepingPillSession(session)).collect(toList())
         );
     }
 
     public Submission getSubmissionForUser(AuthenticatedUser authenticatedUser, String submissionId) {
         Session session = sleepingPill.getSession(submissionId);
         if(session.speakers.stream().anyMatch(s -> s.email.equals(authenticatedUser.emailAddress.toString()))) {
-            return Submission.fromSleepingPillSession(session);
+            return fromSleepingPillSession(session);
         } else {
             LOG.warn(format("User %s tried to access session %s, which the user is not a speaker for...", authenticatedUser.emailAddress.toString(), submissionId));
             throw new NotFoundException("Session with ID " + submissionId + " not found");
@@ -112,5 +113,27 @@ public class SubmissionService {
             LOG.warn(String.format("%s tried to set the status %s that the user isn't allowed to set...", authenticatedUser.emailAddress.toString(), status.name()));
             throw new ForbiddenException("Tried to set a status that the user isn't allowed to set...");
         }
+    }
+
+    private Submission fromSleepingPillSession(Session session) {
+        return new Submission(
+                session.sessionId,
+                session.conferenceId,
+                session.status.name(),
+                session.getTitle(),
+                session.getAbstract(),
+                session.getIntendedAudience(),
+                session.getFormat(),
+                session.getLanguage(),
+                session.getOutline(),
+                session.getEquipment(),
+                session.getLength(),
+                session.speakers.stream().map(Speaker::fromSleepingPillSpeaker).collect(toList()),
+                isEditableBySubmitter(session.sessionId)
+        );
+    }
+
+    private boolean isEditableBySubmitter(String sessionId) {
+        return conferences.getSlugFromId(sessionId).equals(sleepingPillConfiguration.activeYear);
     }
 }
