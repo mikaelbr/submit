@@ -22,6 +22,7 @@ type alias Submission =
     , speakers : List ( Int, Speaker )
     , status : String
     , title : String
+    , editable : Bool
     }
 
 

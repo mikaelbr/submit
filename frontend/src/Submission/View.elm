@@ -47,12 +47,13 @@ viewSubmission submission =
         [ div [ class "sticky-footer" ]
             [ div [ class "sticky-footer-content" ]
                 [ div [] [ a [ href << toHash <| Nav.Model.Submissions ] [ button [ class "button-back" ] [ text "Back to list" ] ] ]
-                , div [] [ button [ class "button-save", onClick Save ] [ text "Save now" ] ]
+                , div [] [ button [ class <| "button-save " ++ hideIfNotEditable submission.editable, onClick Save ] [ text "Save now" ] ]
                 ]
             ]
         , div [ class "logo-wrapper" ] [ img [ src "assets/logo.png", class "logo" ] [] ]
         , div [ class "edit-submission" ]
-            [ div [ class "input-section" ]
+            [ div [ class <| "cant-edit-message " ++ hideIfEditable submission.editable ] [ text "You can't edit this talk. Only talks from this year's JavaZone is editable." ]
+            , div [ class "input-section" ]
                 [ h2 [] [ text "Title" ]
                 , p [ class "input-description" ] [ text "Select an expressive and snappy title that captures the content of your talk without being too long. Remember that the title must be attractive and should make people curious." ]
                 , input [ type_ "text", value submission.title, onInput Title ] []
@@ -138,3 +139,19 @@ viewSpeaker ( i, speaker ) =
 viewError : String -> Html Msg
 viewError message =
     div [] [ text message ]
+
+
+hideIfEditable : Bool -> String
+hideIfEditable editable =
+    if editable then
+        "hide"
+    else
+        ""
+
+
+hideIfNotEditable : Bool -> String
+hideIfNotEditable editable =
+    if not editable then
+        "hide"
+    else
+        ""
