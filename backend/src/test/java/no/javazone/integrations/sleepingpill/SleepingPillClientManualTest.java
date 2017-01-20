@@ -25,6 +25,8 @@ public class SleepingPillClientManualTest {
     public void setup() {
         SleepingPillConfiguration configuration = new SleepingPillConfiguration();
         configuration.baseUri = "https://sleepingpill.javazone.no";
+        configuration.username = "USERNAME";
+        configuration.password = "PASSWORD";
         client = new SleepingPillClient(configuration);
     }
 

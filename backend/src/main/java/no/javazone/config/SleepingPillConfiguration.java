@@ -8,8 +8,18 @@ import org.springframework.stereotype.Component;
 public class SleepingPillConfiguration {
 
     public String baseUri;
+    public String username;
+    public String password;
 
     public void setBaseUri(String baseUri) {
         this.baseUri = baseUri;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
