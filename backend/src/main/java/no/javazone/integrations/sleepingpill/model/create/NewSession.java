@@ -40,7 +40,7 @@ public class NewSession {
         return new NewSession(
                 SessionStatus.DRAFT,
                 postedBy.toString(),
-                "New draft, let the magic happen!",
+                "New draft for your JavaZone talk",
                 "",
                 "",
                 "presentation",
