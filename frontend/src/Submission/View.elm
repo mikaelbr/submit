@@ -14,11 +14,14 @@ import Html
         , h2
         , h3
         , p
+        , a
         , ul
         , li
         )
-import Html.Attributes exposing (class, type_, value, src, placeholder)
+import Html.Attributes exposing (class, type_, value, src, placeholder, href)
 import Html.Events exposing (onInput, onClick)
+import Nav.Nav exposing (toHash)
+import Nav.Model
 import Backend.Network exposing (RequestStatus(..))
 
 
@@ -43,7 +46,7 @@ viewSubmission submission =
     div [ class "wrapper" ]
         [ div [ class "sticky-footer" ]
             [ div [ class "sticky-footer-content" ]
-                [ div [] [ button [] [ text "Back to list" ] ]
+                [ div [] [ a [ href << toHash <| Nav.Model.Submissions ] [ button [] [ text "Back to list" ] ] ]
                 , div [] [ button [ onClick Save ] [ text "Save" ] ]
                 ]
             ]
