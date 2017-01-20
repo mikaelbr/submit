@@ -17,6 +17,7 @@ type Msg
     | Format String
     | IntendedAudience String
     | Language String
+    | Length String
     | Outline String
     | AddSpeaker
     | SpeakerName Int String

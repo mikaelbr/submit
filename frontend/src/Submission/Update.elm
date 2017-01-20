@@ -61,6 +61,10 @@ update msg model =
             updateField model <|
                 \s -> { s | language = language }
 
+        Length length ->
+            updateField model <|
+                \s -> { s | length = length }
+
         Outline outline ->
             updateField model <|
                 \s -> { s | outline = outline }

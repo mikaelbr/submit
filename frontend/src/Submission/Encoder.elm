@@ -14,6 +14,7 @@ encoder submission =
         , ( "equipment", string submission.equipment )
         , ( "format", string submission.format )
         , ( "language", string submission.language )
+        , ( "length", string submission.length )
         , ( "outline", string submission.outline )
         , ( "speakers", list <| List.map encodeSpeaker submission.speakers )
         ]
