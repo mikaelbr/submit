@@ -41,7 +41,13 @@ view model =
 viewSubmission : Submission -> Html Msg
 viewSubmission submission =
     div [ class "wrapper" ]
-        [ div [ class "logo-wrapper" ] [ img [ src "assets/logo.png", class "logo" ] [] ]
+        [ div [ class "sticky-footer" ]
+            [ div [ class "sticky-footer-content" ]
+                [ div [] [ button [] [ text "Back to list" ] ]
+                , div [] [ button [ onClick Save ] [ text "Save" ] ]
+                ]
+            ]
+        , div [ class "logo-wrapper" ] [ img [ src "assets/logo.png", class "logo" ] [] ]
         , div [ class "edit-submission" ]
             [ div [ class "input-section" ]
                 [ h2 [] [ text "Title" ]
@@ -90,9 +96,9 @@ viewSubmission submission =
                     List.map viewSpeaker submission.speakers
                 ]
             , div [ class "input-section" ]
-                [ h2 [] [ text "Ready to save?" ]
-                , p [ class "input-description" ] [ text "Push that button! Don't worry, you'll be able to come back and edit your talk at any time :)" ]
-                , button [ onClick Save ] [ text "Save" ]
+                [ h2 [] [ text "That's it! You're done!" ]
+                , p [ class "input-description" ] [ text "Feel free to come back anytime and edit your talk!" ]
+                , div [ class "sticky-footer-filler" ] []
                 ]
             ]
         ]
