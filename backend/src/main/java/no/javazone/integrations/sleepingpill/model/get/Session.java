@@ -36,7 +36,7 @@ public class Session {
     }
 
     public String getEquipment() {
-        return data.language != null ? data.language.value : null;
+        return data.equipment != null ? data.equipment.value : null;
     }
 
     public String getLength() {
