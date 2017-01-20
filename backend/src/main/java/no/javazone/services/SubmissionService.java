@@ -72,7 +72,7 @@ public class SubmissionService {
 
     public Submission getSubmissionForUser(AuthenticatedUser authenticatedUser, String submissionId) {
         Session session = sleepingPill.getSession(submissionId);
-        if(session.speakers.stream().anyMatch(s -> s.email.equals(authenticatedUser.emailAddress.toString()))) {
+        if (session.speakers.stream().anyMatch(s -> s.email.equals(authenticatedUser.emailAddress.toString()))) {
             return fromSleepingPillSession(session);
         } else {
             LOG.warn(format("User %s tried to access session %s, which the user is not a speaker for...", authenticatedUser.emailAddress.toString(), submissionId));
@@ -88,6 +88,13 @@ public class SubmissionService {
     }
 
     public Submission updateSubmission(AuthenticatedUser authenticatedUser, String submissionId, Submission submission) {
+        Submission previousSubmission = getSubmissionForUser(authenticatedUser, submissionId);
+
+        if (!isEditableBySubmitter(previousSubmission.conferenceId)) {
+            LOG.warn(String.format("User %s tried to edit a previous year's submissions with is %s", authenticatedUser.emailAddress, submissionId));
+            throw new ForbiddenException("Not allowed to edit previous year's submissions");
+        }
+
         UpdatedSession updatedSession = new UpdatedSession(
                 parseAndValidateStatus(authenticatedUser, submission),
                 submission.title,
@@ -107,7 +114,7 @@ public class SubmissionService {
 
     private SessionStatus parseAndValidateStatus(AuthenticatedUser authenticatedUser, Submission submission) {
         SessionStatus status = SessionStatus.valueOf(submission.status);
-        if(status == SessionStatus.DRAFT || status == SessionStatus.SUBMITTED) {
+        if (status == SessionStatus.DRAFT || status == SessionStatus.SUBMITTED) {
             return status;
         } else {
             LOG.warn(String.format("%s tried to set the status %s that the user isn't allowed to set...", authenticatedUser.emailAddress.toString(), status.name()));
@@ -129,7 +136,7 @@ public class SubmissionService {
                 session.getEquipment(),
                 session.getLength(),
                 session.speakers.stream().map(Speaker::fromSleepingPillSpeaker).collect(toList()),
-                isEditableBySubmitter(session.sessionId)
+                isEditableBySubmitter(session.conferenceId)
         );
     }
 
