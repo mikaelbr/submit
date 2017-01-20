@@ -15,7 +15,7 @@ decoder =
         |> required "id" string
         |> required "intendedAudience" string
         |> required "language" string
-        |> required "length" string
+        |> optional "length" string "60"
         |> required "outline" string
         |> required "speakers" (map toTuples <| list decodeSpeaker)
         |> required "status" string
