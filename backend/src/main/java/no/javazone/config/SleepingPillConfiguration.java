@@ -10,6 +10,7 @@ public class SleepingPillConfiguration {
     public String baseUri;
     public String username;
     public String password;
+    public String activeYear;
 
     public void setBaseUri(String baseUri) {
         this.baseUri = baseUri;
@@ -21,5 +22,9 @@ public class SleepingPillConfiguration {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setActiveYear(String activeYear) {
+        this.activeYear = activeYear;
     }
 }

@@ -1,5 +1,6 @@
 package no.javazone.services;
 
+import no.javazone.config.SleepingPillConfiguration;
 import no.javazone.integrations.sleepingpill.SleepingPillClient;
 import no.javazone.integrations.sleepingpill.model.common.SessionStatus;
 import no.javazone.integrations.sleepingpill.model.create.CreatedSession;
@@ -33,18 +34,19 @@ public class SubmissionService {
 
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
-    public static final String SUBMIT_YEAR = "javazone_2017";
-
     private final SleepingPillClient sleepingPill;
 
     private final Conferences conferences;
 
+    private final SleepingPillConfiguration sleepingPillConfiguration;
+
     @Autowired
-    public SubmissionService(SleepingPillClient sleepingPill) {
+    public SubmissionService(SleepingPillClient sleepingPill, SleepingPillConfiguration sleepingPillConfiguration) {
         this.sleepingPill = sleepingPill;
 
         // TODO (EHH): Refresh this periodically?
         conferences = sleepingPill.getConferences();
+        this.sleepingPillConfiguration = sleepingPillConfiguration;
     }
 
     public SubmissionsForUser getSubmissionsForUser(AuthenticatedUser authenticatedUser) {
@@ -79,7 +81,7 @@ public class SubmissionService {
 
     public Submission createNewDraft(AuthenticatedUser authenticatedUser) {
         NewSession draft = NewSession.draft(authenticatedUser.emailAddress);
-        String conferenceId = conferences.getIdFromSlug(SUBMIT_YEAR);
+        String conferenceId = conferences.getIdFromSlug(sleepingPillConfiguration.activeYear);
         CreatedSession createdSession = sleepingPill.createSession(conferenceId, draft);
         return getSubmissionForUser(authenticatedUser, createdSession.id);
     }
