@@ -79,11 +79,15 @@ viewSubmission submission =
                 , textarea [ value submission.equipment, onInput Equipment ] []
                 ]
             , div [ class "input-section" ]
-                [ h2 [] [ text "Who are you?" ]
+                [ div [ class "flex-header" ]
+                    [ h2 [ class "flex-header-element" ] [ text "Who are you?" ]
+                    , div [ class "flex-header-element" ]
+                        [ button [ onClick AddSpeaker ] [ text "Add second speaker" ]
+                        ]
+                    ]
                 , p [ class "input-description" ] [ text "Please give us a little bit of information about yourself. You can also add any additional speakers here. All of you will be shown in the program." ]
                 , ul [ class "speakers" ] <|
                     List.map viewSpeaker submission.speakers
-                , button [ onClick AddSpeaker ] [ text "Add speaker" ]
                 ]
             , div [ class "input-section" ]
                 [ h2 [] [ text "Ready to save?" ]
@@ -97,9 +101,9 @@ viewSubmission submission =
 viewSpeaker : ( Int, Speaker ) -> Html Msg
 viewSpeaker ( i, speaker ) =
     li [ class "speaker" ]
-        [ div [ class "speaker-header" ]
-            [ h2 [] [ text ("Speaker " ++ toString (i + 1)) ]
-            , div [ class "speaker-header-button" ]
+        [ div [ class "flex-header" ]
+            [ h2 [ class "flex-header-element" ] [ text ("Speaker " ++ toString (i + 1)) ]
+            , div [ class "flex-header-element" ]
                 [ button [ onClick (RemoveSpeaker i) ] [ text "Remove speaker" ]
                 ]
             ]
