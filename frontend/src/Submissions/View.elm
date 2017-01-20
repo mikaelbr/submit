@@ -49,7 +49,7 @@ viewSubmissions submissions =
                 , div [ class "submissions" ] years
                 , div [ class "logout" ]
                     [ p [] [ text "We'll keep you signed in on this machine for your convenience. If you don't want us to remember you on this computer, that's okay to. Use the button :)" ]
-                    , button [ onClick Logout ] [ text "Forget me on this computer" ]
+                    , button [ onClick Logout, class "forget-me-button" ] [ text "Forget me on this computer" ]
                     ]
                 ]
             ]
@@ -75,7 +75,7 @@ viewSubmission submission =
             , div [ class "submission-details" ]
                 [ div [ class "title" ] [ text submission.name ]
                 , div [ class "status" ] [ text submission.status ]
-                , div [ class "open-arrow" ] [ text ">" ]
+                , div [ class "open-arrow" ] [ text "-" ]
                 ]
             ]
         ]
