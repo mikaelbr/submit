@@ -12,6 +12,7 @@ import Html
         , button
         , img
         , h2
+        , h3
         , p
         , ul
         , li
@@ -80,7 +81,7 @@ viewSubmission submission =
             , div [ class "input-section" ]
                 [ h2 [] [ text "Who are you?" ]
                 , p [ class "input-description" ] [ text "Please give us a little bit of information about yourself. You can also add any additional speakers here. All of you will be shown in the program." ]
-                , ul [] <|
+                , ul [ class "speakers" ] <|
                     List.map viewSpeaker submission.speakers
                 , button [ onClick AddSpeaker ] [ text "Add speaker" ]
                 ]
@@ -96,34 +97,28 @@ viewSubmission submission =
 viewSpeaker : ( Int, Speaker ) -> Html Msg
 viewSpeaker ( i, speaker ) =
     li [ class "speaker" ]
-        [ input
-            [ type_ "text"
-            , value speaker.name
-            , placeholder "Speaker name"
-            , onInput <| SpeakerName i
+        [ div [ class "speaker-header" ]
+            [ h2 [] [ text ("Speaker " ++ toString (i + 1)) ]
+            , div [ class "speaker-header-button" ]
+                [ button [ onClick (RemoveSpeaker i) ] [ text "Remove speaker" ]
+                ]
             ]
-            []
-        , input
-            [ type_ "text"
-            , value speaker.email
-            , placeholder "Speaker email"
-            , onInput <| SpeakerEmail i
+        , div [ class "speaker-input-section" ]
+            [ h3 [] [ text "Speakers name" ]
+            , input [ type_ "text", value speaker.name, placeholder "Speaker name", onInput <| SpeakerName i ] []
             ]
-            []
-        , input
-            [ type_ "text"
-            , value speaker.zipCode
-            , placeholder "Zip Code"
-            , onInput <| SpeakerZipCode i
+        , div [ class "speaker-input-section" ]
+            [ h3 [] [ text "Speakers email (not public)" ]
+            , input [ type_ "text", value speaker.email, placeholder "Speaker email", onInput <| SpeakerEmail i ] []
             ]
-            []
-        , textarea
-            [ value speaker.bio
-            , placeholder "Speaker bio"
-            , onInput <| SpeakerBio i
+        , div [ class "speaker-input-section" ]
+            [ h3 [] [ text "Short description of the speaker" ]
+            , textarea [ value speaker.bio, placeholder "Speaker bio", onInput <| SpeakerBio i ] []
             ]
-            []
-        , button [ onClick (RemoveSpeaker i) ] [ text "Remove speaker" ]
+        , div [ class "speaker-input-section" ]
+            [ h3 [] [ text "Your norwegian ZIP Code (optional)" ]
+            , input [ type_ "text", value speaker.zipCode, placeholder "Zip Code", onInput <| SpeakerZipCode i ] []
+            ]
         ]
 
 
