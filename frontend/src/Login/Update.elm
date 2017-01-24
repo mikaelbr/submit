@@ -15,10 +15,10 @@ update msg model =
             ( { model | email = email }, Cmd.none )
 
         SubmitEmail ->
-            ( model, getLoginToken model.email )
+            ( { model | loading = True }, getLoginToken model.email )
 
         Submit (Err _) ->
-            ( model, Cmd.none )
+            ( { model | loading = False }, Cmd.none )
 
         Submit (Ok _) ->
             ( model, Navigation.newUrl <| toHash Thanks )
