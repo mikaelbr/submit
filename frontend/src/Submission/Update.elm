@@ -51,7 +51,7 @@ update msg model =
 
         Format format ->
             updateField model <|
-                \s -> { s | format = format, length = getLength s.format }
+                \s -> { s | format = format, length = getLength format }
 
         IntendedAudience intendedAudience ->
             updateField model <|

@@ -64,8 +64,8 @@ viewSubmission submission =
             , div [ class "input-section" ]
                 [ h2 [] [ text "Language" ]
                 , p [ class "input-description" ] [ text "Which language will you be holding the talk in? Note it is permitted to use English in your slides, even though you may be talking in Norwegian. We generally recommend that you hold the talk in the language you are most comfortable with." ]
-                , radio "Norwegian" (Language "no") <| submission.language == "no"
-                , radio "English" (Language "en") <| submission.language == "en"
+                , radio "Norwegian" "language" "no" (Language "no") <| submission.language == "no"
+                , radio "English" "language" "en" (Language "en") <| submission.language == "en"
                 ]
             , div [ class "input-section" ]
                 [ h2 [] [ text "Description" ]
@@ -80,9 +80,9 @@ viewSubmission submission =
             , div [ class "input-section" ]
                 [ h2 [] [ text "Presentation format" ]
                 , p [ class "input-description" ] [ text "In which format are you presenting your talk?" ]
-                , radio "Presentation" (Format "presentation") <| submission.format == "presentation"
-                , radio "Lightning Talk" (Format "lightning-talk") <| submission.format == "lightning-talk"
-                , radio "Workshop" (Format "workshop") <| submission.format == "workshop"
+                , radio "Presentation" "format" "presentation" (Format "presentation") <| submission.format == "presentation"
+                , radio "Lightning Talk" "format" "lightning-talk" (Format "lightning-talk") <| submission.format == "lightning-talk"
+                , radio "Workshop" "format" "workshop" (Format "workshop") <| submission.format == "workshop"
                 ]
             , div [ class "input-section" ]
                 [ h2 [] [ text "Presentation length" ]
@@ -210,11 +210,11 @@ hideIfNotEditable editable =
         ""
 
 
-radio : String -> msg -> Bool -> Html msg
-radio value msg selected =
+radio : String -> String -> String -> msg -> Bool -> Html msg
+radio l group val msg selected =
     div []
         [ label []
-            [ input [ type_ "radio", name "language", onClick msg, checked selected ] []
-            , text value
+            [ input [ type_ "radio", name group, value val, onClick msg, checked selected ] []
+            , text l
             ]
         ]
