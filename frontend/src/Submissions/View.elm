@@ -36,7 +36,10 @@ viewSubmissions : Submissions -> Html Msg
 viewSubmissions submissions =
     let
         years =
-            List.map viewYear submissions.years
+            if List.length submissions.years == 0 then
+                [ viewEmpty ]
+            else
+                List.map viewYear submissions.years
     in
         div [ class "wrapper" ]
             [ div [ class "logo-wrapper" ] [ img [ src "assets/logo.png", class "logo" ] [] ]
@@ -53,6 +56,11 @@ viewSubmissions submissions =
                     ]
                 ]
             ]
+
+
+viewEmpty : Html Msg
+viewEmpty =
+    div [] [ text "TOMT!" ]
 
 
 viewYear : Year -> Html Msg
