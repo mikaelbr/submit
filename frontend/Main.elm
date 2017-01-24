@@ -20,6 +20,7 @@ import Submissions.Update
 import Submission.View
 import Submission.Model
 import Submission.Update
+import Submission.Subscriptions
 import Nav.Requests exposing (getSubmissions, getSubmission)
 import Lazy
 
@@ -146,7 +147,7 @@ pageView model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    Sub.map SubmissionMsg <| Submission.Subscriptions.subscriptions model.submission
 
 
 main : Program Never Model Msg

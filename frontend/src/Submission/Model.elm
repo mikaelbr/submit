@@ -7,6 +7,8 @@ import Time
 type alias Model =
     { submission : RequestStatus Submission
     , lastSaved : Maybe Time.Time
+    , dirty : Bool
+    , autosave : Bool
     }
 
 
@@ -43,7 +45,7 @@ type alias Speaker =
 
 initModel : Model
 initModel =
-    Model Initial Nothing
+    Model Initial Nothing False False
 
 
 initSpeaker : List ( Int, Speaker ) -> ( Int, Speaker )

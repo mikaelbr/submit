@@ -20,7 +20,7 @@ update msg model =
         Get (Ok submission) ->
             ( { model | submission = Complete submission }, Cmd.none )
 
-        Save ->
+        Save _ ->
             case model.submission of
                 Complete submission ->
                     ( model, saveSubmission submission )
@@ -36,6 +36,9 @@ update msg model =
 
         TimeUpdated time ->
             ( { model | lastSaved = Just time }, Cmd.none )
+
+        ToggleAutosave ->
+            ( { model | autosave = not model.autosave }, Cmd.none )
 
         Title title ->
             updateField model <|
@@ -156,7 +159,7 @@ updateField : Model -> (Submission -> Submission) -> ( Model, Cmd Msg )
 updateField model updateFunction =
     case model.submission of
         Complete submission ->
-            ( { model | submission = Complete <| updateFunction submission }, Cmd.none )
+            ( { model | dirty = True, submission = Complete <| updateFunction submission }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )

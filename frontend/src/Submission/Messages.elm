@@ -8,9 +8,10 @@ import Time
 type Msg
     = Message
     | Get (Result Http.Error Submission)
-    | Save
+    | Save Time.Time
     | Saved (Result Http.Error Submission)
     | TimeUpdated Time.Time
+    | ToggleAutosave
     | Title String
     | Abstract String
     | Equipment String

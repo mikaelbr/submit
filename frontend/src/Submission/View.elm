@@ -26,6 +26,9 @@ import Html.Events exposing (onInput, onClick)
 import Nav.Nav exposing (toHash)
 import Nav.Model
 import Backend.Network exposing (RequestStatus(..))
+import Time
+import Date
+import String
 
 
 view : Model -> Html Msg
@@ -38,19 +41,27 @@ view model =
             div [] [ text "Loading" ]
 
         Complete submission ->
-            viewSubmission submission
+            viewSubmission submission model
 
         Error message ->
             viewError message
 
 
-viewSubmission : Submission -> Html Msg
-viewSubmission submission =
+viewSubmission : Submission -> Model -> Html Msg
+viewSubmission submission model =
     div [ class "wrapper" ]
         [ div [ class "sticky-footer" ]
             [ div [ class "sticky-footer-content" ]
-                [ div [] [ a [ href << toHash <| Nav.Model.Submissions ] [ button [ class "button-back" ] [ text "Back to list" ] ] ]
-                , div [] [ button [ class <| "button-save " ++ hideIfNotEditable submission.editable, onClick Save ] [ text "Save now" ] ]
+                [ div []
+                    [ a [ href << toHash <| Nav.Model.Submissions ]
+                        [ button [ class "button-back" ] [ text "Back to list" ] ]
+                    ]
+                , div []
+                    [ input [ type_ "checkbox", onClick ToggleAutosave, checked model.autosave ] []
+                    , text <| viewLastSaved model.lastSaved
+                    ]
+                , div []
+                    [ button [ class <| "button-save " ++ hideIfNotEditable submission.editable, onClick (Save 0) ] [ text "Save now" ] ]
                 ]
             ]
         , div [ class "logo-wrapper" ] [ img [ src "assets/logo.png", class "logo" ] [] ]
@@ -245,3 +256,22 @@ formatText format =
 
         _ ->
             "Please select the length of the presentation (in minutes). Workshops last 2, 4 or 8 hours (120, 240 or 480 minutes)"
+
+
+viewLastSaved : Maybe Time.Time -> String
+viewLastSaved time =
+    case time of
+        Just t ->
+            let
+                date =
+                    Date.fromTime t
+            in
+                "Last saved "
+                    ++ (String.join ":"
+                            << List.map toString
+                        <|
+                            [ Date.hour date, Date.minute date, Date.second date ]
+                       )
+
+        Nothing ->
+            ""
