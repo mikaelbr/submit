@@ -45,7 +45,7 @@ viewSubmissions submissions =
             if List.length submissions.years == 0 then
                 text ""
             else
-                p [ class "intro-text" ] [ text "These are all JavaZone talks you have submitted or participated on. You can edit all talks from the currect year. All earlier talks are also available for your reference, but you can't edit those." ]
+                p [ class "intro-text" ] [ text "These are all JavaZone talks you have submitted or participated on. You can edit all talks from the currect year. All earlier talks are also available for your reference." ]
     in
         div [ class "wrapper" ]
             [ div [ class "logo-wrapper" ] [ img [ src "assets/logo.png", class "logo" ] [] ]
