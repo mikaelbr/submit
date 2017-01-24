@@ -21,6 +21,7 @@ public class Submission {
     public String equipment;
     public String length;
     public String level;
+    public String suggestedKeywords;
     public List<Speaker> speakers;
     public boolean editable;
 
@@ -28,7 +29,7 @@ public class Submission {
     private Submission() { }
 
     public Submission(String sessionId, String conferenceId, String status, String title, String theAbstract,
-                      String intendedAudience, String format, String language, String outline, String equipment, String length, String level, List<Speaker> speakers, boolean editable) {
+                      String intendedAudience, String format, String language, String outline, String equipment, String length, String level, String suggestedKeywords, List<Speaker> speakers, boolean editable) {
         this.id = sessionId;
         this.conferenceId = conferenceId;
         this.status = status;
@@ -41,6 +42,7 @@ public class Submission {
         this.equipment = equipment;
         this.length = length;
         this.level = level;
+        this.suggestedKeywords = suggestedKeywords;
         this.speakers = speakers;
         this.editable = editable;
     }

@@ -47,6 +47,10 @@ public class Session {
         return data.level != null ? data.level.value : null;
     }
 
+    public String getSuggestedKeywords() {
+        return data.suggestedKeywords != null ? data.suggestedKeywords.value : null;
+    }
+
     /**
      * Legazy field, not used anymore
      */

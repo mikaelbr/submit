@@ -106,6 +106,7 @@ public class SubmissionService {
                 submission.equipment,
                 submission.length,
                 submission.level,
+                submission.suggestedKeywords,
                 submission.speakers.stream().map(UpdatedSpeaker::fromApiObject).collect(toList())
         );
         sleepingPill.updateSession(submissionId, updatedSession);
@@ -137,6 +138,7 @@ public class SubmissionService {
                 session.getEquipment(),
                 session.getLength(),
                 session.getLevel(),
+                session.getSuggestedKeywords(),
                 session.speakers.stream().map(Speaker::fromSleepingPillSpeaker).collect(toList()),
                 isEditableBySubmitter(session.conferenceId)
         );
