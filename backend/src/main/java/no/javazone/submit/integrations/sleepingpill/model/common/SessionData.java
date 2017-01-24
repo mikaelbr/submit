@@ -13,6 +13,7 @@ public class SessionData {
     public StringDataField language;
     public StringDataField equipment;
     public StringDataField length;
+    public StringDataField level;
 
     /**
      * Legazy field, not used anymore
@@ -63,6 +64,10 @@ public class SessionData {
         this.length = new StringDataField(false, length);
     }
 
+    public void setLevel(String level) {
+        this.level = new StringDataField(false, level);
+    }
+
     @Override
     public String toString() {
         return "SessionData{" +
@@ -73,6 +78,7 @@ public class SessionData {
                 ", language=" + language +
                 ", equipment=" + equipment +
                 ", length=" + length +
+                ", level=" + level +
                 ", published=" + published +
                 ", slug=" + slug +
                 ", keywords=" + keywords +

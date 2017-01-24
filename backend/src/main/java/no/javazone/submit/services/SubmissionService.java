@@ -66,7 +66,7 @@ public class SubmissionService {
     private Year sleepingpillYearToOurYear(Map.Entry<String, List<Session>> e) {
         return new Year(
                 conferences.getNameFromId(e.getKey()),
-                e.getValue().stream().map((session) -> fromSleepingPillSession(session)).collect(toList())
+                e.getValue().stream().map(this::fromSleepingPillSession).collect(toList())
         );
     }
 
@@ -105,6 +105,7 @@ public class SubmissionService {
                 submission.outline,
                 submission.equipment,
                 submission.length,
+                submission.level,
                 submission.speakers.stream().map(UpdatedSpeaker::fromApiObject).collect(toList())
         );
         sleepingPill.updateSession(submissionId, updatedSession);
@@ -135,6 +136,7 @@ public class SubmissionService {
                 session.getOutline(),
                 session.getEquipment(),
                 session.getLength(),
+                session.getLevel(),
                 session.speakers.stream().map(Speaker::fromSleepingPillSpeaker).collect(toList()),
                 isEditableBySubmitter(session.conferenceId)
         );

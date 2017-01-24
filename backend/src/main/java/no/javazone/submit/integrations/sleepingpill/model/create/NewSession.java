@@ -19,7 +19,7 @@ public class NewSession {
     private NewSession() { }
 
     public NewSession(SessionStatus status, String postedBy, String title, String theAbstract, String intendedAudience,
-                      String format, String language, String outline, String equipment, String length, List<NewSpeaker> speakers) {
+                      String format, String language, String outline, String equipment, String length, String level, List<NewSpeaker> speakers) {
 
         this.status = status;
         this.postedBy = postedBy;
@@ -34,6 +34,7 @@ public class NewSession {
         data.setOutline(outline);
         data.setEquipment(equipment);
         data.setLength(length);
+        data.setLevel(level);
     }
 
     public static NewSession draft(EmailAddress postedBy) {
@@ -48,7 +49,7 @@ public class NewSession {
                 "",
                 "",
                 "60",
-                singletonList(NewSpeaker.draft(postedBy))
-        );
+                "beginner",
+                singletonList(NewSpeaker.draft(postedBy)));
     }
 }

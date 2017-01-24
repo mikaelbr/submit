@@ -69,8 +69,8 @@ public class SleepingPillClientManualTest {
                 "Har en fin outline",
                 "Equipment",
                 "60",
-                speakers
-        );
+                "beginner",
+                speakers);
         CreatedSession createdSession = client.createSession(conferenceId, session);
 
         System.out.println("Created session with ID: " + createdSession.id);
@@ -99,6 +99,7 @@ public class SleepingPillClientManualTest {
                 "New outline",
                 "New Equipment",
                 "60",
+                "advanced",
                 speakers
         );
         client.updateSession(sessionId, session);

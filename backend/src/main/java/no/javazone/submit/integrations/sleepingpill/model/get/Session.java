@@ -43,6 +43,10 @@ public class Session {
         return data.length != null ? data.length.value : null;
     }
 
+    public String getLevel() {
+        return data.level != null ? data.level.value : null;
+    }
+
     /**
      * Legazy field, not used anymore
      */
