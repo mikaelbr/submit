@@ -37,6 +37,7 @@ type alias Speaker =
     , name : String
     , zipCode : String
     , twitter : String
+    , deletable : Bool
     }
 
 
@@ -56,4 +57,4 @@ initSpeaker speakers =
                 _ ->
                     0
     in
-        ( nextInt, Speaker "" "" "" "" "" "" )
+        ( nextInt, Speaker "" "" "" "" "" "" False )

@@ -120,12 +120,15 @@ viewSubmission submission =
                 [ div [ class "flex-header" ]
                     [ h2 [ class "flex-header-element" ] [ text "Who are you?" ]
                     , div [ class "flex-header-element" ]
-                        [ button [ onClick AddSpeaker, class "button-new" ] [ text "Add second speaker" ]
+                        [ if List.length submission.speakers > 1 then
+                            div [] []
+                          else
+                            button [ onClick AddSpeaker, class "button-new" ] [ text "Add second speaker" ]
                         ]
                     ]
                 , p [ class "input-description" ] [ text "Please give us a little bit of information about yourself. You can also add any additional speakers here. All of you will be shown in the program." ]
                 , ul [ class "speakers" ] <|
-                    List.map viewSpeaker submission.speakers
+                    List.map (viewSpeaker <| List.length submission.speakers) submission.speakers
                 ]
             , div [ class "input-section" ]
                 [ h2 [] [ text "That's it! You're done!" ]
@@ -159,36 +162,45 @@ viewLength s =
                 ]
 
 
-viewSpeaker : ( Int, Speaker ) -> Html Msg
-viewSpeaker ( i, speaker ) =
-    li [ class "speaker" ]
-        [ div [ class "flex-header" ]
-            [ h2 [ class "flex-header-element" ] [ text ("Speaker " ++ toString (i + 1)) ]
-            , div [ class "flex-header-element" ]
-                [ button [ onClick (RemoveSpeaker i), class "button-delete" ] [ text "Remove speaker" ]
+viewSpeaker : Int -> ( Int, Speaker ) -> Html Msg
+viewSpeaker n ( i, speaker ) =
+    let
+        removeButton =
+            if n == 1 then
+                div [] []
+            else if not speaker.deletable then
+                div [] []
+            else
+                div [ class "flex-header-element" ]
+                    [ button [ onClick (RemoveSpeaker i), class "button-delete" ] [ text "Remove speaker" ]
+                    ]
+    in
+        li [ class "speaker" ]
+            [ div [ class "flex-header" ]
+                [ h2 [ class "flex-header-element" ] [ text ("Speaker " ++ toString (i + 1)) ]
+                , removeButton
+                ]
+            , div [ class "speaker-input-section" ]
+                [ h3 [] [ text "Speakers name" ]
+                , input [ type_ "text", value speaker.name, placeholder "Speaker name", onInput <| SpeakerName i ] []
+                ]
+            , div [ class "speaker-input-section" ]
+                [ h3 [] [ text "Speakers email (not public)" ]
+                , input [ type_ "text", value speaker.email, placeholder "Speaker email", onInput <| SpeakerEmail i ] []
+                ]
+            , div [ class "speaker-input-section" ]
+                [ h3 [] [ text "Short description of the speaker (try not to exceed 150 words)" ]
+                , textarea [ value speaker.bio, placeholder "Speaker bio", onInput <| SpeakerBio i ] []
+                ]
+            , div [ class "speaker-input-section" ]
+                [ h3 [] [ text "Your Twitter handle (optional)" ]
+                , input [ type_ "text", value speaker.twitter, placeholder "@YourTwitterName", onInput <| SpeakerTwitter i ] []
+                ]
+            , div [ class "speaker-input-section" ]
+                [ h3 [] [ text "Your norwegian ZIP Code (optional)" ]
+                , input [ type_ "text", value speaker.zipCode, placeholder "Zip Code", onInput <| SpeakerZipCode i ] []
                 ]
             ]
-        , div [ class "speaker-input-section" ]
-            [ h3 [] [ text "Speakers name" ]
-            , input [ type_ "text", value speaker.name, placeholder "Speaker name", onInput <| SpeakerName i ] []
-            ]
-        , div [ class "speaker-input-section" ]
-            [ h3 [] [ text "Speakers email (not public)" ]
-            , input [ type_ "text", value speaker.email, placeholder "Speaker email", onInput <| SpeakerEmail i ] []
-            ]
-        , div [ class "speaker-input-section" ]
-            [ h3 [] [ text "Short description of the speaker (try not to exceed 150 words)" ]
-            , textarea [ value speaker.bio, placeholder "Speaker bio", onInput <| SpeakerBio i ] []
-            ]
-        , div [ class "speaker-input-section" ]
-            [ h3 [] [ text "Your Twitter handle (optional)" ]
-            , input [ type_ "text", value speaker.twitter, placeholder "@YourTwitterName", onInput <| SpeakerTwitter i ] []
-            ]
-        , div [ class "speaker-input-section" ]
-            [ h3 [] [ text "Your norwegian ZIP Code (optional)" ]
-            , input [ type_ "text", value speaker.zipCode, placeholder "Zip Code", onInput <| SpeakerZipCode i ] []
-            ]
-        ]
 
 
 viewError : String -> Html Msg

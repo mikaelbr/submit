@@ -40,3 +40,4 @@ decodeSpeaker =
         |> optional "name" string ""
         |> optional "zipCode" string ""
         |> optional "twitter" string ""
+        |> required "deletable" bool
