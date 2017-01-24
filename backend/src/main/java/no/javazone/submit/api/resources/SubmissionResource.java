@@ -30,9 +30,6 @@ public class SubmissionResource {
 
     private final SubmissionService submissionService;
 
-    @Context
-    private ContainerRequestContext containerRequestContext;
-
     @Autowired
     public SubmissionResource(SubmissionService submissionService) {
         this.submissionService = submissionService;
@@ -40,8 +37,8 @@ public class SubmissionResource {
 
     @GET
     @Produces(APPLICATION_JSON)
-    public Response getAllSubmissionsForLoggedInUser() {
-        return assertLoggedInUser(authenticatedUser ->
+    public Response getAllSubmissionsForLoggedInUser(@Context ContainerRequestContext context) {
+        return assertLoggedInUser(context, authenticatedUser ->
                 Response.ok(submissionService.getSubmissionsForUser(authenticatedUser)).build()
         );
     }
@@ -49,16 +46,17 @@ public class SubmissionResource {
     @GET
     @Path("/{submissionId}")
     @Produces(APPLICATION_JSON)
-    public Response getSingleSubmissionsForLoggedInUser(@PathParam("submissionId") String submissionId) {
-        return assertLoggedInUser(authenticatedUser ->
+    public Response getSingleSubmissionsForLoggedInUser(@Context ContainerRequestContext context,
+                                                        @PathParam("submissionId") String submissionId) {
+        return assertLoggedInUser(context, authenticatedUser ->
                 Response.ok(submissionService.getSubmissionForUser(authenticatedUser, submissionId)).build()
         );
     }
 
     @POST
     @Produces(APPLICATION_JSON)
-    public Response newDraft() {
-        return assertLoggedInUser(authenticatedUser ->
+    public Response newDraft(@Context ContainerRequestContext context) {
+        return assertLoggedInUser(context, authenticatedUser ->
                 Response.ok(submissionService.createNewDraft(authenticatedUser)).build()
         );
     }
@@ -67,14 +65,16 @@ public class SubmissionResource {
     @Path("/{submissionId}")
     @Produces(APPLICATION_JSON)
     @Consumes(APPLICATION_JSON)
-    public Response updateSubmission(@PathParam("submissionId") String submissionId, Submission submission) {
-        return assertLoggedInUser(authenticatedUser ->
+    public Response updateSubmission(@Context ContainerRequestContext context,
+                                     @PathParam("submissionId") String submissionId,
+                                     Submission submission) {
+        return assertLoggedInUser(context, authenticatedUser ->
                 Response.ok(submissionService.updateSubmission(authenticatedUser, submissionId, submission)).build()
         );
     }
 
-    private Response assertLoggedInUser(Function<AuthenticatedUser, Response> requestHandler) {
-        return getAuthenticatedUser()
+    private Response assertLoggedInUser(ContainerRequestContext context, Function<AuthenticatedUser, Response> requestHandler) {
+        return getAuthenticatedUser(context)
                 .map(requestHandler)
                 .orElseGet(() -> {
                     LOG.warn("No token even though we are in the resource method. Something is wrong. Did you forget to add the filter annotation to the Resource?");
@@ -82,8 +82,8 @@ public class SubmissionResource {
                 });
     }
 
-    private Optional<AuthenticatedUser> getAuthenticatedUser() {
-        return ofNullable((AuthenticatedUser) containerRequestContext.getProperty(AUTHENTICATED_USER_PROPERTY));
+    private Optional<AuthenticatedUser> getAuthenticatedUser(ContainerRequestContext context) {
+        return ofNullable((AuthenticatedUser) context.getProperty(AUTHENTICATED_USER_PROPERTY));
     }
 
 }
