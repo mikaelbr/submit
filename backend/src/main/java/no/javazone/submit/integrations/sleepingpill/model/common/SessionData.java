@@ -15,6 +15,7 @@ public class SessionData {
     public StringDataField length;
     public StringDataField level;
     public StringDataField suggestedKeywords;
+    public StringDataField infoToProgramCommittee;
 
     /**
      * Legazy field, not used anymore
@@ -73,6 +74,10 @@ public class SessionData {
         this.suggestedKeywords = new StringDataField(true, suggestedKeywords);
     }
 
+    public void setInfoToProgramCommittee(String infoToProgramCommittee) {
+        this.infoToProgramCommittee = new StringDataField(true, infoToProgramCommittee);
+    }
+
     @Override
     public String toString() {
         return "SessionData{" +
@@ -85,6 +90,7 @@ public class SessionData {
                 ", length=" + length +
                 ", level=" + level +
                 ", suggestedKeywords=" + suggestedKeywords +
+                ", infoToProgramCommittee=" + infoToProgramCommittee +
                 ", published=" + published +
                 ", slug=" + slug +
                 ", keywords=" + keywords +

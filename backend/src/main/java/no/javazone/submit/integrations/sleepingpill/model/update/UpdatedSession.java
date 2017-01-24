@@ -15,7 +15,8 @@ public class UpdatedSession {
     private UpdatedSession() { }
 
     public UpdatedSession(SessionStatus status, String title, String theAbstract, String intendedAudience,
-                          String format, String language, String outline, String equipment, String length, String level, String suggestedKeywords, List<UpdatedSpeaker> speakers) {
+                          String format, String language, String outline, String equipment, String length, String level,
+                          String suggestedKeywords, String infoToProgramCommittee, List<UpdatedSpeaker> speakers) {
 
         this.status = status;
         this.speakers = speakers;
@@ -31,5 +32,6 @@ public class UpdatedSession {
         data.setLength(length);
         data.setLevel(level);
         data.setSuggestedKeywords(suggestedKeywords);
+        data.setInfoToProgramCommittee(infoToProgramCommittee);
     }
 }

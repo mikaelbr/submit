@@ -71,6 +71,7 @@ public class SleepingPillClientManualTest {
                 "60",
                 "beginner",
                 "",
+                "",
                 speakers);
         CreatedSession createdSession = client.createSession(conferenceId, session);
 
@@ -101,6 +102,7 @@ public class SleepingPillClientManualTest {
                 "New Equipment",
                 "60",
                 "advanced",
+                "",
                 "",
                 speakers
         );

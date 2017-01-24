@@ -51,6 +51,10 @@ public class Session {
         return data.suggestedKeywords != null ? data.suggestedKeywords.value : null;
     }
 
+    public String getInfoToProgramCommittee() {
+        return data.infoToProgramCommittee != null ? data.infoToProgramCommittee.value : null;
+    }
+
     /**
      * Legazy field, not used anymore
      */

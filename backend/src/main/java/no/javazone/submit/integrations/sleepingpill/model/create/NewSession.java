@@ -19,7 +19,8 @@ public class NewSession {
     private NewSession() { }
 
     public NewSession(SessionStatus status, String postedBy, String title, String theAbstract, String intendedAudience,
-                      String format, String language, String outline, String equipment, String length, String level, String suggestedKeywords, List<NewSpeaker> speakers) {
+                      String format, String language, String outline, String equipment, String length, String level, String suggestedKeywords,
+                      String infoToProgramCommittee, List<NewSpeaker> speakers) {
 
         this.status = status;
         this.postedBy = postedBy;
@@ -36,6 +37,7 @@ public class NewSession {
         data.setLength(length);
         data.setLevel(level);
         data.setSuggestedKeywords(suggestedKeywords);
+        data.setInfoToProgramCommittee(infoToProgramCommittee);
     }
 
     public static NewSession draft(EmailAddress postedBy) {
@@ -51,6 +53,7 @@ public class NewSession {
                 "",
                 "60",
                 "beginner",
+                "",
                 "",
                 singletonList(NewSpeaker.draft(postedBy)));
     }
