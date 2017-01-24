@@ -86,13 +86,15 @@ viewSubmission submission =
                 ]
             , div [ class "input-section" ]
                 [ h2 [] [ text "Presentation length" ]
-                , p [ class "input-description" ] [ text "Please select the length of the presentation (in minutes). Presentations can have a length of 45 or 60 minutes. Including Q&A" ]
+                , p [ class "input-description" ] [ text <| formatText submission.format ]
                 , viewLength submission
                 ]
             , div [ class "input-section" ]
                 [ h2 [] [ text "Experience level" ]
                 , p [ class "input-description" ] [ text "Who is your talk pitched at?  Beginners, Experts or perhaps those in between?" ]
-                , input [ type_ "text", value submission.level, onInput Level ] []
+                , radio "Beginner" "experience" "beginner" (Level "beginner") <| submission.level == "beginner"
+                , radio "Intermediate" "experience" "intermediate" (Level "intermediate") <| submission.level == "intermediate"
+                , radio "Advanced" "experience" "advanced" (Level "advanced") <| submission.level == "advanced"
                 ]
             , div [ class "input-section" ]
                 [ h2 [] [ text "Suggested keywords" ]
@@ -218,3 +220,16 @@ radio l group val msg selected =
             , text l
             ]
         ]
+
+
+formatText : String -> String
+formatText format =
+    case format of
+        "presentation" ->
+            "Please select the length of the presentation (in minutes). Presentations can have a length of 45 or 60 minutes. Including Q&A"
+
+        "lightning-talk" ->
+            "Please select the length of the presentation (in minutes). Lightning talks can be 10 or 20 minutes long. The time limit is strictly enforced"
+
+        _ ->
+            "Please select the length of the presentation (in minutes). Workshops last 2, 4 or 8 hours (120, 240 or 480 minutes)"
