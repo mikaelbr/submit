@@ -226,7 +226,7 @@ hideIfNotEditable editable =
 
 radio : String -> String -> String -> msg -> Bool -> Html msg
 radio l group val msg selected =
-    div []
+    div [ class "radio-input" ]
         [ label []
             [ input [ type_ "radio", name group, value val, onClick msg, checked selected ] []
             , text l
