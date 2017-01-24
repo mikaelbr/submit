@@ -55,7 +55,8 @@ public class SleepingPillClientManualTest {
                         "Espen Herseth Halvorsen",
                         "espenhh@example.com",
                         "Espens flotte bio",
-                        "1234"
+                        "1234",
+                        "@Espenhh"
                 )
         );
         NewSession session = new NewSession(
@@ -88,7 +89,8 @@ public class SleepingPillClientManualTest {
                         "Espen Updated Halvorsen",
                         "espenhh@example.com",
                         "Espens flotte bio",
-                        "1234"
+                        "1234",
+                        "@JavaZone"
                 )
         );
         UpdatedSession session = new UpdatedSession(

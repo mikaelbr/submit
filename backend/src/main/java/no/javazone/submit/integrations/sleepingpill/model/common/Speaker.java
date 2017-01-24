@@ -15,6 +15,10 @@ public class Speaker {
         return data.zipCode != null ? data.zipCode.value : null;
     }
 
+    public String getTwitter() {
+        return data.twitter != null ? data.twitter.value : null;
+    }
+
     @Override
     public String toString() {
         return "Speaker{" +
