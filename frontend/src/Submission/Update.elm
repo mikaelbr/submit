@@ -51,7 +51,7 @@ update msg model =
 
         Format format ->
             updateField model <|
-                \s -> { s | format = format }
+                \s -> { s | format = format, length = getLength s.format }
 
         IntendedAudience intendedAudience ->
             updateField model <|
@@ -168,3 +168,16 @@ updateSpeaker i ( j, speaker ) updateFunction =
         ( j, updateFunction speaker )
     else
         ( j, speaker )
+
+
+getLength : String -> String
+getLength format =
+    case format of
+        "presentation" ->
+            "45"
+
+        "lightning-talk" ->
+            "10"
+
+        _ ->
+            "120"

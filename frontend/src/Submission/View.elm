@@ -17,8 +17,11 @@ import Html
         , a
         , ul
         , li
+        , label
+        , select
+        , option
         )
-import Html.Attributes exposing (class, type_, value, src, placeholder, href)
+import Html.Attributes exposing (class, type_, value, src, placeholder, href, name, checked, selected)
 import Html.Events exposing (onInput, onClick)
 import Nav.Nav exposing (toHash)
 import Nav.Model
@@ -61,7 +64,8 @@ viewSubmission submission =
             , div [ class "input-section" ]
                 [ h2 [] [ text "Language" ]
                 , p [ class "input-description" ] [ text "Which language will you be holding the talk in? Note it is permitted to use English in your slides, even though you may be talking in Norwegian. We generally recommend that you hold the talk in the language you are most comfortable with." ]
-                , input [ type_ "text", value submission.language, onInput Language ] []
+                , radio "Norwegian" (Language "no") <| submission.language == "no"
+                , radio "English" (Language "en") <| submission.language == "en"
                 ]
             , div [ class "input-section" ]
                 [ h2 [] [ text "Description" ]
@@ -76,12 +80,14 @@ viewSubmission submission =
             , div [ class "input-section" ]
                 [ h2 [] [ text "Presentation format" ]
                 , p [ class "input-description" ] [ text "In which format are you presenting your talk?" ]
-                , input [ type_ "text", value submission.format, onInput Format ] []
+                , radio "Presentation" (Format "presentation") <| submission.format == "presentation"
+                , radio "Lightning Talk" (Format "lightning-talk") <| submission.format == "lightning-talk"
+                , radio "Workshop" (Format "workshop") <| submission.format == "workshop"
                 ]
             , div [ class "input-section" ]
                 [ h2 [] [ text "Presentation length" ]
                 , p [ class "input-description" ] [ text "Please select the length of the presentation (in minutes). Presentations can have a length of 45 or 60 minutes. Including Q&A" ]
-                , input [ type_ "text", value submission.length, onInput Length ] []
+                , viewLength submission
                 ]
             , div [ class "input-section" ]
                 [ h2 [] [ text "Experience level" ]
@@ -126,6 +132,29 @@ viewSubmission submission =
                 ]
             ]
         ]
+
+
+viewLength : Submission -> Html Msg
+viewLength s =
+    case s.format of
+        "presentation" ->
+            select [ onInput Length ]
+                [ option [ value "45", selected <| s.length == "45" ] [ text "45 minutes" ]
+                , option [ value "60", selected <| s.length == "60" ] [ text "60 minutes" ]
+                ]
+
+        "lightning-talk" ->
+            select [ onInput Length ]
+                [ option [ value "10", selected <| s.length == "10" ] [ text "10 minutes" ]
+                , option [ value "20", selected <| s.length == "20" ] [ text "20 minutes" ]
+                ]
+
+        _ ->
+            select [ onInput Length ]
+                [ option [ value "120", selected <| s.length == "120" ] [ text "2 hours" ]
+                , option [ value "240", selected <| s.length == "240" ] [ text "4 hours" ]
+                , option [ value "480", selected <| s.length == "480" ] [ text "8 hours" ]
+                ]
 
 
 viewSpeaker : ( Int, Speaker ) -> Html Msg
@@ -179,3 +208,13 @@ hideIfNotEditable editable =
         "hide"
     else
         ""
+
+
+radio : String -> msg -> Bool -> Html msg
+radio value msg selected =
+    div []
+        [ label []
+            [ input [ type_ "radio", name "language", onClick msg, checked selected ] []
+            , text value
+            ]
+        ]
