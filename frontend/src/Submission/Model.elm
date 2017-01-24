@@ -59,4 +59,4 @@ initSpeaker speakers =
                 _ ->
                     0
     in
-        ( nextInt, Speaker "" "" "" "" "" "" False )
+        ( nextInt, Speaker "" "" "" "" "" "" True )
