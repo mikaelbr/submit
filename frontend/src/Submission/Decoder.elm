@@ -8,18 +8,18 @@ import Json.Decode.Pipeline exposing (decode, required, optional)
 decoder : Decoder Submission
 decoder =
     decode Submission
-        |> required "abstract" string
+        |> optional "abstract" string ""
         |> required "conferenceId" string
-        |> required "equipment" string
-        |> required "format" string
+        |> optional "equipment" string ""
+        |> optional "format" string ""
         |> required "id" string
-        |> required "intendedAudience" string
-        |> required "language" string
+        |> optional "intendedAudience" string ""
+        |> optional "language" string ""
         |> optional "length" string "60"
-        |> required "outline" string
+        |> optional "outline" string ""
         |> required "speakers" (map toTuples <| list decodeSpeaker)
         |> required "status" string
-        |> required "title" string
+        |> optional "title" string ""
         |> required "editable" bool
 
 
@@ -31,8 +31,8 @@ toTuples speakers =
 decodeSpeaker : Decoder Speaker
 decodeSpeaker =
     decode Speaker
-        |> required "bio" string
-        |> required "email" string
+        |> optional "bio" string ""
+        |> optional "email" string ""
         |> required "id" string
-        |> required "name" string
+        |> optional "name" string ""
         |> optional "zipCode" string ""
