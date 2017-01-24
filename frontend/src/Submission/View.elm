@@ -105,7 +105,7 @@ viewSubmission submission =
                 ]
             , div [ class "input-section" ]
                 [ h2 [] [ text "Additional information for the Program Committee" ]
-                , p [ class "input-description" ] [ text "Please include any information relevant to the Program Committee. Here you can write a few words about your motivation for speaking at JavaZone, and optionally include links to videos and slides from previous speaker engagements." ]
+                , p [ class "input-description" ] [ text "Please include any information relevant to the Program Committee. Here you can write a few words about your motivation for speaking at JavaZone, and optionally include links to videos and slides from previous speaker engagements, or other links that tell us about you (e.g. your GitHub profile)." ]
                 , textarea [ class "small-textarea", value submission.infoToProgramCommittee, onInput InfoToProgramCommittee ] []
                 ]
             , div [ class "input-section" ]
