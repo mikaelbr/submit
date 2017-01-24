@@ -20,6 +20,9 @@ decoder =
         |> required "speakers" (map toTuples <| list decodeSpeaker)
         |> required "status" string
         |> optional "title" string ""
+        |> optional "level" string "beginner"
+        |> optional "suggestedKeywords" string ""
+        |> optional "infoToProgramCommittee" string ""
         |> required "editable" bool
 
 
@@ -36,3 +39,4 @@ decodeSpeaker =
         |> required "id" string
         |> optional "name" string ""
         |> optional "zipCode" string ""
+        |> optional "twitter" string ""

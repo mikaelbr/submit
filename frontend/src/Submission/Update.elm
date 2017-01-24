@@ -69,6 +69,18 @@ update msg model =
             updateField model <|
                 \s -> { s | outline = outline }
 
+        Level level ->
+            updateField model <|
+                \s -> { s | level = level }
+
+        SuggestedKeywords suggestedKeywords ->
+            updateField model <|
+                \s -> { s | suggestedKeywords = suggestedKeywords }
+
+        InfoToProgramCommittee infoToProgramCommittee ->
+            updateField model <|
+                \s -> { s | infoToProgramCommittee = infoToProgramCommittee }
+
         AddSpeaker ->
             updateField model <|
                 \s -> { s | speakers = s.speakers ++ [ initSpeaker s.speakers ] }
@@ -113,6 +125,17 @@ update msg model =
                         speakers =
                             List.map
                                 (\speaker -> updateSpeaker i speaker (\sp -> { sp | zipCode = zipCode }))
+                                s.speakers
+                    in
+                        { s | speakers = speakers }
+
+        SpeakerTwitter i twitter ->
+            updateField model <|
+                \s ->
+                    let
+                        speakers =
+                            List.map
+                                (\speaker -> updateSpeaker i speaker (\sp -> { sp | twitter = twitter }))
                                 s.speakers
                     in
                         { s | speakers = speakers }

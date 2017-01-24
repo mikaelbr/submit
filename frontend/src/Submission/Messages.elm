@@ -19,9 +19,13 @@ type Msg
     | Language String
     | Length String
     | Outline String
+    | Level String
+    | SuggestedKeywords String
+    | InfoToProgramCommittee String
     | AddSpeaker
     | SpeakerName Int String
     | SpeakerEmail Int String
     | SpeakerBio Int String
     | SpeakerZipCode Int String
+    | SpeakerTwitter Int String
     | RemoveSpeaker Int

@@ -16,6 +16,9 @@ encoder submission =
         , ( "language", string submission.language )
         , ( "length", string submission.length )
         , ( "outline", string submission.outline )
+        , ( "level", string submission.level )
+        , ( "suggestedKeywords", string submission.suggestedKeywords )
+        , ( "infoToProgramCommittee", string submission.infoToProgramCommittee )
         , ( "speakers", list <| List.map encodeSpeaker submission.speakers )
         ]
 
@@ -28,4 +31,5 @@ encodeSpeaker ( i, speaker ) =
         , ( "email", string speaker.email )
         , ( "bio", string speaker.bio )
         , ( "zipCode", string speaker.zipCode )
+        , ( "twitter", string speaker.twitter )
         ]

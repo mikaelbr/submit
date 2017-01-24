@@ -23,6 +23,9 @@ type alias Submission =
     , speakers : List ( Int, Speaker )
     , status : String
     , title : String
+    , level : String
+    , suggestedKeywords : String
+    , infoToProgramCommittee : String
     , editable : Bool
     }
 
@@ -33,6 +36,7 @@ type alias Speaker =
     , id : String
     , name : String
     , zipCode : String
+    , twitter : String
     }
 
 
@@ -52,4 +56,4 @@ initSpeaker speakers =
                 _ ->
                     0
     in
-        ( nextInt, Speaker "" "" "" "" "" )
+        ( nextInt, Speaker "" "" "" "" "" "" )
