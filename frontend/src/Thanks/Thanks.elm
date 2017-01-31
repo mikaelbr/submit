@@ -30,7 +30,7 @@ view model =
         [ div [ class "logo-wrapper" ]
             [ img [ src "assets/logo.png", class "logo" ] []
             ]
-        , h1 [] [ text "Yay! We are on it!" ]
+        , h1 [] [ text "Awesome!", br [] [], text " We are on it!" ]
         , div [ class "success-image-wrapper" ]
             [ img [ src "/assets/plane2.png", class "success-image" ] []
             ]
