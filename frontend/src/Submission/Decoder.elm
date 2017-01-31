@@ -24,6 +24,7 @@ decoder =
         |> optional "suggestedKeywords" string ""
         |> optional "infoToProgramCommittee" string ""
         |> required "editable" bool
+        |> required "status" string
 
 
 toTuples : List Speaker -> List ( Int, Speaker )

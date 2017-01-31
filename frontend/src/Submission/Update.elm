@@ -56,6 +56,10 @@ update msg model =
             updateField model <|
                 \s -> { s | format = format, length = getLength format }
 
+        Status status ->
+            updateField model <|
+                \s -> { s | status = status, length = getLength status }
+
         IntendedAudience intendedAudience ->
             updateField model <|
                 \s -> { s | intendedAudience = intendedAudience }

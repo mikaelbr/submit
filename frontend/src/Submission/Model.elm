@@ -29,6 +29,7 @@ type alias Submission =
     , suggestedKeywords : String
     , infoToProgramCommittee : String
     , editable : Bool
+    , status : String
     }
 
 

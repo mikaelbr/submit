@@ -20,6 +20,7 @@ encoder submission =
         , ( "suggestedKeywords", string submission.suggestedKeywords )
         , ( "infoToProgramCommittee", string submission.infoToProgramCommittee )
         , ( "speakers", list <| List.map encodeSpeaker submission.speakers )
+        , ( "status", string submission.status )
         ]
 
 

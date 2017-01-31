@@ -21,6 +21,7 @@ type Msg
     | Length String
     | Outline String
     | Level String
+    | Status String
     | SuggestedKeywords String
     | InfoToProgramCommittee String
     | AddSpeaker

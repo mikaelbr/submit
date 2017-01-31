@@ -171,11 +171,14 @@ viewSubmission submission model =
                 , ul [ class "speakers" ] <|
                     List.map (viewSpeaker <| List.length submission.speakers) submission.speakers
                 ]
-            , div [ class "input-section" ]
-                [ h2 [] [ text "That's it! You're done!" ]
-                , p [ class "input-description" ] [ text "Feel free to come back anytime and edit your talk!" ]
-                , div [ class "sticky-footer-filler" ] []
+            , div [ class <| "input-section " ++ hideIfNotEditable submission.editable ]
+                [ h2 [] [ text "How finished are you with your abstract?" ]
+                , p [ class "input-description" ] [ text "Keep it as a draft until you have filled in everything. If you set it to ready for review before March 27th, we'll try to give you some personal feedback. Don't worry, you can still make changes after marking it as ready for review." ]
+                , p [ class "input-description input-description-strong" ] [ text "Make sure you mark it as ready by April 24th at the latest to have your talk considered for JavaZone 2017! Mark your calendar! ;)" ]
+                , radio "Not ready: Keep it as my personal draft" "status" "DRAFT" (Status "DRAFT") <| submission.status == "DRAFT"
+                , radio "Ready: Let the program committee look at it" "status" "SUBMITTED" (Status "SUBMITTED") <| submission.status == "SUBMITTED"
                 ]
+            , div [ class "sticky-footer-filler" ] []
             ]
         ]
 
