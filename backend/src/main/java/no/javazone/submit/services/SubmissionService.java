@@ -72,12 +72,8 @@ public class SubmissionService {
 
     public Submission getSubmissionForUser(AuthenticatedUser authenticatedUser, String submissionId) {
         Session session = sleepingPill.getSession(submissionId);
-        if (session.speakers.stream().anyMatch(s -> s.email.equals(authenticatedUser.emailAddress.toString()))) {
-            return fromSleepingPillSession(session, authenticatedUser);
-        } else {
-            LOG.warn(format("User %s tried to access session %s, which the user is not a speaker for...", authenticatedUser.emailAddress.toString(), submissionId));
-            throw new NotFoundException("Session with ID " + submissionId + " not found");
-        }
+        checkSessionOwnership(session, authenticatedUser);
+        return fromSleepingPillSession(session, authenticatedUser);
     }
 
     public Submission createNewDraft(AuthenticatedUser authenticatedUser) {
@@ -113,6 +109,15 @@ public class SubmissionService {
         sleepingPill.updateSession(submissionId, updatedSession);
 
         return getSubmissionForUser(authenticatedUser, submissionId);
+    }
+
+    private void checkSessionOwnership(Session session, AuthenticatedUser authenticatedUser) {
+        boolean isSpeakerAtSession = session.speakers.stream().anyMatch(s -> s.email.equals(authenticatedUser.emailAddress.toString()));
+        boolean isOriginalOwner = session.postedBy.equals(authenticatedUser.emailAddress.toString());
+        if (!isSpeakerAtSession && !isOriginalOwner) {
+            LOG.warn(format("User %s tried to access session %s, which the user is not a speaker for or is not the original poster for...", authenticatedUser.emailAddress.toString(), session.sessionId));
+            throw new NotFoundException("Session with ID " + session.sessionId + " not found");
+        }
     }
 
     private SessionStatus parseAndValidateStatus(AuthenticatedUser authenticatedUser, Submission submission) {
