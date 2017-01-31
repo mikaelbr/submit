@@ -115,7 +115,7 @@ public class SubmissionService {
 
     private void checkSessionOwnership(Session session, AuthenticatedUser authenticatedUser) {
         boolean isSpeakerAtSession = session.speakers.stream().anyMatch(s -> s.email.equals(authenticatedUser.emailAddress.toString()));
-        boolean isOriginalOwner = session.postedBy.equals(authenticatedUser.emailAddress.toString());
+        boolean isOriginalOwner = session.postedBy != null && session.postedBy.equals(authenticatedUser.emailAddress.toString());
         if (!isSpeakerAtSession && !isOriginalOwner) {
             LOG.warn(format("User %s tried to access session %s, which the user is not a speaker for or is not the original poster for...", authenticatedUser.emailAddress.toString(), session.sessionId));
             throw new NotFoundException("Session with ID " + session.sessionId + " not found");
