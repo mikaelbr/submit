@@ -76,7 +76,7 @@ viewSubmission submission model =
             ]
         , div [ class "logo-wrapper" ] [ img [ src "assets/logo.png", class "logo" ] [] ]
         , div [ class <| "edit-intro " ++ hideIfNotEditable submission.editable ]
-            [ h1 [] [ text "Let's make this talk happen!" ]
+            [ h1 [] [ text "Ready? Let's make your talk a reality!" ]
             , p [ class "ingress" ] [ text "JavaZone takes place in Oslo, Norway, on September 13th-14th 2017. Do YOU want to be one of the great speakers at our conference? Fantastic! That's what's this thing is for! Let's get you started!" ]
             , div [ class "help-part" ]
                 [ strong [] [ span [] [ text "February 13th" ], text "Create your talk" ]
