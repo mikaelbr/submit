@@ -69,3 +69,30 @@
   text-align: center;
   background: @yellow;
 }
+
+.save-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.autosave {
+  font-size: 1.5em;
+  padding: 0 3em;
+  text-align: right;
+  display: flex;
+  justify-content: space-between;
+}
+.autosave .autosave-checkbox {
+  margin-left: 1em;
+  display: flex;
+  align-items: center;
+}
+.autosave input {
+  transform: scale(1.5);
+}
+.autosave .lastsaved {
+  color: @grey;
+  font-size: .7em;
+  text-transform: uppercase;
+}

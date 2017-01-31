@@ -45,7 +45,7 @@ type alias Speaker =
 
 initModel : Model
 initModel =
-    Model Initial Nothing False False
+    Model Initial Nothing False True
 
 
 initSpeaker : List ( Int, Speaker ) -> ( Int, Speaker )

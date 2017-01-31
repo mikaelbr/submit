@@ -21,7 +21,7 @@ import Html
         , select
         , option
         )
-import Html.Attributes exposing (class, type_, value, src, placeholder, href, name, checked, selected)
+import Html.Attributes exposing (class, type_, value, src, placeholder, href, name, checked, selected, id, for)
 import Html.Events exposing (onInput, onClick)
 import Nav.Nav exposing (toHash)
 import Nav.Model
@@ -56,12 +56,19 @@ viewSubmission submission model =
                     [ a [ href << toHash <| Nav.Model.Submissions ]
                         [ button [ class "button-back" ] [ text "Back to list" ] ]
                     ]
-                , div []
-                    [ input [ type_ "checkbox", onClick ToggleAutosave, checked model.autosave ] []
-                    , text <| viewLastSaved model.lastSaved
+                , div [ class "save-controls" ]
+                    [ div [ class "autosave" ]
+                        [ div []
+                            [ label [ for "autosave" ] [ text "Autosave changes" ]
+                            , div [ class "lastsaved" ] [ text <| viewLastSaved model.lastSaved ]
+                            ]
+                        , div [ class "autosave-checkbox" ]
+                            [ input [ id "autosave", type_ "checkbox", onClick ToggleAutosave, checked model.autosave ] []
+                            ]
+                        ]
+                    , div []
+                        [ button [ class <| "button-save " ++ hideIfNotEditable submission.editable, onClick (Save 0) ] [ text "Save now" ] ]
                     ]
-                , div []
-                    [ button [ class <| "button-save " ++ hideIfNotEditable submission.editable, onClick (Save 0) ] [ text "Save now" ] ]
                 ]
             ]
         , div [ class "logo-wrapper" ] [ img [ src "assets/logo.png", class "logo" ] [] ]
@@ -274,4 +281,4 @@ viewLastSaved time =
                        )
 
         Nothing ->
-            ""
+            "Not edited yet"
