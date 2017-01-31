@@ -84,6 +84,8 @@ public class SubmissionService {
     }
 
     public Submission updateSubmission(AuthenticatedUser authenticatedUser, String submissionId, Submission submission) {
+        submission.validate();
+
         Submission previousSubmission = getSubmissionForUser(authenticatedUser, submissionId);
 
         if (!isEditableBySubmitter(previousSubmission.conferenceId)) {

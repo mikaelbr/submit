@@ -2,10 +2,12 @@ package no.javazone.submit.api.representations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.ws.rs.ForbiddenException;
 import java.util.List;
 
 public class Submission {
 
+    public static final int MAX_FIELD_LENGTH_TO_AVOID_DOS_ATTACK = 100_000;
     public String id;
     public String conferenceId;
     public String status;
@@ -50,4 +52,35 @@ public class Submission {
         this.editable = editable;
     }
 
+    public void validate() {
+        // We don't validate the actual values, that happens in the frontend.
+        // If the speaker messes with the data directly, they can thank themselves
+        // that the talk is mangled, and probably won't be chosen... :P
+        checkFieldLength(status);
+        checkFieldLength(title);
+        checkFieldLength(theAbstract);
+        checkFieldLength(intendedAudience);
+        checkFieldLength(format);
+        checkFieldLength(language);
+        checkFieldLength(outline);
+        checkFieldLength(equipment);
+        checkFieldLength(length);
+        checkFieldLength(level);
+        checkFieldLength(suggestedKeywords);
+        checkFieldLength(infoToProgramCommittee);
+        speakers.forEach(s -> {
+            checkFieldLength(s.name);
+            checkFieldLength(s.bio);
+            checkFieldLength(s.email);
+            checkFieldLength(s.id);
+            checkFieldLength(s.twitter);
+            checkFieldLength(s.zipCode);
+        });
+    }
+
+    private void checkFieldLength(String field) {
+        if(field != null && field.length() > MAX_FIELD_LENGTH_TO_AVOID_DOS_ATTACK) {
+            throw new ForbiddenException("Field data too long: " + field);
+        }
+    }
 }
