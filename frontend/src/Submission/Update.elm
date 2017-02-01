@@ -3,9 +3,10 @@ module Submission.Update exposing (update)
 import Submission.Model exposing (..)
 import Submission.Messages exposing (..)
 import Backend.Network exposing (RequestStatus(..))
-import Nav.Requests exposing (saveSubmission)
+import Nav.Requests exposing (saveSubmission, loginFailed)
 import Time
 import Task
+import Lazy
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -15,7 +16,7 @@ update msg model =
             ( model, Cmd.none )
 
         Get (Err error) ->
-            ( { model | submission = Error <| toString error }, Cmd.none )
+            ( { model | submission = Error <| toString error }, Lazy.force loginFailed )
 
         Get (Ok submission) ->
             ( { model | submission = Complete submission }, Cmd.none )

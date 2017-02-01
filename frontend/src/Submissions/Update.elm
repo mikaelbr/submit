@@ -5,7 +5,7 @@ import Submissions.Messages exposing (..)
 import Navigation
 import Nav.Nav exposing (toHash)
 import Nav.Model
-import Nav.Requests exposing (createSubmission, getSubmissions, deleteLoginToken)
+import Nav.Requests exposing (createSubmission, getSubmissions, deleteLoginToken, loginFailed)
 import Backend.Network exposing (RequestStatus(..))
 import LocalStorage
 import Task
@@ -22,7 +22,7 @@ update msg model =
             ( model, Lazy.force createSubmission )
 
         Get (Err message) ->
-            ( { model | submissions = Error <| toString message }, Cmd.none )
+            ( { model | submissions = Error <| toString message }, Lazy.force loginFailed )
 
         Get (Ok submissions) ->
             ( { model | submissions = Complete submissions }, Cmd.none )
