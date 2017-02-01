@@ -6,6 +6,7 @@ module Nav.Requests
         , createSubmission
         , saveSubmission
         , deleteLoginToken
+        , loginFailed
         )
 
 import Http
@@ -19,6 +20,18 @@ import Submission.Encoder
 import Json.Decode exposing (Decoder)
 import LocalStorage
 import Lazy
+import Navigation
+
+
+-- This is so horribly, horribly wrong, but right now
+-- the only way I see to both remove token and
+-- navigate to register page in one function
+
+
+loginFailed : Lazy.Lazy (Cmd msg)
+loginFailed =
+    Lazy.lazy <|
+        \_ -> Navigation.newUrl ((\_ -> "#") <| LocalStorage.remove "login_token")
 
 
 getLoginToken : String -> Cmd Login.Message.Msg
