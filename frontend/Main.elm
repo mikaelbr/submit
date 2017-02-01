@@ -102,8 +102,11 @@ update msg model =
 updatePage : Page -> Model -> ( Model, Cmd Msg )
 updatePage page m =
     let
+        leftModel =
+            leftPage m.page m
+
         model =
-            { m | page = page }
+            { leftModel | page = page }
     in
         case page of
             UseToken token ->
@@ -119,6 +122,16 @@ updatePage page m =
 
             _ ->
                 ( { model | page = page }, Cmd.none )
+
+
+leftPage : Page -> Model -> Model
+leftPage oldPage model =
+    case oldPage of
+        Submission _ ->
+            { model | submission = Submission.Model.initModel }
+
+        _ ->
+            model
 
 
 view : Model -> Html Msg
