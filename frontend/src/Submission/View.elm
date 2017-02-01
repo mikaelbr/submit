@@ -25,13 +25,14 @@ import Html
         , option
         )
 import Html.Attributes exposing (class, type_, value, src, placeholder, href, name, checked, selected, id, for)
-import Html.Events exposing (onInput, onClick)
+import Html.Events exposing (onInput, onClick, on)
 import Nav.Nav exposing (toHash)
 import Nav.Model
 import Backend.Network exposing (RequestStatus(..))
 import Time
 import Date
 import String
+import Json.Decode exposing (succeed)
 
 
 view : Model -> Html Msg
@@ -227,6 +228,10 @@ viewSpeaker n ( i, speaker ) =
             , div [ class "speaker-input-section" ]
                 [ h3 [] [ text "Speakers name" ]
                 , input [ type_ "text", value speaker.name, placeholder "Speaker name", onInput <| SpeakerName i ] []
+                ]
+            , div [ class "speaker-inpuc-section" ]
+                [ h3 [] [ text "Speakers image" ]
+                , input [ type_ "file", id <| "SpeakerImage" ++ toString i, on "change" (succeed <| FileSelected <| "SpeakerImage" ++ toString i) ] []
                 ]
             , div [ class "speaker-input-section" ]
                 [ h3 [] [ text "Speakers email (not public)" ]

@@ -7,6 +7,7 @@ import Nav.Requests exposing (saveSubmission, loginFailed)
 import Time
 import Task
 import Lazy
+import Ports exposing (fileSelected)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -158,6 +159,12 @@ update msg model =
                                 s.speakers
                     in
                         { s | speakers = speakers }
+
+        FileSelected id ->
+            ( model, fileSelected id )
+
+        FileUploaded fileData ->
+            ( model, Cmd.none )
 
 
 updateField : Model -> (Submission -> Submission) -> ( Model, Cmd Msg )
