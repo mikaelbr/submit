@@ -30,7 +30,7 @@ get key =
 {-| Remove an element from localStorage with the given key.
     remove "my-key"
 -}
-remove : String -> Task Never ()
+remove : String -> ()
 remove key =
     Native.LocalStorage.removeItem key
 

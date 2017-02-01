@@ -48,4 +48,4 @@ update msg model =
 
 removeLocalToken : Lazy.Lazy (Cmd Msg)
 removeLocalToken =
-    Lazy.lazy <| \() -> Task.perform TokenRemoved <| LocalStorage.remove "login_token"
+    Lazy.lazy <| \() -> Task.perform TokenRemoved <| Task.succeed <| LocalStorage.remove "login_token"

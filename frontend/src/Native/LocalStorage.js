@@ -18,7 +18,7 @@ var _javabin$submit$Native_LocalStorage = (function() {
 
     var removeItem = function(item) {
         localStorage.removeItem(item);
-        return Task.succeed(Tuple0);
+        return Tuple0;
     };
 
     var clear = function() {
