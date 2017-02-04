@@ -100,7 +100,10 @@ public class SubmissionResource {
                                         @PathParam("submissionId") String submissionId,
                                         @PathParam("speakerId") String speakerId) {
         // We don't authenticate picture requests, due to problems adding headers on such requests from browser
-        return Response.ok(submissionService.getSpeakerPicture(submissionId, speakerId)).build();
+        return Response
+                .ok(submissionService.getSpeakerPicture(submissionId, speakerId))
+                .header("Content-Type", "image/jpeg")
+                .build();
     }
 
     private Response assertLoggedInUser(ContainerRequestContext context, Function<AuthenticatedUser, Response> requestHandler) {
