@@ -6,12 +6,16 @@ import no.javazone.submit.integrations.sleepingpill.model.create.CreatedSession;
 import no.javazone.submit.integrations.sleepingpill.model.create.NewSession;
 import no.javazone.submit.integrations.sleepingpill.model.create.NewSpeaker;
 import no.javazone.submit.integrations.sleepingpill.model.get.Session;
+import no.javazone.submit.integrations.sleepingpill.model.picture.CreatedPicture;
 import no.javazone.submit.integrations.sleepingpill.model.update.UpdatedSession;
 import no.javazone.submit.integrations.sleepingpill.model.update.UpdatedSpeaker;
+import no.javazone.submit.util.StreamUtil;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -111,6 +115,17 @@ public class SleepingPillClientManualTest {
         client.updateSession(sessionId, session);
 
         System.out.println("Updated session");
+    }
+
+    @Test
+    public void add_picture_to_talk() {
+        InputStream image = getClass().getResourceAsStream("/testimage.jpg");
+        byte[] sentInBytes = StreamUtil.convertStreamToString(image).getBytes();
+        CreatedPicture picture = client.uploadPicture(new ByteArrayInputStream(sentInBytes));
+        byte[] downloadedPicture = client.getPicture(picture.id);
+
+        System.out.println("Uploaded picture with byte length " + sentInBytes.length + ", got id " + picture.id);
+        System.out.println("Fetched picture back with byte length " + downloadedPicture.length);
     }
 
 }

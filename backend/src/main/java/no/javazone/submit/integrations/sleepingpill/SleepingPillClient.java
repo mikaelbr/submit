@@ -11,7 +11,9 @@ import no.javazone.submit.integrations.sleepingpill.model.create.NewSession;
 import no.javazone.submit.integrations.sleepingpill.model.get.Conferences;
 import no.javazone.submit.integrations.sleepingpill.model.get.Session;
 import no.javazone.submit.integrations.sleepingpill.model.get.Sessions;
+import no.javazone.submit.integrations.sleepingpill.model.picture.CreatedPicture;
 import no.javazone.submit.integrations.sleepingpill.model.update.UpdatedSession;
+import no.javazone.submit.util.StreamUtil;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -34,6 +36,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 @Service
 public class SleepingPillClient {
@@ -77,21 +80,50 @@ public class SleepingPillClient {
         put("/data/session/" + sessionId, session, null);
     }
 
+    public CreatedPicture uploadPicture(InputStream image) {
+        BasicHttpEntity entity = new BasicHttpEntity();
+        entity.setContent(image);
+
+        String path = baseUri + "/data/picture";
+        HttpPost httpPost = new HttpPost(path);
+        httpPost.setEntity(entity);
+
+        // TODO: autodetect?
+        httpPost.setHeader("Content-Type", "image/jpeg");
+        return request(httpPost, path, CreatedPicture.class);
+    }
+
+    public byte[] getPicture(String id) {
+        String path = baseUri + "/data/picture/" + id;
+        HttpGet httpGet = new HttpGet(path);
+        try (CloseableHttpResponse response = client.execute(httpGet, context)) {
+            if(response.getStatusLine().getStatusCode() >= 400) {
+                LOG.warn("Could not fetch picture with id " + id + ". Got status code " + response.getStatusLine().getStatusCode());
+                throw new RuntimeException("Couldn't fetch picture");
+            } else {
+                return StreamUtil.convertStreamToString(response.getEntity().getContent()).getBytes();
+            }
+        } catch (IOException e) {
+            LOG.warn("Error when doing http request to " + baseUri + path, e);
+            throw new RuntimeException(e);
+        }
+    }
+
     private <T> T get(String path, Class<T> responseType) {
         HttpGet httpGet = new HttpGet(baseUri + path);
-        return request(httpGet, path, responseType);
+        return jsonRequest(httpGet, path, responseType);
     }
 
     private <T> T post(String path, Object body, Class<T> responseType) {
         HttpPost httpPost = new HttpPost(baseUri + path);
         addEntity(httpPost, body);
-        return request(httpPost, path, responseType);
+        return jsonRequest(httpPost, path, responseType);
     }
 
     private <T> T put(String path, Object body, Class<T> responseType) {
         HttpPut httpPut = new HttpPut(baseUri + path);
         addEntity(httpPut, body);
-        return request(httpPut, path, responseType);
+        return jsonRequest(httpPut, path, responseType);
     }
 
     private void addEntity(HttpEntityEnclosingRequestBase request, Object body) {
@@ -105,8 +137,12 @@ public class SleepingPillClient {
         request.setEntity(entity);
     }
 
-    private <T> T request(HttpUriRequest request, String path, Class<T> responseType) {
+    private <T> T jsonRequest(HttpUriRequest request, String path, Class<T> responseType) {
         request.setHeader("Content-Type", "application/json");
+        return request(request, path, responseType);
+    }
+
+    private <T> T request(HttpUriRequest request, String path, Class<T> responseType) {
         request.setHeader("Accept", "application/json");
         try (CloseableHttpResponse response = client.execute(request, context)) {
             if (responseType != null) {
@@ -119,6 +155,7 @@ public class SleepingPillClient {
             throw new RuntimeException(e);
         }
     }
+
 
     private CloseableHttpClient createHttpClient() {
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
@@ -144,7 +181,6 @@ public class SleepingPillClient {
         localContext.setAuthCache(authCache);
         return localContext;
     }
-
 
     private static ObjectMapper createObjectmapper() {
         ObjectMapper mapper = new ObjectMapper()
