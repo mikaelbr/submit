@@ -2,10 +2,10 @@ module Login.Login exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, src, type_, id, placeholder, value, disabled)
-import Html.Events exposing (onClick, onInput)
+import Html.Events exposing (on, onClick, onInput, keyCode)
 import Login.Model exposing (Model)
 import Login.Message exposing (Msg(..))
-
+import Json.Decode
 
 init : ( Model, Cmd Msg )
 init =
@@ -24,7 +24,7 @@ view model =
             [ img [ src "assets/logo.png", class "logo" ] [] ]
         , h1 [] [ text "Get ready to speak at", br [] [], text "JavaZone 2017" ]
         , div [ class "email-wrapper" ]
-            [ input [ value model.email, onInput Email, type_ "email", class "email", id "email-address", placeholder "Your email address" ] []
+            [ input [ value model.email, onInput Email, onEnter SubmitEmail, type_ "email", class "email", id "email-address", placeholder "Your email address" ] []
             , if model.loading then
                 div [ class "spinner" ]
                     [ div [ class "bounce1" ] []
@@ -42,3 +42,16 @@ view model =
                 ]
             ]
         ]
+
+
+onEnter : msg -> Attribute msg
+onEnter msg =
+    let
+        isEnter code =
+            if code == 13 then
+                Json.Decode.succeed msg
+            else
+                Json.Decode.fail "not ENTER"
+    in
+        on "keydown" (Json.Decode.andThen isEnter keyCode)
+
