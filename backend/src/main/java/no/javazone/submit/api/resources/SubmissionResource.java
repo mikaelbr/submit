@@ -2,8 +2,10 @@ package no.javazone.submit.api.resources;
 
 import no.javazone.submit.api.filters.AuthenticatedWithToken;
 import no.javazone.submit.api.representations.Submission;
-import no.javazone.submit.services.SubmissionService;
 import no.javazone.submit.api.session.AuthenticatedUser;
+import no.javazone.submit.services.SubmissionService;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,9 @@ import org.springframework.stereotype.Component;
 import javax.ws.rs.*;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.InputStream;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -70,6 +74,29 @@ public class SubmissionResource {
                                      Submission submission) {
         return assertLoggedInUser(context, authenticatedUser ->
                 Response.ok(submissionService.updateSubmission(authenticatedUser, submissionId, submission)).build()
+        );
+    }
+
+    @POST
+    @Path("/{submissionId}/speakers/{speakerId}/picture")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response addPictureToSpeaker(@Context ContainerRequestContext context,
+                                        @PathParam("submissionId") String submissionId,
+                                        @PathParam("speakerId") String speakerId,
+                                        @FormDataParam("image") FormDataBodyPart picture) {
+        return assertLoggedInUser(context, authenticatedUser -> {
+            submissionService.addPictureToSpeaker(authenticatedUser, submissionId, speakerId, picture.getEntityAs(InputStream.class), picture.getMediaType().toString());
+            return Response.ok().build();
+        });
+    }
+
+    @GET
+    @Path("/{submissionId}/speakers/{speakerId}/picture")
+    public Response getSpeakerPicture(@Context ContainerRequestContext context,
+                                        @PathParam("submissionId") String submissionId,
+                                        @PathParam("speakerId") String speakerId) {
+        return assertLoggedInUser(context, authenticatedUser ->
+                Response.ok(submissionService.getSpeakerPicture(authenticatedUser, submissionId, speakerId)).build()
         );
     }
 

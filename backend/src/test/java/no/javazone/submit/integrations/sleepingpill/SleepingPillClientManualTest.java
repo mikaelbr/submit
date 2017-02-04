@@ -121,7 +121,7 @@ public class SleepingPillClientManualTest {
     public void add_picture_to_talk() {
         InputStream image = getClass().getResourceAsStream("/testimage.jpg");
         byte[] sentInBytes = StreamUtil.convertStreamToString(image).getBytes();
-        CreatedPicture picture = client.uploadPicture(new ByteArrayInputStream(sentInBytes));
+        CreatedPicture picture = client.uploadPicture(new ByteArrayInputStream(sentInBytes), "image/jpeg");
         byte[] downloadedPicture = client.getPicture(picture.id);
 
         System.out.println("Uploaded picture with byte length " + sentInBytes.length + ", got id " + picture.id);

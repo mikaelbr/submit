@@ -13,6 +13,7 @@ import no.javazone.submit.integrations.sleepingpill.model.create.NewSession;
 import no.javazone.submit.integrations.sleepingpill.model.get.Conferences;
 import no.javazone.submit.integrations.sleepingpill.model.get.Session;
 import no.javazone.submit.integrations.sleepingpill.model.get.Sessions;
+import no.javazone.submit.integrations.sleepingpill.model.picture.CreatedPicture;
 import no.javazone.submit.integrations.sleepingpill.model.update.UpdatedSession;
 import no.javazone.submit.integrations.sleepingpill.model.update.UpdatedSpeaker;
 import org.slf4j.Logger;
@@ -22,9 +23,11 @@ import org.springframework.stereotype.Service;
 
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotFoundException;
+import java.io.InputStream;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.groupingBy;
@@ -161,6 +164,7 @@ public class SubmissionService {
                 speaker.getBio(),
                 speaker.getZipCode(),
                 speaker.getTwitter(),
+                speaker.getPictureId(),
                 deleteble(speaker, authenticatedUser)
         );
     }
@@ -171,5 +175,32 @@ public class SubmissionService {
 
     private boolean isEditableBySubmitter(String sessionId) {
         return conferences.getSlugFromId(sessionId).equals(sleepingPillConfiguration.activeYear);
+    }
+
+    public void addPictureToSpeaker(AuthenticatedUser authenticatedUser, String submissionId, String speakerId, InputStream pictureStream, String mediaType) {
+        Submission submission = getSubmissionForUser(authenticatedUser, submissionId);
+        Optional<Speaker> speaker = submission.speakers.stream().filter(s -> s.id.equals(speakerId)).findAny();
+        if (speaker.isPresent()) {
+            CreatedPicture createdPicture = sleepingPill.uploadPicture(pictureStream, mediaType);
+            speaker.get().setPictureId(createdPicture.id);
+            updateSubmission(authenticatedUser, submissionId, submission);
+        } else {
+            throw new NotFoundException("Could not add picture. Did not find speaker with id " + speakerId + " on session " + submissionId);
+        }
+    }
+
+    public byte[] getSpeakerPicture(AuthenticatedUser authenticatedUser, String submissionId, String speakerId) {
+        Submission submission = getSubmissionForUser(authenticatedUser, submissionId);
+        Optional<Speaker> speaker = submission.speakers.stream().filter(s -> s.id.equals(speakerId)).findAny();
+        if (speaker.isPresent()) {
+            String pictureId = speaker.get().pictureId;
+            if (pictureId == null) {
+                throw new NotFoundException("Didn't find stored picture for " + speakerId + " on session " + submissionId);
+            } else {
+                return sleepingPill.getPicture(pictureId);
+            }
+        } else {
+            throw new NotFoundException("Didn't find speaker for speakerid " + speakerId + " on session " + submissionId);
+        }
     }
 }

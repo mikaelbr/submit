@@ -19,6 +19,10 @@ public class Speaker {
         return data.twitter != null ? data.twitter.value : null;
     }
 
+    public String getPictureId() {
+        return data.pictureId != null ? data.pictureId.value : null;
+    }
+
     @Override
     public String toString() {
         return "Speaker{" +

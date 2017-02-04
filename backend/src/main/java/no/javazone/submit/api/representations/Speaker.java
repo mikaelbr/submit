@@ -8,18 +8,23 @@ public class Speaker {
     public String zipCode;
     public String twitter;
     public boolean deletable;
+    public String pictureId;
 
     @SuppressWarnings("unused")
     private Speaker() { }
 
-    public Speaker(String id, String name, String email, String bio, String zipCode, String twitter, boolean deletable) {
+    public Speaker(String id, String name, String email, String bio, String zipCode, String twitter, String pictureId, boolean deletable) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.bio = bio;
         this.zipCode = zipCode;
         this.twitter = twitter;
+        this.pictureId = pictureId;
         this.deletable = deletable;
     }
 
+    public void setPictureId(String pictureId) {
+        this.pictureId = pictureId;
+    }
 }

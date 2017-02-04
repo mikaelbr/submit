@@ -80,7 +80,7 @@ public class SleepingPillClient {
         put("/data/session/" + sessionId, session, null);
     }
 
-    public CreatedPicture uploadPicture(InputStream image) {
+    public CreatedPicture uploadPicture(InputStream image, String mediaType) {
         BasicHttpEntity entity = new BasicHttpEntity();
         entity.setContent(image);
 
@@ -88,8 +88,7 @@ public class SleepingPillClient {
         HttpPost httpPost = new HttpPost(path);
         httpPost.setEntity(entity);
 
-        // TODO: autodetect?
-        httpPost.setHeader("Content-Type", "image/jpeg");
+        httpPost.setHeader("Content-Type", mediaType);
         return request(httpPost, path, CreatedPicture.class);
     }
 
