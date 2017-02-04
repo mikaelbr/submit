@@ -34,6 +34,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.ws.rs.ServerErrorException;
+import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -144,6 +146,11 @@ public class SleepingPillClient {
     private <T> T request(HttpUriRequest request, String path, Class<T> responseType) {
         request.setHeader("Accept", "application/json");
         try (CloseableHttpResponse response = client.execute(request, context)) {
+            if(response.getStatusLine().getStatusCode() >= 400) {
+                LOG.warn("Got HTTP error (" + response.getStatusLine().getStatusCode() + ") when doing http request to " + baseUri + path + "\nRESPONSE:\n"
+                + StreamUtil.convertStreamToString(response.getEntity().getContent()));
+                throw new ServerErrorException("Error with sleeping pill...", Response.Status.INTERNAL_SERVER_ERROR);
+            }
             if (responseType != null) {
                 return objectmapper.readValue(response.getEntity().getContent(), responseType);
             } else {
