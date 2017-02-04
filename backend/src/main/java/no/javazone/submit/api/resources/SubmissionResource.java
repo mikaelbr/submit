@@ -87,9 +87,10 @@ public class SubmissionResource {
     public Response addPictureToSpeaker(@Context ContainerRequestContext context,
                                         @PathParam("submissionId") String submissionId,
                                         @PathParam("speakerId") String speakerId,
+                                        @FormDataParam("image") InputStream imageInputStream,
                                         @FormDataParam("image") FormDataBodyPart picture) {
         return assertLoggedInUser(context, authenticatedUser -> {
-            submissionService.addPictureToSpeaker(authenticatedUser, submissionId, speakerId, picture.getEntityAs(InputStream.class), picture.getMediaType().toString());
+            submissionService.addPictureToSpeaker(authenticatedUser, submissionId, speakerId, imageInputStream, picture.getMediaType().toString());
             return Response.ok().build();
         });
     }
