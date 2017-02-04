@@ -27,7 +27,6 @@ import static no.javazone.submit.api.filters.AuthenticatedWithTokenFilter.AUTHEN
 
 @Path("/api/submissions")
 @Component
-@AuthenticatedWithToken
 public class SubmissionResource {
 
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
@@ -40,6 +39,7 @@ public class SubmissionResource {
     }
 
     @GET
+    @AuthenticatedWithToken
     @Produces(APPLICATION_JSON)
     public Response getAllSubmissionsForLoggedInUser(@Context ContainerRequestContext context) {
         return assertLoggedInUser(context, authenticatedUser ->
@@ -48,6 +48,7 @@ public class SubmissionResource {
     }
 
     @GET
+    @AuthenticatedWithToken
     @Path("/{submissionId}")
     @Produces(APPLICATION_JSON)
     public Response getSingleSubmissionsForLoggedInUser(@Context ContainerRequestContext context,
@@ -58,6 +59,7 @@ public class SubmissionResource {
     }
 
     @POST
+    @AuthenticatedWithToken
     @Produces(APPLICATION_JSON)
     public Response newDraft(@Context ContainerRequestContext context) {
         return assertLoggedInUser(context, authenticatedUser ->
@@ -66,6 +68,7 @@ public class SubmissionResource {
     }
 
     @PUT
+    @AuthenticatedWithToken
     @Path("/{submissionId}")
     @Produces(APPLICATION_JSON)
     @Consumes(APPLICATION_JSON)
@@ -78,6 +81,7 @@ public class SubmissionResource {
     }
 
     @POST
+    @AuthenticatedWithToken
     @Path("/{submissionId}/speakers/{speakerId}/picture")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response addPictureToSpeaker(@Context ContainerRequestContext context,
@@ -95,9 +99,8 @@ public class SubmissionResource {
     public Response getSpeakerPicture(@Context ContainerRequestContext context,
                                         @PathParam("submissionId") String submissionId,
                                         @PathParam("speakerId") String speakerId) {
-        return assertLoggedInUser(context, authenticatedUser ->
-                Response.ok(submissionService.getSpeakerPicture(authenticatedUser, submissionId, speakerId)).build()
-        );
+        // We don't authenticate picture requests, due to problems adding headers on such requests from browser
+        return Response.ok(submissionService.getSpeakerPicture(submissionId, speakerId)).build();
     }
 
     private Response assertLoggedInUser(ContainerRequestContext context, Function<AuthenticatedUser, Response> requestHandler) {

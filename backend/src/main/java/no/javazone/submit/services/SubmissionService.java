@@ -189,11 +189,11 @@ public class SubmissionService {
         }
     }
 
-    public byte[] getSpeakerPicture(AuthenticatedUser authenticatedUser, String submissionId, String speakerId) {
-        Submission submission = getSubmissionForUser(authenticatedUser, submissionId);
-        Optional<Speaker> speaker = submission.speakers.stream().filter(s -> s.id.equals(speakerId)).findAny();
+    public byte[] getSpeakerPicture(String submissionId, String speakerId) {
+        Session session = sleepingPill.getSession(submissionId);
+        Optional<no.javazone.submit.integrations.sleepingpill.model.common.Speaker> speaker = session.speakers.stream().filter(s -> s.id.equals(speakerId)).findAny();
         if (speaker.isPresent()) {
-            String pictureId = speaker.get().pictureId;
+            String pictureId = speaker.get().getPictureId();
             if (pictureId == null) {
                 throw new NotFoundException("Didn't find stored picture for " + speakerId + " on session " + submissionId);
             } else {
