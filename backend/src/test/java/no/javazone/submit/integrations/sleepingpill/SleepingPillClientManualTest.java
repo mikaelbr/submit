@@ -94,7 +94,8 @@ public class SleepingPillClientManualTest {
                         "espenhh@example.com",
                         "Espens flotte bio",
                         "1234",
-                        "@JavaZone"
+                        "@JavaZone",
+                        "picture-id"
                 )
         );
         UpdatedSession session = new UpdatedSession(

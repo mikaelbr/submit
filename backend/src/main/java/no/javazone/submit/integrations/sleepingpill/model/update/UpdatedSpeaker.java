@@ -13,7 +13,7 @@ public class UpdatedSpeaker {
     @SuppressWarnings("unused")
     private UpdatedSpeaker() { }
 
-    public UpdatedSpeaker(String id, String name, String email, String bio, String zipCode, String twitter) {
+    public UpdatedSpeaker(String id, String name, String email, String bio, String zipCode, String twitter, String pictureId) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -22,9 +22,10 @@ public class UpdatedSpeaker {
         data.setBio(bio);
         data.setZipCode(zipCode);
         data.setTwitter(twitter);
+        data.setPictureId(pictureId);
     }
 
     public static UpdatedSpeaker fromApiObject(Speaker speaker) {
-        return new UpdatedSpeaker(speaker.id, speaker.name, speaker.email, speaker.bio, speaker.zipCode, speaker.twitter);
+        return new UpdatedSpeaker(speaker.id, speaker.name, speaker.email, speaker.bio, speaker.zipCode, speaker.twitter, speaker.pictureId);
     }
 }
