@@ -83,6 +83,7 @@ public class SubmissionResource {
     @AuthenticatedWithToken
     @Path("/{submissionId}/speakers/{speakerId}/picture")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(APPLICATION_JSON)
     public Response addPictureToSpeaker(@Context ContainerRequestContext context,
                                         @PathParam("submissionId") String submissionId,
                                         @PathParam("speakerId") String speakerId,
