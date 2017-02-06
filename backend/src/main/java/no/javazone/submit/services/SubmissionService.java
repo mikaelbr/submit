@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotFoundException;
-import java.io.InputStream;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -177,7 +176,7 @@ public class SubmissionService {
         return conferences.getSlugFromId(sessionId).equals(sleepingPillConfiguration.activeYear);
     }
 
-    public void addPictureToSpeaker(AuthenticatedUser authenticatedUser, String submissionId, String speakerId, InputStream pictureStream, String mediaType) {
+    public void addPictureToSpeaker(AuthenticatedUser authenticatedUser, String submissionId, String speakerId, byte[] pictureStream, String mediaType) {
         Submission submission = getSubmissionForUser(authenticatedUser, submissionId);
         Optional<Speaker> speaker = submission.speakers.stream().filter(s -> s.id.equals(speakerId)).findAny();
         if (speaker.isPresent()) {

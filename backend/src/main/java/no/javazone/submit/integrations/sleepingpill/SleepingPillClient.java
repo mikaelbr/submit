@@ -14,6 +14,7 @@ import no.javazone.submit.integrations.sleepingpill.model.get.Sessions;
 import no.javazone.submit.integrations.sleepingpill.model.picture.CreatedPicture;
 import no.javazone.submit.integrations.sleepingpill.model.update.UpdatedSession;
 import no.javazone.submit.util.StreamUtil;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -38,7 +39,6 @@ import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 @Service
 public class SleepingPillClient {
@@ -82,9 +82,9 @@ public class SleepingPillClient {
         put("/data/session/" + sessionId, session, null);
     }
 
-    public CreatedPicture uploadPicture(InputStream image, String mediaType) {
+    public CreatedPicture uploadPicture(byte[] image, String mediaType) {
         BasicHttpEntity entity = new BasicHttpEntity();
-        entity.setContent(image);
+        entity.setContent(new ByteArrayInputStream(image));
 
         String path = baseUri + "/data/picture";
         HttpPost httpPost = new HttpPost(path);
@@ -102,7 +102,7 @@ public class SleepingPillClient {
                 LOG.warn("Could not fetch picture with id " + id + ". Got status code " + response.getStatusLine().getStatusCode());
                 throw new RuntimeException("Couldn't fetch picture");
             } else {
-                return StreamUtil.convertStreamToString(response.getEntity().getContent()).getBytes();
+                return IOUtils.toByteArray(response.getEntity().getContent());
             }
         } catch (IOException e) {
             LOG.warn("Error when doing http request to " + baseUri + path, e);

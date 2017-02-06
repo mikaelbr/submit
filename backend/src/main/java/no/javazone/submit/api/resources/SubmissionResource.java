@@ -16,7 +16,6 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.InputStream;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -87,10 +86,10 @@ public class SubmissionResource {
     public Response addPictureToSpeaker(@Context ContainerRequestContext context,
                                         @PathParam("submissionId") String submissionId,
                                         @PathParam("speakerId") String speakerId,
-                                        @FormDataParam("image") InputStream imageInputStream,
+                                        @FormDataParam("image") byte[] image,
                                         @FormDataParam("image") FormDataBodyPart picture) {
         return assertLoggedInUser(context, authenticatedUser -> {
-            submissionService.addPictureToSpeaker(authenticatedUser, submissionId, speakerId, imageInputStream, picture.getMediaType().toString());
+            submissionService.addPictureToSpeaker(authenticatedUser, submissionId, speakerId, image, picture.getMediaType().toString());
             return Response.ok().build();
         });
     }

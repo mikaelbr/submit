@@ -9,12 +9,13 @@ import no.javazone.submit.integrations.sleepingpill.model.get.Session;
 import no.javazone.submit.integrations.sleepingpill.model.picture.CreatedPicture;
 import no.javazone.submit.integrations.sleepingpill.model.update.UpdatedSession;
 import no.javazone.submit.integrations.sleepingpill.model.update.UpdatedSpeaker;
-import no.javazone.submit.util.StreamUtil;
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -119,14 +120,22 @@ public class SleepingPillClientManualTest {
     }
 
     @Test
-    public void add_picture_to_talk() {
+    public void add_picture_to_talk() throws IOException {
         InputStream image = getClass().getResourceAsStream("/testimage.jpg");
-        byte[] sentInBytes = StreamUtil.convertStreamToString(image).getBytes();
-        CreatedPicture picture = client.uploadPicture(new ByteArrayInputStream(sentInBytes), "image/jpeg");
+        byte[] sentInBytes = IOUtils.toByteArray(image);
+        CreatedPicture picture = client.uploadPicture(sentInBytes, "image/jpeg");
         byte[] downloadedPicture = client.getPicture(picture.id);
 
         System.out.println("Uploaded picture with byte length " + sentInBytes.length + ", got id " + picture.id);
         System.out.println("Fetched picture back with byte length " + downloadedPicture.length);
+    }
+
+    @Test
+    public void get_picture_by_id() throws IOException {
+        byte[] clientPicture = client.getPicture("7f9e8ed40dc947899b4a43d28a578a11");
+        FileOutputStream fos = new FileOutputStream("/Users/eh/Desktop/submitbilde/direct.jpeg");
+        fos.write(clientPicture);
+        fos.close();
     }
 
 }
