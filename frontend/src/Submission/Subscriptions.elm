@@ -10,7 +10,7 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
     case model.submission of
         Complete submission ->
-            if model.autosave && model.dirty && submission.status /= "HISTORIC" then
+            if model.autosave && model.dirty && submission.editable then
                 every (30 * second) Save
             else
                 Sub.none
