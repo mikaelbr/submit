@@ -23,6 +23,7 @@ import Submission.Update
 import Submission.Subscriptions
 import Nav.Requests exposing (getSubmissions, getSubmission)
 import Lazy
+import Backend.Network exposing (RequestStatus(..))
 
 
 initModel : Page -> Model
@@ -115,7 +116,18 @@ updatePage page m =
                 )
 
             Submissions ->
-                ( model, Cmd.map SubmissionsMsg <| Lazy.force getSubmissions )
+                let
+                    submissions =
+                        model.submissions
+                in
+                    ( { model
+                        | submissions =
+                            { submissions
+                                | submissions = Loading
+                            }
+                      }
+                    , Cmd.map SubmissionsMsg <| Lazy.force getSubmissions
+                    )
 
             Submission id ->
                 ( model, Cmd.map SubmissionMsg <| getSubmission id )

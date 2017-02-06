@@ -18,21 +18,30 @@ view model =
             div [] []
 
         Loading ->
-            div [] [ text "Loading" ]
+            viewWrapper [ div [ class "submissions-list loading" ] [ text "Loading..." ] ]
 
         Complete submissions ->
-            viewSubmissions submissions
+            viewWrapper <| viewSubmissions submissions
 
         Error message ->
-            viewError message
+            viewWrapper <| viewError message
 
 
-viewError : String -> Html Msg
+viewWrapper : List (Html Msg) -> Html Msg
+viewWrapper content =
+    div [ class "wrapper" ]
+        [ div [ class "logo-wrapper" ] [ img [ src "assets/logo.png", class "logo" ] [] ]
+        , div [ class "submissions-list" ]
+            content
+        ]
+
+
+viewError : String -> List (Html Msg)
 viewError message =
-    div [] [ text message ]
+    [ text message ]
 
 
-viewSubmissions : Submissions -> Html Msg
+viewSubmissions : Submissions -> List (Html Msg)
 viewSubmissions submissions =
     let
         years =
@@ -47,21 +56,17 @@ viewSubmissions submissions =
             else
                 p [ class "intro-text" ] [ text "These are all JavaZone talks you have submitted or participated on. You can edit all talks from the currect year. All earlier talks are also available for your reference." ]
     in
-        div [ class "wrapper" ]
-            [ div [ class "logo-wrapper" ] [ img [ src "assets/logo.png", class "logo" ] [] ]
-            , div [ class "submissions-list" ]
-                [ div [ class "flex-header" ]
-                    [ h1 [ class "flex-header-element" ] [ text "Your JavaZone Talks" ]
-                    , div [ class "flex-header-element" ] [ button [ onClick CreateTalk, class "new-talk button-new" ] [ text "Create new draft" ] ]
-                    ]
-                , introtext
-                , div [ class "submissions" ] years
-                , div [ class "logout" ]
-                    [ p [] [ text "We'll keep you signed in on this machine for your convenience. If you don't want us to remember you on this computer, that's okay to. Use the button :)" ]
-                    , button [ onClick Logout, class "forget-me-button" ] [ text "Forget me on this computer" ]
-                    ]
-                ]
+        [ div [ class "flex-header" ]
+            [ h1 [ class "flex-header-element" ] [ text "Your JavaZone Talks" ]
+            , div [ class "flex-header-element" ] [ button [ onClick CreateTalk, class "new-talk button-new" ] [ text "Create new draft" ] ]
             ]
+        , introtext
+        , div [ class "submissions" ] years
+        , div [ class "logout" ]
+            [ p [] [ text "We'll keep you signed in on this machine for your convenience. If you don't want us to remember you on this computer, that's okay to. Use the button :)" ]
+            , button [ onClick Logout, class "forget-me-button" ] [ text "Forget me on this computer" ]
+            ]
+        ]
 
 
 viewEmpty : Html Msg
