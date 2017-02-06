@@ -42,3 +42,5 @@ decodeSpeaker =
         |> optional "zipCode" string ""
         |> optional "twitter" string ""
         |> required "deletable" bool
+        |> required "hasPicture" bool
+        |> optional "pictureUrl" string ""

@@ -238,11 +238,6 @@ viewSpeaker submission n ( i, speaker ) =
                 [ h3 [] [ text "Speakers name" ]
                 , input [ type_ "text", value speaker.name, placeholder "Speaker name", onInput <| SpeakerName i ] []
                 ]
-            , div [ class "speaker-inpuc-section" ]
-                [ h3 [] [ text "Speakers image" ]
-                , input [ type_ "file", id <| "SpeakerImage" ++ toString i, on "change" (succeed <| FileSelected speaker <| "SpeakerImage" ++ toString i) ] []
-                , img [ src <| "https://submit.javazone.no/api/submissions/" ++ submission.id ++ "/speakers/" ++ speaker.id ++ "/picture", class "speaker-image" ] []
-                ]
             , div [ class "speaker-input-section" ]
                 [ h3 [] [ text "Speakers email (not public)" ]
                 , input [ type_ "text", value speaker.email, placeholder "Speaker email", onInput <| SpeakerEmail i ] []
@@ -258,6 +253,11 @@ viewSpeaker submission n ( i, speaker ) =
             , div [ class "speaker-input-section" ]
                 [ h3 [] [ text "Your norwegian ZIP Code (optional)" ]
                 , input [ type_ "text", value speaker.zipCode, onInput <| SpeakerZipCode i, placeholder "Will let us contact you about future speaking opportunities in local javaBin user groups :)" ] []
+                ]
+            , div [ class "speaker-input-section" ]
+                [ h3 [] [ text "Speakers image" ]
+                , input [ class "speaker-image-input", type_ "file", id <| "SpeakerImage" ++ toString i, on "change" (succeed <| FileSelected speaker <| "SpeakerImage" ++ toString i) ] []
+                , speakerImage speaker
                 ]
             ]
 
@@ -331,3 +331,11 @@ zeroPad n =
         "0" ++ n
     else
         n
+
+
+speakerImage : Speaker -> Html Msg
+speakerImage speaker =
+    if speaker.hasPicture then
+        img [ src speaker.pictureUrl, class "speaker-image" ] []
+    else
+        div [ class "speaker-image empty-speaker-image" ] []
