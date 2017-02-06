@@ -7,7 +7,7 @@ import Time exposing (every, second)
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    if model.autosave then
+    if model.autosave && model.dirty then
         every (30 * second) Save
     else
         Sub.none
