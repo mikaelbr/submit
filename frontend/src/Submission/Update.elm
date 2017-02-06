@@ -34,7 +34,7 @@ update msg model =
             ( model, Cmd.none )
 
         Saved (Ok _) ->
-            ( model, Task.perform TimeUpdated Time.now )
+            ( { model | dirty = False }, Task.perform TimeUpdated Time.now )
 
         TimeUpdated time ->
             ( { model | lastSaved = Just time }, Cmd.none )
