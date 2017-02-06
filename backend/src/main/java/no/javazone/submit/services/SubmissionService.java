@@ -1,13 +1,12 @@
 package no.javazone.submit.services;
 
+import no.javazone.submit.api.representations.*;
 import no.javazone.submit.api.representations.Speaker;
-import no.javazone.submit.api.representations.Submission;
-import no.javazone.submit.api.representations.SubmissionsForUser;
-import no.javazone.submit.api.representations.Year;
 import no.javazone.submit.api.session.AuthenticatedUser;
+import no.javazone.submit.config.ServerConfiguration;
 import no.javazone.submit.config.SleepingPillConfiguration;
 import no.javazone.submit.integrations.sleepingpill.SleepingPillClient;
-import no.javazone.submit.integrations.sleepingpill.model.common.SessionStatus;
+import no.javazone.submit.integrations.sleepingpill.model.common.*;
 import no.javazone.submit.integrations.sleepingpill.model.create.CreatedSession;
 import no.javazone.submit.integrations.sleepingpill.model.create.NewSession;
 import no.javazone.submit.integrations.sleepingpill.model.get.Conferences;
@@ -42,14 +41,16 @@ public class SubmissionService {
     private final Conferences conferences;
 
     private final SleepingPillConfiguration sleepingPillConfiguration;
+    private final ServerConfiguration serverConfiguration;
 
     @Autowired
-    public SubmissionService(SleepingPillClient sleepingPill, SleepingPillConfiguration sleepingPillConfiguration) {
+    public SubmissionService(SleepingPillClient sleepingPill, SleepingPillConfiguration sleepingPillConfiguration, ServerConfiguration serverConfiguration) {
         this.sleepingPill = sleepingPill;
+        this.sleepingPillConfiguration = sleepingPillConfiguration;
+        this.serverConfiguration = serverConfiguration;
 
         // TODO (EHH): Refresh this periodically?
         conferences = sleepingPill.getConferences();
-        this.sleepingPillConfiguration = sleepingPillConfiguration;
     }
 
     public SubmissionsForUser getSubmissionsForUser(AuthenticatedUser authenticatedUser) {
@@ -150,12 +151,12 @@ public class SubmissionService {
                 session.getLevel(),
                 session.getSuggestedKeywords(),
                 session.getInfoToProgramCommittee(),
-                session.speakers.stream().map((speaker) -> fromSleepingPillSpeaker(speaker, authenticatedUser)).collect(toList()),
+                session.speakers.stream().map((speaker) -> fromSleepingPillSpeaker(session.sessionId, speaker, authenticatedUser)).collect(toList()),
                 isEditableBySubmitter(session.conferenceId)
         );
     }
 
-    private Speaker fromSleepingPillSpeaker(no.javazone.submit.integrations.sleepingpill.model.common.Speaker speaker, AuthenticatedUser authenticatedUser) {
+    private Speaker fromSleepingPillSpeaker(String sessionId, no.javazone.submit.integrations.sleepingpill.model.common.Speaker speaker, AuthenticatedUser authenticatedUser) {
         return new Speaker(
                 speaker.id,
                 speaker.name,
@@ -164,6 +165,8 @@ public class SubmissionService {
                 speaker.getZipCode(),
                 speaker.getTwitter(),
                 speaker.getPictureId(),
+                speaker.getPictureId() != null,
+                serverConfiguration.apiBaseUri + "/" + sessionId + "/speakers/" + speaker.id + "/picture",
                 deleteble(speaker, authenticatedUser)
         );
     }
@@ -176,13 +179,14 @@ public class SubmissionService {
         return conferences.getSlugFromId(sessionId).equals(sleepingPillConfiguration.activeYear);
     }
 
-    public void addPictureToSpeaker(AuthenticatedUser authenticatedUser, String submissionId, String speakerId, byte[] pictureStream, String mediaType) {
+    public UploadedPicture addPictureToSpeaker(AuthenticatedUser authenticatedUser, String submissionId, String speakerId, byte[] pictureStream, String mediaType) {
         Submission submission = getSubmissionForUser(authenticatedUser, submissionId);
         Optional<Speaker> speaker = submission.speakers.stream().filter(s -> s.id.equals(speakerId)).findAny();
         if (speaker.isPresent()) {
             CreatedPicture createdPicture = sleepingPill.uploadPicture(pictureStream, mediaType);
             speaker.get().setPictureId(createdPicture.id);
             updateSubmission(authenticatedUser, submissionId, submission);
+            return new UploadedPicture(serverConfiguration.apiBaseUri + "/" + submissionId + "/speakers/" + speakerId + "/picture");
         } else {
             throw new NotFoundException("Could not add picture. Did not find speaker with id " + speakerId + " on session " + submissionId);
         }

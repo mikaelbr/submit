@@ -88,10 +88,8 @@ public class SubmissionResource {
                                         @PathParam("speakerId") String speakerId,
                                         @FormDataParam("image") byte[] image,
                                         @FormDataParam("image") FormDataBodyPart picture) {
-        return assertLoggedInUser(context, authenticatedUser -> {
-            submissionService.addPictureToSpeaker(authenticatedUser, submissionId, speakerId, image, picture.getMediaType().toString());
-            return Response.ok().build();
-        });
+        return assertLoggedInUser(context, authenticatedUser ->
+                Response.ok(submissionService.addPictureToSpeaker(authenticatedUser, submissionId, speakerId, image, picture.getMediaType().toString())).build());
     }
 
     @GET
