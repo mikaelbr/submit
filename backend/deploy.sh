@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 BASEDIR=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 
 # resolve symlinks
@@ -11,33 +10,50 @@ while [ -h "$BASEDIR/$0" ]; do
 done
 cd ${BASEDIR}
 
-ENVS=$(eb list --profile javabin | sed 's/^\* //')
+app=submit
+beanstalk_env=${1}
+envs=$(eb list | sed 's/^\* //')
 
-if [[ ${1} != submit-* ]]; then
-  echo "Usage: ${0} submit-<environment>"
+if [[ ${beanstalk_env} != ${app}-* ]]; then
+  echo "Usage: ${0} ${app}-<environment>"
   echo
   echo "Available environments:"
-  echo "$ENVS"
+  echo "${envs}"
   exit 1
-elif [ $(echo "$ENVS" | grep "^$1$" -c) -eq 0 ]; then
-  echo "Environment not recognized: '$1'. Use one of the following:"
+elif [ $(echo "${envs}" | grep "^${beanstalk_env}$" -c) -eq 0 ]; then
+  echo "Environment not recognized: '${beanstalk_env}'. Use one of the following:"
   echo
-  echo "$ENVS"
+  echo "${envs}"
   exit 1
 fi
 
-BEANSTALK_ENV=$1
-ENV="$(echo $BEANSTALK_ENV | cut -d '-' -f 2)"
+local_version=$( grep -E "<version>[0-9]+(\.[0-9]+).*(SNAPSHOT)?</version>" pom.xml -m1 2> /dev/null | sed 's/.*<version>\(.*\)<\/version>/\1/' )
 
-echo "> preparing secret properties"
+version_suggestion="[${local_version}] "
+read -p "Version? ${version_suggestion}" version
+[ -z ${version} ] && version="${local_version}"
 
-ansible-vault view "secretconfig/application-$ENV.properties.encrypted" >> "application-$ENV.properties"
+env=$(echo ${beanstalk_env} | sed s/${app}-//g)
 
-git add "application-$ENV.properties"
+trap "{ rm -f app.zip app.jar ${secret_properties_file} ; exit 255; }" EXIT
 
-echo "> Starting deploy"
-eb deploy "$BEANSTALK_ENV" --staged --profile javabin
+./package.sh ${env} ${version}
+if [ $? -ne 0 ]; then
+  echo "> Package failed!"
+  exit 1
+fi
 
-git rm -f "application-$ENV.properties"
+if [ "${2}" == "debug" ]; then
+  echo "Debug mode. Skipping deploy."
+  rm -f app.zip
+  exit 0
+fi
 
-echo "Deploy complete."
+echo "> Deploying ${version_with_git_rev} to ${beanstalk_env}"
+eb deploy "${beanstalk_env}"
+
+echo "> Deleting app.zip"
+rm -f app.zip
+
+echo "> Deploy complete.'"
+exit 0
