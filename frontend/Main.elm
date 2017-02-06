@@ -130,7 +130,18 @@ updatePage page m =
                     )
 
             Submission id ->
-                ( model, Cmd.map SubmissionMsg <| getSubmission id )
+                let
+                    submission =
+                        model.submission
+                in
+                    ( { model
+                        | submission =
+                            { submission
+                                | submission = Loading
+                            }
+                      }
+                    , Cmd.map SubmissionMsg <| getSubmission id
+                    )
 
             _ ->
                 ( { model | page = page }, Cmd.none )

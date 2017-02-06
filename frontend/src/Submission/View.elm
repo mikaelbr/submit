@@ -42,13 +42,22 @@ view model =
             div [] []
 
         Loading ->
-            div [] [ text "Loading" ]
+            viewLoading
 
         Complete submission ->
             viewSubmission submission model
 
         Error message ->
             viewError message
+
+
+viewLoading : Html Msg
+viewLoading =
+    div [ class "wrapper" ]
+        [ div [ class "logo-wrapper" ] [ img [ src "assets/logo.png", class "logo" ] [] ]
+        , div [ class "edit-submission" ]
+            [ div [ class "edit-submission loading" ] [ text "Loading ..." ] ]
+        ]
 
 
 viewSubmission : Submission -> Model -> Html Msg
