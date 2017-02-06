@@ -307,10 +307,18 @@ viewLastSaved time =
             in
                 "Last saved "
                     ++ (String.join ":"
-                            << List.map toString
+                            << List.map (zeroPad << toString)
                         <|
                             [ Date.hour date, Date.minute date, Date.second date ]
                        )
 
         Nothing ->
             "Not edited yet"
+
+
+zeroPad : String -> String
+zeroPad n =
+    if String.length n == 1 then
+        "0" ++ n
+    else
+        n
