@@ -166,7 +166,7 @@ public class SubmissionService {
                 speaker.getTwitter(),
                 speaker.getPictureId(),
                 speaker.getPictureId() != null,
-                serverConfiguration.apiBaseUri + "/" + sessionId + "/speakers/" + speaker.id + "/picture",
+                serverConfiguration.apiBaseUri + "/submissions/" + sessionId + "/speakers/" + speaker.id + "/picture",
                 deleteble(speaker, authenticatedUser)
         );
     }
@@ -186,7 +186,7 @@ public class SubmissionService {
             CreatedPicture createdPicture = sleepingPill.uploadPicture(pictureStream, mediaType);
             speaker.get().setPictureId(createdPicture.id);
             updateSubmission(authenticatedUser, submissionId, submission);
-            return new UploadedPicture(serverConfiguration.apiBaseUri + "/" + submissionId + "/speakers/" + speakerId + "/picture");
+            return new UploadedPicture(serverConfiguration.apiBaseUri + "/submissions/" + submissionId + "/speakers/" + speakerId + "/picture");
         } else {
             throw new NotFoundException("Could not add picture. Did not find speaker with id " + speakerId + " on session " + submissionId);
         }
