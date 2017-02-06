@@ -1,7 +1,7 @@
 package no.javazone.submit.integrations.sleepingpill.model.update;
 
-import no.javazone.submit.integrations.sleepingpill.model.common.SpeakerData;
 import no.javazone.submit.api.representations.Speaker;
+import no.javazone.submit.integrations.sleepingpill.model.common.SpeakerData;
 
 public class UpdatedSpeaker {
 
@@ -11,7 +11,8 @@ public class UpdatedSpeaker {
     public SpeakerData data;
 
     @SuppressWarnings("unused")
-    private UpdatedSpeaker() { }
+    private UpdatedSpeaker() {
+    }
 
     public UpdatedSpeaker(String id, String name, String email, String bio, String zipCode, String twitter, String pictureId) {
         this.id = id;
@@ -22,7 +23,9 @@ public class UpdatedSpeaker {
         data.setBio(bio);
         data.setZipCode(zipCode);
         data.setTwitter(twitter);
-        data.setPictureId(pictureId);
+        if (pictureId != null) {
+            data.setPictureId(pictureId);
+        }
     }
 
     public static UpdatedSpeaker fromApiObject(Speaker speaker) {
