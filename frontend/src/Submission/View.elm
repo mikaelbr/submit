@@ -170,7 +170,7 @@ viewSubmission submission model =
                     ]
                 , p [ class "input-description" ] [ text "Please give us a little bit of information about yourself. You can also add any additional speakers here. All of you will be shown in the program." ]
                 , ul [ class "speakers" ] <|
-                    List.map (viewSpeaker <| List.length submission.speakers) submission.speakers
+                    List.map (viewSpeaker submission <| List.length submission.speakers) submission.speakers
                 ]
             , div [ class <| "input-section " ++ hideIfNotEditable submission.editable ]
                 [ h2 [] [ text "How finished are you with your abstract?" ]
@@ -207,8 +207,8 @@ viewLength s =
                 ]
 
 
-viewSpeaker : Int -> ( Int, Speaker ) -> Html Msg
-viewSpeaker n ( i, speaker ) =
+viewSpeaker : Submission -> Int -> ( Int, Speaker ) -> Html Msg
+viewSpeaker submission n ( i, speaker ) =
     let
         removeButton =
             if n == 1 then
@@ -231,9 +231,8 @@ viewSpeaker n ( i, speaker ) =
                 ]
             , div [ class "speaker-inpuc-section" ]
                 [ h3 [] [ text "Speakers image" ]
-                , input [ type_ "file", id <| "SpeakerImage" ++ toString i, on "change" (succeed <| FileSelected <| "SpeakerImage" ++ toString i) ] []
-                  -- TODO: fix correct image URL
-                , img [ src <| "https://submit.javazone.no/api/submissions/22db550f32394928b35198e3f146d2b0/speakers/411d19199e8a47e08b1c6d8679c75b6f/picture", class "speaker-image" ] []
+                , input [ type_ "file", id <| "SpeakerImage" ++ toString i, on "change" (succeed <| FileSelected speaker <| "SpeakerImage" ++ toString i) ] []
+                , img [ src <| "https://submit.javazone.no/api/submissions/" ++ submission.id ++ "/speakers/" ++ speaker.id ++ "/picture", class "speaker-image" ] []
                 ]
             , div [ class "speaker-input-section" ]
                 [ h3 [] [ text "Speakers email (not public)" ]

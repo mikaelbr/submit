@@ -15,7 +15,10 @@
         return response.json();
     }
 
-    app.ports.fileSelected.subscribe(function(id) {
+    app.ports.fileSelected.subscribe(function(props) {
+        var id = props.id;
+        var submission = props.submission;
+        var speaker = props.speaker;
         var input = document.getElementById(id);
         if (input == null) {
             return;
@@ -24,12 +27,15 @@
         var data = new FormData();
         data.append('image', input.files[0]);
 
-        // TODO: fix correct token and correct URL
+        var token = localStorage.getItem("login_token");
+        var url = 'https://submit.javazone.no/api/submissions/' +
+                  submission + '/speakers/' +
+                  speaker + '/picture';
 
         var myHeaders = new Headers();
-        myHeaders.append("x-token", "c3e28586-4427-454c-b623-7ababaaa6bf1");
+        myHeaders.append("x-token", token);
 
-        fetch('https://submit.javazone.no/api/submissions/22db550f32394928b35198e3f146d2b0/speakers/411d19199e8a47e08b1c6d8679c75b6f/picture', {
+        fetch(url, {
                 method: 'POST',
                 body: data,
                 headers: myHeaders

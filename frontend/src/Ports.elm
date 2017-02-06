@@ -13,7 +13,14 @@ type alias FileData =
     }
 
 
-port fileSelected : String -> Cmd msg
+type alias ImagePostData =
+    { id : String
+    , submission : String
+    , speaker : String
+    }
+
+
+port fileSelected : ImagePostData -> Cmd msg
 
 
 port fileUploadSucceeded : (FileData -> msg) -> Sub msg

@@ -7,7 +7,7 @@ import Nav.Requests exposing (saveSubmission, loginFailed)
 import Time
 import Task
 import Lazy
-import Ports exposing (fileSelected)
+import Ports exposing (fileSelected, ImagePostData)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -171,8 +171,13 @@ update msg model =
                     in
                         { s | speakers = speakers }
 
-        FileSelected id ->
-            ( model, fileSelected id )
+        FileSelected speaker id ->
+            case model.submission of
+                Complete submission ->
+                    ( model, fileSelected <| ImagePostData id submission.id speaker.id )
+
+                _ ->
+                    ( model, Cmd.none )
 
         FileUploaded fileData ->
             ( model, Cmd.none )

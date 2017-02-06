@@ -33,5 +33,5 @@ type Msg
     | SpeakerTwitter Int String
     | SpeakerPictureId Int String
     | RemoveSpeaker Int
-    | FileSelected String
+    | FileSelected Speaker String
     | FileUploaded FileData
