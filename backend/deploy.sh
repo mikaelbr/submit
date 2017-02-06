@@ -49,7 +49,7 @@ if [ "${2}" == "debug" ]; then
   exit 0
 fi
 
-echo "> Deploying ${version_with_git_rev} to ${beanstalk_env}"
+echo "> Deploying submit to ${beanstalk_env}"
 eb deploy "${beanstalk_env}"
 
 echo "> Deleting app.zip"
