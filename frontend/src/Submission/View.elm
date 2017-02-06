@@ -338,4 +338,4 @@ speakerImage speaker =
     if speaker.hasPicture then
         img [ src speaker.pictureUrl, class "speaker-image" ] []
     else
-        div [ class "speaker-image empty-speaker-image" ] []
+        img [ src "assets/robot_padded_arm.png", class "speaker-image" ] []
