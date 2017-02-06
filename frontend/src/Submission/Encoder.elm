@@ -33,4 +33,5 @@ encodeSpeaker ( i, speaker ) =
         , ( "bio", string speaker.bio )
         , ( "zipCode", string speaker.zipCode )
         , ( "twitter", string speaker.twitter )
+        , ( "pictureId", string speaker.pictureId )
         ]

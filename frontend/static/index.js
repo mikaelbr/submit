@@ -24,9 +24,15 @@
         var data = new FormData();
         data.append('image', input.files[0]);
 
-        fetch('/image', {
+        // TODO: fix correct token and correct URL
+
+        var myHeaders = new Headers();
+        myHeaders.append("x-token", "c3e28586-4427-454c-b623-7ababaaa6bf1");
+
+        fetch('https://submit.javazone.no/api/submissions/22db550f32394928b35198e3f146d2b0/speakers/411d19199e8a47e08b1c6d8679c75b6f/picture', {
                 method: 'POST',
-                body: data
+                body: data,
+                headers: myHeaders
             })
             .then(checkStatus)
             .then(parseJson)

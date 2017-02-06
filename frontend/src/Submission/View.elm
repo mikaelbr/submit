@@ -232,6 +232,8 @@ viewSpeaker n ( i, speaker ) =
             , div [ class "speaker-inpuc-section" ]
                 [ h3 [] [ text "Speakers image" ]
                 , input [ type_ "file", id <| "SpeakerImage" ++ toString i, on "change" (succeed <| FileSelected <| "SpeakerImage" ++ toString i) ] []
+                  -- TODO: fix correct image URL
+                , img [ src <| "https://submit.javazone.no/api/submissions/22db550f32394928b35198e3f146d2b0/speakers/411d19199e8a47e08b1c6d8679c75b6f/picture", class "speaker-image" ] []
                 ]
             , div [ class "speaker-input-section" ]
                 [ h3 [] [ text "Speakers email (not public)" ]

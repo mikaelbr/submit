@@ -149,6 +149,17 @@ update msg model =
                     in
                         { s | speakers = speakers }
 
+        SpeakerPictureId i pictureId ->
+            updateField model <|
+                \s ->
+                    let
+                        speakers =
+                            List.map
+                                (\speaker -> updateSpeaker i speaker (\sp -> { sp | pictureId = pictureId }))
+                                s.speakers
+                    in
+                        { s | speakers = speakers }
+
         RemoveSpeaker i ->
             updateField model <|
                 \s ->
