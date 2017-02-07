@@ -3,7 +3,7 @@ module Submission.Messages exposing (Msg(..))
 import Submission.Model exposing (..)
 import Http
 import Time
-import Ports exposing (FileData)
+import Ports exposing (UploadedImageData)
 
 
 type Msg
@@ -32,5 +32,5 @@ type Msg
     | SpeakerZipCode Int String
     | SpeakerTwitter Int String
     | RemoveSpeaker Int
-    | FileSelected Speaker String
-    | FileUploaded FileData
+    | FileSelected Speaker Int String
+    | FileUploaded UploadedImageData

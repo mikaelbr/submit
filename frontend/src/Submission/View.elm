@@ -257,7 +257,7 @@ viewSpeaker submission n ( i, speaker ) =
             , div [ class "speaker-input-section" ]
                 [ h3 [] [ text "Speakers image" ]
                 , p [ class "input-description" ] [ text "Please upload a good image of yourself. Max 500 KB. If you don't upload a picture, we'll try to use the gravatar image connected to your email address." ]
-                , input [ class "speaker-image-input", type_ "file", id <| "SpeakerImage" ++ toString i, on "change" (succeed <| FileSelected speaker <| "SpeakerImage" ++ toString i) ] []
+                , input [ class "speaker-image-input", type_ "file", id <| "SpeakerImage" ++ toString i, on "change" (succeed <| FileSelected speaker i <| "SpeakerImage" ++ toString i) ] []
                 , speakerImage speaker
                 ]
             ]

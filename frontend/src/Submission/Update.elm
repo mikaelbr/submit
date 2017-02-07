@@ -160,16 +160,24 @@ update msg model =
                     in
                         { s | speakers = speakers }
 
-        FileSelected speaker id ->
+        FileSelected speaker i id ->
             case model.submission of
                 Complete submission ->
-                    ( model, fileSelected <| ImagePostData id submission.id speaker.id )
+                    ( model, fileSelected <| ImagePostData id submission.id speaker.id i )
 
                 _ ->
                     ( model, Cmd.none )
 
-        FileUploaded fileData ->
-            ( model, Cmd.none )
+        FileUploaded image ->
+            updateField model <|
+                \s ->
+                    let
+                        speakers =
+                            List.map
+                                (\speaker -> updateSpeaker image.i speaker (\sp -> { sp | pictureUrl = image.url }))
+                                s.speakers
+                    in
+                        { s | speakers = speakers }
 
 
 updateField : Model -> (Submission -> Submission) -> ( Model, Cmd Msg )

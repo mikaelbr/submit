@@ -19,6 +19,7 @@
         var id = props.id;
         var submission = props.submission;
         var speaker = props.speaker;
+        var i = props.i
         var input = document.getElementById(id);
         if (input == null) {
             return;
@@ -43,7 +44,12 @@
             .then(checkStatus)
             .then(parseJson)
             .then(function(data) {
-                app.ports.fileUploadSucceeded.send(data);
+                app.ports.fileUploadSucceeded.send({
+                    url: data.pictureUrl + '?t=' + Date.now(),
+                    submission: submission,
+                    speaker: speaker,
+                    i : i
+                });
             })
             .catch(function(error) {
                 app.ports.fileUploadFailed.send(error.message);
