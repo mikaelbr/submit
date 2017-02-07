@@ -53,7 +53,8 @@ public class EmailService {
         b.append("Ready to submit a talk to JavaZone, or editing your talk?\n\n");
         b.append("Use this link to log your browser in to our submitting system:\n");
         b.append(emailConfiguration.tokenLinkPrefix).append("/").append(token).append("\n\n");
-        b.append("Don't know why you received this email? Someone probably just misspelled their email address. Don't worry, they can't do anything on your behalf without this link");
+        b.append("Don't know why you received this email? Someone probably just misspelled their email address. Don't worry, they can't do anything on your behalf without this link").append("\n\n");
+        b.append("Best regards,").append("\n").append("The JavaZone Program Committee");
         return b.toString();
     }
 }
