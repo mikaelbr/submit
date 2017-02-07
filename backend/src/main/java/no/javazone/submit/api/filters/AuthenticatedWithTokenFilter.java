@@ -44,7 +44,7 @@ public class AuthenticatedWithTokenFilter implements ContainerRequestFilter {
             requestContext.setProperty(AUTHENTICATED_USER_PROPERTY, authenticatedUser.get());
         } else {
             LOG.warn(String.format("Denied request due to invalid token. Token %s", token.toString()));
-            AuditLogger.log(USER_AUTHENTICATION_WRONG_TOKEN, "user " + authenticatedUser, "token " + token);
+            AuditLogger.log(USER_AUTHENTICATION_WRONG_TOKEN, "token " + token);
             throw new ForbiddenException("Not valid token");
         }
 
