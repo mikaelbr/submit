@@ -3,6 +3,7 @@ package no.javazone.submit.services;
 import no.javazone.submit.config.EmailConfiguration;
 import no.javazone.submit.api.representations.EmailAddress;
 import no.javazone.submit.api.representations.Token;
+import no.javazone.submit.util.AuditLogger;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
@@ -11,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import static no.javazone.submit.util.AuditLogger.Event.SENT_EMAIL;
 
 @Service
 public class EmailService {
@@ -39,6 +42,7 @@ public class EmailService {
             email.addTo(emailAddress.toString());
             email.send();
             LOG.info("Token " + token + " was sent to: " + emailAddress);
+            AuditLogger.log(SENT_EMAIL, "emailaddress " + emailAddress);
         } catch (EmailException e) {
             LOG.warn("Couldn't send token " + token + " to " + emailAddress, e);
         }

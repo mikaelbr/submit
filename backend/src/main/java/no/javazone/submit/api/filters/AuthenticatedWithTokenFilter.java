@@ -3,6 +3,7 @@ package no.javazone.submit.api.filters;
 import no.javazone.submit.api.representations.Token;
 import no.javazone.submit.services.AuthenticationService;
 import no.javazone.submit.api.session.AuthenticatedUser;
+import no.javazone.submit.util.AuditLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import java.io.IOException;
 import java.util.Optional;
+
+import static no.javazone.submit.util.AuditLogger.Event.USER_AUTHENTICATION_OK;
+import static no.javazone.submit.util.AuditLogger.Event.USER_AUTHENTICATION_WRONG_TOKEN;
 
 @AuthenticatedWithToken
 @Component
@@ -36,10 +40,11 @@ public class AuthenticatedWithTokenFilter implements ContainerRequestFilter {
         Optional<AuthenticatedUser> authenticatedUser = authenticationService.validateToken(token);
 
         if (authenticatedUser.isPresent()) {
-            LOG.info(String.format("User %s authenticated OK with token %s", authenticatedUser.get().emailAddress, token.toString()));
+            AuditLogger.log(USER_AUTHENTICATION_OK, "user " + authenticatedUser, "token " + token);
             requestContext.setProperty(AUTHENTICATED_USER_PROPERTY, authenticatedUser.get());
         } else {
-            LOG.info(String.format("Denied request due to invalid token. Token %s", token.toString()));
+            LOG.warn(String.format("Denied request due to invalid token. Token %s", token.toString()));
+            AuditLogger.log(USER_AUTHENTICATION_WRONG_TOKEN, "user " + authenticatedUser, "token " + token);
             throw new ForbiddenException("Not valid token");
         }
 

@@ -1,9 +1,12 @@
 package no.javazone.submit.api.representations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import no.javazone.submit.util.AuditLogger;
 
 import javax.ws.rs.ForbiddenException;
 import java.util.List;
+
+import static no.javazone.submit.util.AuditLogger.Event.INVALID_TALK_FIELD;
 
 public class Submission {
 
@@ -78,9 +81,10 @@ public class Submission {
         });
     }
 
-    private void checkFieldLength(String field) {
-        if(field != null && field.length() > MAX_FIELD_LENGTH_TO_AVOID_DOS_ATTACK) {
-            throw new ForbiddenException("Field data too long: " + field);
+    private void checkFieldLength(String fieldData) {
+        if(fieldData != null && fieldData.length() > MAX_FIELD_LENGTH_TO_AVOID_DOS_ATTACK) {
+            AuditLogger.log(INVALID_TALK_FIELD, "fielddata " + fieldData);
+            throw new ForbiddenException("Field data too long: " + fieldData);
         }
     }
 }

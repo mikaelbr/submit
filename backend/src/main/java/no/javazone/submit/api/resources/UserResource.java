@@ -36,7 +36,7 @@ public class UserResource {
 
     @DELETE
     @Path("/authtoken")
-    public void useAuthenticationEmail(@QueryParam("token") Token token) {
+    public void deletetoken(@QueryParam("token") Token token) {
         authenticationService.removeToken(token);
     }
 

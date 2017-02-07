@@ -4,6 +4,7 @@ import no.javazone.submit.api.filters.AuthenticatedWithToken;
 import no.javazone.submit.api.representations.Submission;
 import no.javazone.submit.api.session.AuthenticatedUser;
 import no.javazone.submit.services.SubmissionService;
+import no.javazone.submit.util.AuditLogger;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ import static java.util.Optional.ofNullable;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static no.javazone.submit.api.filters.AuthenticatedWithTokenFilter.AUTHENTICATED_USER_PROPERTY;
+import static no.javazone.submit.util.AuditLogger.Event.WRONG_ACCESS_TOKEN_IN_RESOURCE;
 
 @Path("/api/submissions")
 @Component
@@ -110,6 +112,7 @@ public class SubmissionResource {
                 .map(requestHandler)
                 .orElseGet(() -> {
                     LOG.warn("No token even though we are in the resource method. Something is wrong. Did you forget to add the filter annotation to the Resource?");
+                    AuditLogger.log(WRONG_ACCESS_TOKEN_IN_RESOURCE);
                     return Response.status(FORBIDDEN).build();
                 });
     }

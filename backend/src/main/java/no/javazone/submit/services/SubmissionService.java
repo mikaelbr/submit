@@ -15,6 +15,7 @@ import no.javazone.submit.integrations.sleepingpill.model.get.Sessions;
 import no.javazone.submit.integrations.sleepingpill.model.picture.CreatedPicture;
 import no.javazone.submit.integrations.sleepingpill.model.update.UpdatedSession;
 import no.javazone.submit.integrations.sleepingpill.model.update.UpdatedSpeaker;
+import no.javazone.submit.util.AuditLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import java.util.Optional;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
+import static no.javazone.submit.util.AuditLogger.Event.*;
 
 @Service
 public class SubmissionService {
@@ -58,6 +60,8 @@ public class SubmissionService {
 
         Map<String, List<Session>> groupedByConference = sleepingPillSessions.sessions.stream().collect(groupingBy(s -> s.conferenceId));
 
+        AuditLogger.log(GET_ALL_TALKS, "user " + authenticatedUser.emailAddress);
+
         return new SubmissionsForUser(
                 groupedByConference.entrySet().stream()
                         .map((e) -> sleepingpillYearToOurYear(e, authenticatedUser))
@@ -76,6 +80,7 @@ public class SubmissionService {
     public Submission getSubmissionForUser(AuthenticatedUser authenticatedUser, String submissionId) {
         Session session = sleepingPill.getSession(submissionId);
         checkSessionOwnership(session, authenticatedUser);
+        AuditLogger.log(GET_SINGLE_TALK, "user " + authenticatedUser, "session " + submissionId);
         return fromSleepingPillSession(session, authenticatedUser);
     }
 
@@ -83,6 +88,7 @@ public class SubmissionService {
         NewSession draft = NewSession.draft(authenticatedUser.emailAddress);
         String conferenceId = conferences.getIdFromSlug(sleepingPillConfiguration.activeYear);
         CreatedSession createdSession = sleepingPill.createSession(conferenceId, draft);
+        AuditLogger.log(CREATE_DRAFT, "user " + authenticatedUser);
         return getSubmissionForUser(authenticatedUser, createdSession.id);
     }
 
@@ -93,6 +99,7 @@ public class SubmissionService {
 
         if (!isEditableBySubmitter(previousSubmission.conferenceId)) {
             LOG.warn(String.format("User %s tried to edit a previous year's submissions with is %s", authenticatedUser.emailAddress, submissionId));
+            AuditLogger.log(EDIT_UNEDITABLE_TALK, "user " + authenticatedUser, "session " + submissionId);
             throw new ForbiddenException("Not allowed to edit previous year's submissions");
         }
 
@@ -113,6 +120,8 @@ public class SubmissionService {
         );
         sleepingPill.updateSession(submissionId, updatedSession);
 
+        AuditLogger.log(UPDATE_TALK, "user " + authenticatedUser, "session " + submissionId);
+
         return getSubmissionForUser(authenticatedUser, submissionId);
     }
 
@@ -121,6 +130,7 @@ public class SubmissionService {
         boolean isOriginalOwner = session.postedBy != null && session.postedBy.equals(authenticatedUser.emailAddress.toString());
         if (!isSpeakerAtSession && !isOriginalOwner) {
             LOG.warn(format("User %s tried to access session %s, which the user is not a speaker for or is not the original poster for...", authenticatedUser.emailAddress.toString(), session.sessionId));
+            AuditLogger.log(ILLEGAL_TALK_ACCESS, "user " + authenticatedUser, "session " + session.sessionId);
             throw new NotFoundException("Session with ID " + session.sessionId + " not found");
         }
     }
@@ -131,6 +141,7 @@ public class SubmissionService {
             return status;
         } else {
             LOG.warn(String.format("%s tried to set the status %s that the user isn't allowed to set...", authenticatedUser.emailAddress.toString(), status.name()));
+            AuditLogger.log(EDIT_UNEDITABLE_TALK, "user " + authenticatedUser, "session " + submission.id, "status " + status);
             throw new ForbiddenException("Tried to set a status that the user isn't allowed to set...");
         }
     }
@@ -185,9 +196,11 @@ public class SubmissionService {
         if (speaker.isPresent()) {
             CreatedPicture createdPicture = sleepingPill.uploadPicture(pictureStream, mediaType);
             speaker.get().setPictureId(createdPicture.id);
+            AuditLogger.log(UPLOAD_SPEAKER_PICTURE, "user " + authenticatedUser, "session " + submissionId, "speaker " + speakerId);
             updateSubmission(authenticatedUser, submissionId, submission);
             return new UploadedPicture(serverConfiguration.apiBaseUri + "/submissions/" + submissionId + "/speakers/" + speakerId + "/picture");
         } else {
+            AuditLogger.log(ILLEGAL_SPEAKER_FOR_PICTURE_UPLOAD, "user " + authenticatedUser, "session " + submissionId, "speaker " + speakerId);
             throw new NotFoundException("Could not add picture. Did not find speaker with id " + speakerId + " on session " + submissionId);
         }
     }
@@ -198,11 +211,14 @@ public class SubmissionService {
         if (speaker.isPresent()) {
             String pictureId = speaker.get().getPictureId();
             if (pictureId == null) {
+                AuditLogger.log(GET_SPEAKER_IMAGE_MISSING_IMAGE, "session " + submissionId, "speaker " + speakerId);
                 throw new NotFoundException("Didn't find stored picture for " + speakerId + " on session " + submissionId);
             } else {
+                AuditLogger.log(GET_SPEAKER_PICTURE, "session " + submissionId, "speaker " + speakerId);
                 return sleepingPill.getPicture(pictureId);
             }
         } else {
+            AuditLogger.log(GET_SPEAKER_IMAGE_MISSING_SPEAKER, "session " + submissionId, "speaker " + speakerId);
             throw new NotFoundException("Didn't find speaker for speakerid " + speakerId + " on session " + submissionId);
         }
     }

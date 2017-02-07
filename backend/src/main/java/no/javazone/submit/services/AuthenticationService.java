@@ -4,12 +4,16 @@ import no.javazone.submit.dao.LoginTokenDao;
 import no.javazone.submit.api.representations.EmailAddress;
 import no.javazone.submit.api.representations.Token;
 import no.javazone.submit.api.session.AuthenticatedUser;
+import no.javazone.submit.util.AuditLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+import static no.javazone.submit.util.AuditLogger.Event.CREATE_TOKEN;
+import static no.javazone.submit.util.AuditLogger.Event.REMOVE_TOKEN;
 
 @Service
 public class AuthenticationService {
@@ -25,7 +29,7 @@ public class AuthenticationService {
     public Token createTokenForEmail(EmailAddress email) {
         Token token = Token.generate();
         loginTokenDao.addLoginToken(email, token);
-        LOG.info("Created token " + token + " for user " + email);
+        AuditLogger.log(CREATE_TOKEN, "user " + email, "token " + token);
         return token;
     }
 
@@ -37,6 +41,7 @@ public class AuthenticationService {
 
     public void removeToken(Token token) {
         LOG.info("Removing token " + token.toString());
+        AuditLogger.log(REMOVE_TOKEN, "token " + token);
         loginTokenDao.removeToken(token);
     }
 }
