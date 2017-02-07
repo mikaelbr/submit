@@ -91,17 +91,22 @@ public class SleepingPillClient {
         httpPost.setEntity(entity);
 
         httpPost.setHeader("Content-Type", mediaType);
+        logRequest("POST", path, null);
         return request(httpPost, path, CreatedPicture.class);
     }
 
     public byte[] getPicture(String id) {
+        long before = System.currentTimeMillis();
         String path = baseUri + "/data/picture/" + id;
         HttpGet httpGet = new HttpGet(path);
+        logRequest("GET", path, null);
         try (CloseableHttpResponse response = client.execute(httpGet, context)) {
-            if(response.getStatusLine().getStatusCode() >= 400) {
+            if (response.getStatusLine().getStatusCode() >= 400) {
                 LOG.warn("Could not fetch picture with id " + id + ". Got status code " + response.getStatusLine().getStatusCode());
+                logResponse("GET", path, null, response.getStatusLine().getStatusCode(), before);
                 throw new RuntimeException("Couldn't fetch picture");
             } else {
+                logResponse("GET", path, null, response.getStatusLine().getStatusCode(), before);
                 return IOUtils.toByteArray(response.getEntity().getContent());
             }
         } catch (IOException e) {
@@ -112,18 +117,21 @@ public class SleepingPillClient {
 
     private <T> T get(String path, Class<T> responseType) {
         HttpGet httpGet = new HttpGet(baseUri + path);
+        logRequest("GET", baseUri + path, null);
         return jsonRequest(httpGet, path, responseType);
     }
 
     private <T> T post(String path, Object body, Class<T> responseType) {
         HttpPost httpPost = new HttpPost(baseUri + path);
         addEntity(httpPost, body);
+        logRequest("POST", baseUri + path, body);
         return jsonRequest(httpPost, path, responseType);
     }
 
     private <T> T put(String path, Object body, Class<T> responseType) {
         HttpPut httpPut = new HttpPut(baseUri + path);
         addEntity(httpPut, body);
+        logRequest("POST", baseUri + path, body);
         return jsonRequest(httpPut, path, responseType);
     }
 
@@ -144,16 +152,20 @@ public class SleepingPillClient {
     }
 
     private <T> T request(HttpUriRequest request, String path, Class<T> responseType) {
+        long before = System.currentTimeMillis();
         request.setHeader("Accept", "application/json");
         try (CloseableHttpResponse response = client.execute(request, context)) {
-            if(response.getStatusLine().getStatusCode() >= 400) {
+            if (response.getStatusLine().getStatusCode() >= 400) {
                 LOG.warn("Got HTTP error (" + response.getStatusLine().getStatusCode() + ") when doing http request to " + baseUri + path + "\nRESPONSE:\n"
-                + StreamUtil.convertStreamToString(response.getEntity().getContent()));
+                        + StreamUtil.convertStreamToString(response.getEntity().getContent()));
+                logResponse(request.getMethod(), path, null, response.getStatusLine().getStatusCode(), before);
                 throw new ServerErrorException("Error with sleeping pill...", Response.Status.INTERNAL_SERVER_ERROR);
-            }
-            if (responseType != null) {
-                return objectmapper.readValue(response.getEntity().getContent(), responseType);
+            } else if (responseType != null) {
+                byte[] bytes = IOUtils.toByteArray(response.getEntity().getContent());
+                logResponse(request.getMethod(), path, bytes, response.getStatusLine().getStatusCode(), before);
+                return objectmapper.readValue(new ByteArrayInputStream(bytes), responseType);
             } else {
+                logResponse(request.getMethod(), path, null, response.getStatusLine().getStatusCode(), before);
                 return null;
             }
         } catch (IOException e) {
@@ -161,7 +173,6 @@ public class SleepingPillClient {
             throw new RuntimeException(e);
         }
     }
-
 
     private CloseableHttpClient createHttpClient() {
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
@@ -188,6 +199,7 @@ public class SleepingPillClient {
         return localContext;
     }
 
+
     private static ObjectMapper createObjectmapper() {
         ObjectMapper mapper = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -200,6 +212,36 @@ public class SleepingPillClient {
                         .withCreatorVisibility(JsonAutoDetect.Visibility.NONE)
         );
         return mapper;
+    }
+
+    private void logRequest(String method, String url, Object body) {
+        try {
+            LOG.info(
+                    String.format("SLEEPINGPILL REQUEST: [Method: %s] [URL: %s] [BODY: %s]",
+                            method,
+                            url,
+                            body != null ? objectmapper.writeValueAsString(body) : "[NO BODY OR BODY NOT LOGGED]"
+                    )
+            );
+        } catch (JsonProcessingException e) {
+            LOG.error("Error when logging request", e);
+        }
+    }
+
+    private void logResponse(String method, String url, byte[] bytes, int statusCode, long beforeMillis) {
+        try {
+            LOG.info(
+                    String.format("SLEEPINGPILL RESPONSE: [Status: %s] [Duration: %s ms] [Method: %s] [URL: %s] [BODY: %s]",
+                            statusCode,
+                            System.currentTimeMillis() - beforeMillis,
+                            method,
+                            url,
+                            bytes != null ? objectmapper.writeValueAsString(bytes) : "[NO BODY OR BODY NOT LOGGED]"
+                    )
+            );
+        } catch (JsonProcessingException e) {
+            LOG.error("Error when logging response", e);
+        }
     }
 }
 
