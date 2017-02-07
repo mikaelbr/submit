@@ -39,6 +39,7 @@ import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 @Service
 public class SleepingPillClient {
@@ -236,10 +237,10 @@ public class SleepingPillClient {
                             System.currentTimeMillis() - beforeMillis,
                             method,
                             url,
-                            bytes != null ? objectmapper.writeValueAsString(bytes) : "[NO BODY OR BODY NOT LOGGED]"
+                            bytes != null ? new String(bytes, "UTF-8") : "[NO BODY OR BODY NOT LOGGED]"
                     )
             );
-        } catch (JsonProcessingException e) {
+        } catch (UnsupportedEncodingException e) {
             LOG.error("Error when logging response", e);
         }
     }
