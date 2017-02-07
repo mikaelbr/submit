@@ -174,7 +174,7 @@ update msg model =
                     let
                         speakers =
                             List.map
-                                (\speaker -> updateSpeaker image.i speaker (\sp -> { sp | pictureUrl = image.url }))
+                                (\speaker -> updateSpeaker image.i speaker (\sp -> { sp | pictureUrl = image.url, hasPicture = True }))
                                 s.speakers
                     in
                         { s | speakers = speakers }
