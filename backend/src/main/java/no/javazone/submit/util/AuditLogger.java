@@ -14,7 +14,7 @@ public class AuditLogger {
 
     public enum Event {
         CREATE_TOKEN(EXPECTED),
-        REMOVE_TOKEN(EXPECTED),
+        REMOVE_TOKEN_FROM_BROWSER_LOCAL_STORAGE(EXPECTED),
         GET_ALL_TALKS(EXPECTED),
         GET_SINGLE_TALK(EXPECTED),
         CREATE_DRAFT(EXPECTED),

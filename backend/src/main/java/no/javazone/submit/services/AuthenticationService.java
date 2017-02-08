@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 import static no.javazone.submit.util.AuditLogger.Event.CREATE_TOKEN;
-import static no.javazone.submit.util.AuditLogger.Event.REMOVE_TOKEN;
+import static no.javazone.submit.util.AuditLogger.Event.REMOVE_TOKEN_FROM_BROWSER_LOCAL_STORAGE;
 
 @Service
 public class AuthenticationService {
@@ -39,9 +39,9 @@ public class AuthenticationService {
                 .map(AuthenticatedUser::new);
     }
 
-    public void removeToken(Token token) {
-        LOG.info("Removing token " + token.toString());
-        AuditLogger.log(REMOVE_TOKEN, "token " + token);
-        loginTokenDao.removeToken(token);
+    public void indicateLoginTokenRemovedFromBrowser(Token token) {
+        LOG.info("Logging user out of browser for token " + token.toString() + ". Doesn't actually delete the token, as the user might use the link in the email again");
+        AuditLogger.log(REMOVE_TOKEN_FROM_BROWSER_LOCAL_STORAGE, "token " + token);
+        //loginTokenDao.removeToken(token);
     }
 }

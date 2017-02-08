@@ -36,8 +36,8 @@ public class UserResource {
 
     @DELETE
     @Path("/authtoken")
-    public void deletetoken(@QueryParam("token") Token token) {
-        authenticationService.removeToken(token);
+    public void indicateLoginTokenRemovedFromBrowser(@QueryParam("token") Token token) {
+        authenticationService.indicateLoginTokenRemovedFromBrowser(token);
     }
 
 }
