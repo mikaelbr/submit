@@ -1,12 +1,12 @@
 package no.javazone.submit.services;
 
 import no.javazone.submit.api.representations.*;
-import no.javazone.submit.api.representations.Speaker;
 import no.javazone.submit.api.session.AuthenticatedUser;
 import no.javazone.submit.config.ServerConfiguration;
 import no.javazone.submit.config.SleepingPillConfiguration;
+import no.javazone.submit.integrations.slack.SlackClient;
 import no.javazone.submit.integrations.sleepingpill.SleepingPillClient;
-import no.javazone.submit.integrations.sleepingpill.model.common.*;
+import no.javazone.submit.integrations.sleepingpill.model.common.SessionStatus;
 import no.javazone.submit.integrations.sleepingpill.model.create.CreatedSession;
 import no.javazone.submit.integrations.sleepingpill.model.create.NewSession;
 import no.javazone.submit.integrations.sleepingpill.model.get.Conferences;
@@ -31,6 +31,7 @@ import java.util.Optional;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
+import static no.javazone.submit.integrations.sleepingpill.model.common.SessionStatus.SUBMITTED;
 import static no.javazone.submit.util.AuditLogger.Event.*;
 
 @Service
@@ -41,15 +42,17 @@ public class SubmissionService {
     private final SleepingPillClient sleepingPill;
 
     private final Conferences conferences;
+    private final SlackClient slackClient;
 
     private final SleepingPillConfiguration sleepingPillConfiguration;
     private final ServerConfiguration serverConfiguration;
 
     @Autowired
-    public SubmissionService(SleepingPillClient sleepingPill, SleepingPillConfiguration sleepingPillConfiguration, ServerConfiguration serverConfiguration) {
+    public SubmissionService(SleepingPillClient sleepingPill, SleepingPillConfiguration sleepingPillConfiguration, ServerConfiguration serverConfiguration, SlackClient slackClient) {
         this.sleepingPill = sleepingPill;
         this.sleepingPillConfiguration = sleepingPillConfiguration;
         this.serverConfiguration = serverConfiguration;
+        this.slackClient = slackClient;
 
         // TODO (EHH): Refresh this periodically?
         conferences = sleepingPill.getConferences();
@@ -122,7 +125,35 @@ public class SubmissionService {
 
         AuditLogger.log(UPDATE_TALK, "user " + authenticatedUser, "session " + submissionId);
 
+        notifySlack(submissionId, submission, previousSubmission);
+
         return getSubmissionForUser(authenticatedUser, submissionId);
+    }
+
+    private void notifySlack(String submissionId, Submission submission, Submission previousSubmission) {
+        try {
+            if (SessionStatus.valueOf(previousSubmission.status) != SUBMITTED && SessionStatus.valueOf(submission.status) == SUBMITTED) {
+                slackClient.postTalkMarkedForInReview(
+                        submissionId, submission.title,
+                        submission.format,
+                        submission.length,
+                        submission.language,
+                        submission.theAbstract,
+                        submission.speakers.get(0).name,
+                        submission.speakers.get(0).email,
+                        previousSubmission.speakers.get(0).hasPicture ? previousSubmission.speakers.get(0).pictureUrl : null
+                );
+            } else if(SessionStatus.valueOf(previousSubmission.status) == SUBMITTED && SessionStatus.valueOf(submission.status) != SUBMITTED) {
+                slackClient.postTalkMarkedForNotInReview(
+                        submissionId, submission.title,
+                        submission.speakers.get(0).name,
+                        submission.speakers.get(0).email,
+                        previousSubmission.speakers.get(0).hasPicture ? previousSubmission.speakers.get(0).pictureUrl : null
+                );
+            }
+        } catch (Exception e) {
+            LOG.warn("Some error happened when submitting status update to slack", e);
+        }
     }
 
     private void checkSessionOwnership(Session session, AuthenticatedUser authenticatedUser) {
@@ -137,7 +168,7 @@ public class SubmissionService {
 
     private SessionStatus parseAndValidateStatus(AuthenticatedUser authenticatedUser, Submission submission) {
         SessionStatus status = SessionStatus.valueOf(submission.status);
-        if (status == SessionStatus.DRAFT || status == SessionStatus.SUBMITTED) {
+        if (status == SessionStatus.DRAFT || status == SUBMITTED) {
             return status;
         } else {
             LOG.warn(String.format("%s tried to set the status %s that the user isn't allowed to set...", authenticatedUser.emailAddress.toString(), status.name()));
