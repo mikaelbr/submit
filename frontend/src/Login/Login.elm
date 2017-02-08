@@ -7,6 +7,7 @@ import Login.Model exposing (Model)
 import Login.Message exposing (Msg(..))
 import Json.Decode
 
+
 init : ( Model, Cmd Msg )
 init =
     ( initModel, Cmd.none )
@@ -21,7 +22,7 @@ view : Model -> Html Msg
 view model =
     div [ class "wrapper login" ]
         [ div [ class "logo-wrapper" ]
-            [ img [ src "assets/logo.png", class "logo" ] [] ]
+            [ img [ src "assets/neon-logo.svg", class "logo" ] [] ]
         , h1 [] [ text "Get ready to speak at", br [] [], text "JavaZone 2017" ]
         , div [ class "email-wrapper" ]
             [ input [ value model.email, onInput Email, onEnter SubmitEmail, type_ "email", class "email", id "email-address", placeholder "Your email address" ] []
@@ -54,4 +55,3 @@ onEnter msg =
                 Json.Decode.fail "not ENTER"
     in
         on "keydown" (Json.Decode.andThen isEnter keyCode)
-

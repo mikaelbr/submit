@@ -28,7 +28,7 @@ view : Model -> Html Msg
 view model =
     div [ class "wrapper login " ]
         [ div [ class "logo-wrapper" ]
-            [ img [ src "assets/logo.png", class "logo" ] []
+            [ img [ src "assets/neon-logo.svg", class "logo" ] []
             ]
         , h1 [] [ text "Awesome!", br [] [], text " We are on it!" ]
         , div [ class "success-image-wrapper" ]
