@@ -132,7 +132,7 @@ public class SleepingPillClient {
     private <T> T put(String path, Object body, Class<T> responseType) {
         HttpPut httpPut = new HttpPut(baseUri + path);
         addEntity(httpPut, body);
-        logRequest("POST", baseUri + path, body);
+        logRequest("PUT", baseUri + path, body);
         return jsonRequest(httpPut, path, responseType);
     }
 
