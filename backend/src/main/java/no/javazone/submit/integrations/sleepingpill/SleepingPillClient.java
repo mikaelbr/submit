@@ -67,6 +67,10 @@ public class SleepingPillClient {
         return get("/data/conference", Conferences.class);
     }
 
+    public Sessions getTalksByConferenceId(String conferenceId) {
+        return get("/data/conference/" + conferenceId + "/session", Sessions.class);
+    }
+
     public Sessions getTalksForSpeakerByEmail(String email) {
         return get("/data/submitter/" + email + "/session", Sessions.class);
     }

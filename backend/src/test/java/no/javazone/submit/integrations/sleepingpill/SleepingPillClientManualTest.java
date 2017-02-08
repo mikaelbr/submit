@@ -41,6 +41,12 @@ public class SleepingPillClientManualTest {
     }
 
     @Test
+    public void fetch_talks_by_conference_id() {
+        String id = client.getConferences().getIdFromSlug("javazone_2017");
+        client.getTalksByConferenceId(id).sessions.forEach(System.out::println);
+    }
+
+    @Test
     public void fetch_talks_by_email() {
         client.getTalksForSpeakerByEmail("espen.halvorsen@bekk.no").sessions.forEach(System.out::println);
     }
