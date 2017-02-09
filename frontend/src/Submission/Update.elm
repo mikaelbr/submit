@@ -60,7 +60,7 @@ update msg model =
 
         Status status ->
             updateField model <|
-                \s -> { s | status = status, length = getLength status }
+                \s -> { s | status = status }
 
         IntendedAudience intendedAudience ->
             updateField model <|
