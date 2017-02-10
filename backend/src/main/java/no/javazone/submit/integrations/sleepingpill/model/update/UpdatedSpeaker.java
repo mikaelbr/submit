@@ -15,7 +15,9 @@ public class UpdatedSpeaker {
     }
 
     public UpdatedSpeaker(String id, String name, String email, String bio, String zipCode, String twitter, String pictureId) {
-        this.id = id;
+        if(id != null && !id.isEmpty()) {
+            this.id = id;
+        }
         this.name = name;
         this.email = email;
 
