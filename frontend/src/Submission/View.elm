@@ -24,7 +24,7 @@ import Html
         , select
         , option
         )
-import Html.Attributes exposing (class, type_, value, src, placeholder, href, name, checked, selected, id, for)
+import Html.Attributes exposing (class, style, type_, value, src, placeholder, href, name, checked, selected, id, for)
 import Html.Events exposing (onInput, onClick, on)
 import Nav.Nav exposing (toHash)
 import Nav.Model
@@ -337,6 +337,6 @@ zeroPad n =
 speakerImage : Speaker -> Html Msg
 speakerImage speaker =
     if speaker.hasPicture then
-        img [ src speaker.pictureUrl, class "speaker-image" ] []
+        div [ style <| [ ( "background-image", "url(" ++ speaker.pictureUrl ++ ")" ) ], class "speaker-image" ] []
     else
         img [ src "assets/robot_padded_arm.png", class "speaker-image" ] []
