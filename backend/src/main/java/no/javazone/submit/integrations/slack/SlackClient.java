@@ -117,7 +117,7 @@ public class SlackClient {
 
         SlackChannel channel = slack.findChannelByName("javazone-submit");
 
-        SlackAttachment attachment = new SlackAttachment("Some statistics about the submitted talks", "", "_These statistics are posted 16.00 every day (and with every deploy of submit backend)_", null);
+        SlackAttachment attachment = new SlackAttachment("Some statistics about the submitted talks", "", "_These statistics are posted 16.00 every day_", null);
         attachment.setColor("#3abae9");
         attachment.addMarkdownIn("text");
 

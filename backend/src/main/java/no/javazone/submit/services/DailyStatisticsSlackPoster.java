@@ -38,9 +38,7 @@ public class DailyStatisticsSlackPoster {
     private void setupRecurringJob() {
         long timeToFirstExecution = calculateMillisecondsUntilTeatime();
         SCHEDULER.scheduleAtFixedRate(this::postStatistics, timeToFirstExecution, 1000 * 60 * 60 * 24, TimeUnit.MILLISECONDS);
-        LOG.info("Scheduled daily statistics job to 16:00 each day, that should be " + timeToFirstExecution + "ms from now... Doing one now to check that it works as well :)");
-
-        postStatistics();
+        LOG.info("Scheduled daily statistics job to 16:00 each day, that should be " + timeToFirstExecution + "ms from now...");
     }
 
     private static long calculateMillisecondsUntilTeatime() {
