@@ -37,7 +37,6 @@ public class SlackClientManualTest {
                 "en",
                 "This is a long and windy abstract\n\nWell, it contains newlines as well!\n\nLook at how long it is! :)",
                 "Espen Herseth Halvorsen",
-                "espenhh@gmail.com",
                 "https://submit.javazone.no/api/submissions/e8df80124dbd4195ae4b4779493a795b/speakers/1766e9ab3e7a45d6a60b853b76e2b13d/picture"
         );
     }

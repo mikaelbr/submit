@@ -35,7 +35,7 @@ public class SlackClient {
         connectIfNessesary();
     }
 
-    public void postTalkMarkedForInReview(String id, String title, String format, String length, String language, String theAbstract, String submitterName, String submitterEmail, String submitterImage) {
+    public void postTalkMarkedForInReview(String id, String title, String format, String length, String language, String theAbstract, String submitterName, String submitterImage) {
         connectIfNessesary();
 
         SlackChannel channel = slack.findChannelByName("javazone-submit");

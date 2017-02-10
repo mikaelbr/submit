@@ -30,6 +30,7 @@ import java.util.Optional;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static no.javazone.submit.integrations.sleepingpill.model.common.SessionStatus.SUBMITTED;
 import static no.javazone.submit.util.AuditLogger.Event.*;
@@ -142,8 +143,7 @@ public class SubmissionService {
                         submission.length,
                         submission.language,
                         submission.theAbstract,
-                        submission.speakers.get(0).name,
-                        submission.speakers.get(0).email,
+                        submission.speakers.stream().map(s -> s.name).collect(joining(" & ")),
                         previousSubmission.speakers.get(0).hasPicture ? previousSubmission.speakers.get(0).pictureUrl : null
                 );
                 emailService.notifySpeakerAboutStatusChangeToInReview(submission);
