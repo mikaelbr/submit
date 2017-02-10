@@ -42,17 +42,20 @@ public class SubmissionService {
     private final SleepingPillClient sleepingPill;
 
     private final Conferences conferences;
+    private final EmailService emailService;
     private final SlackClient slackClient;
 
     private final SleepingPillConfiguration sleepingPillConfiguration;
     private final ServerConfiguration serverConfiguration;
 
     @Autowired
-    public SubmissionService(SleepingPillClient sleepingPill, SleepingPillConfiguration sleepingPillConfiguration, ServerConfiguration serverConfiguration, SlackClient slackClient) {
+    public SubmissionService(SleepingPillClient sleepingPill, SleepingPillConfiguration sleepingPillConfiguration, ServerConfiguration serverConfiguration,
+                             SlackClient slackClient, EmailService emailService) {
         this.sleepingPill = sleepingPill;
         this.sleepingPillConfiguration = sleepingPillConfiguration;
         this.serverConfiguration = serverConfiguration;
         this.slackClient = slackClient;
+        this.emailService = emailService;
 
         // TODO (EHH): Refresh this periodically?
         conferences = sleepingPill.getConferences();
@@ -125,12 +128,12 @@ public class SubmissionService {
 
         AuditLogger.log(UPDATE_TALK, "user " + authenticatedUser, "session " + submissionId);
 
-        notifySlack(submissionId, submission, previousSubmission);
+        notifySlackAndEmail(submissionId, submission, previousSubmission);
 
         return getSubmissionForUser(authenticatedUser, submissionId);
     }
 
-    private void notifySlack(String submissionId, Submission submission, Submission previousSubmission) {
+    private void notifySlackAndEmail(String submissionId, Submission submission, Submission previousSubmission) {
         try {
             if (SessionStatus.valueOf(previousSubmission.status) != SUBMITTED && SessionStatus.valueOf(submission.status) == SUBMITTED) {
                 slackClient.postTalkMarkedForInReview(
@@ -143,6 +146,7 @@ public class SubmissionService {
                         submission.speakers.get(0).email,
                         previousSubmission.speakers.get(0).hasPicture ? previousSubmission.speakers.get(0).pictureUrl : null
                 );
+                emailService.notifySpeakerAboutStatusChangeToInReview(submission);
             } else if(SessionStatus.valueOf(previousSubmission.status) == SUBMITTED && SessionStatus.valueOf(submission.status) != SUBMITTED) {
                 slackClient.postTalkMarkedForNotInReview(
                         submissionId, submission.title,
