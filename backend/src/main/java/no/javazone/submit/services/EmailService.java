@@ -36,7 +36,7 @@ public class EmailService {
             email.setSmtpPort(465);
             email.setAuthenticator(new DefaultAuthenticator(emailConfiguration.smtpUser, emailConfiguration.smtpPass));
             email.setSSLOnConnect(true);
-            email.setFrom("program@java.no");
+            email.setFrom("program@java.no", "JavaZone Program Committee");
             email.setSubject("JavaZone submission login");
             email.setMsg(emailBody);
             email.addTo(emailAddress.toString());
