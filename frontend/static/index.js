@@ -29,7 +29,7 @@
         data.append('image', input.files[0]);
 
         var token = localStorage.getItem("login_token");
-        var url = 'https://submit.javazone.no/api/submissions/' +
+        var url = '/api/submissions/' +
                   submission + '/speakers/' +
                   speaker + '/picture';
 
