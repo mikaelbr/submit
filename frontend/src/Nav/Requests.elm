@@ -96,7 +96,7 @@ createSubmission =
 
 url : List String -> String
 url ls =
-    "https://submit.javazone.no/api/" ++ String.join "/" ls
+    "/api/" ++ String.join "/" ls
 
 
 get : Json.Decode.Decoder a -> String -> Http.Request a
