@@ -34,7 +34,7 @@ public class EmailService {
     }
 
     public void sendTokenToUser(EmailAddress emailAddress, Token token) {
-        send(emailAddress, "JavaZone submission login", generateTokenEmail(token));
+        send(emailAddress, emailConfiguration.subjectPrefix + "JavaZone submission login", generateTokenEmail(token));
     }
 
     public void notifySpeakerAboutStatusChangeToInReview(Submission submission) {
@@ -44,7 +44,7 @@ public class EmailService {
                 .filter(Objects::nonNull)
                 .forEach(emailAddress -> {
                     Token token = authenticationService.createTokenForEmail(emailAddress);
-                    send(emailAddress, "JavaZone submission marked for review: " + submission.title, generateReviewEmail(submission, token));
+                    send(emailAddress, emailConfiguration.subjectPrefix + "JavaZone submission marked for review: " + submission.title, generateReviewEmail(submission, token));
                 });
     }
 

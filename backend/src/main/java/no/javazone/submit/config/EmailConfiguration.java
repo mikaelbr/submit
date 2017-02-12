@@ -13,6 +13,8 @@ public class EmailConfiguration {
 
     public String tokenLinkPrefix;
 
+    public String subjectPrefix;
+
     public void setSmtpUser(String smtpUser) {
         this.smtpUser = smtpUser;
     }
@@ -23,5 +25,9 @@ public class EmailConfiguration {
 
     public void setTokenLinkPrefix(String tokenLinkPrefix) {
         this.tokenLinkPrefix = tokenLinkPrefix;
+    }
+
+    public void setSubjectPrefix(String subjectPrefix) {
+        this.subjectPrefix = subjectPrefix;
     }
 }
