@@ -28,9 +28,11 @@ public class SlackClient {
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     private final SlackSession slack;
+    private final SlackConfiguration slackConfiguration;
 
     @Autowired
     public SlackClient(SlackConfiguration slackConfiguration) {
+        this.slackConfiguration = slackConfiguration;
         slack = SlackSessionFactory.createWebSocketSlackSession(slackConfiguration.token);
         connectIfNessesary();
     }
@@ -38,7 +40,7 @@ public class SlackClient {
     public void postTalkMarkedForInReview(String id, String title, String format, String length, String language, String theAbstract, String submitterName, String submitterImage) {
         connectIfNessesary();
 
-        SlackChannel channel = slack.findChannelByName("javazone-submit");
+        SlackChannel channel = slack.findChannelByName(slackConfiguration.channel);
 
         SlackAttachment attachment = new SlackAttachment(title, "", "_Speaker has changed the talk status to 'ready for review'_", null);
         attachment.setColor("#30a74d");
@@ -64,7 +66,7 @@ public class SlackClient {
     public void postTalkMarkedForNotInReview(String id, String title, String submitterName, String submitterEmail, String submitterImage) {
         connectIfNessesary();
 
-        SlackChannel channel = slack.findChannelByName("javazone-submit");
+        SlackChannel channel = slack.findChannelByName(slackConfiguration.channel);
 
         SlackAttachment attachment = new SlackAttachment(title, "", "_Speaker has changed the talk status back to 'not in review'_", null);
         attachment.setColor("#b63d9d");
@@ -114,7 +116,7 @@ public class SlackClient {
 
         connectIfNessesary();
 
-        SlackChannel channel = slack.findChannelByName("javazone-submit");
+        SlackChannel channel = slack.findChannelByName(slackConfiguration.channel);
 
         SlackAttachment attachment = new SlackAttachment("Some statistics about the submitted talks", "", "_These statistics are posted 16.00 every day_", null);
         attachment.setColor("#3abae9");
