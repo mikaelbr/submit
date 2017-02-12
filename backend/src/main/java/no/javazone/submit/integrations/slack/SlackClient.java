@@ -5,6 +5,7 @@ import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackPreparedMessage;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
+import no.javazone.submit.config.CakeConfiguration;
 import no.javazone.submit.config.SlackConfiguration;
 import no.javazone.submit.integrations.sleepingpill.model.common.SessionStatus;
 import no.javazone.submit.integrations.sleepingpill.model.common.Speaker;
@@ -28,11 +29,13 @@ public class SlackClient {
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     private final SlackSession slack;
+    private final CakeConfiguration cakeConfiguration;
     private final SlackConfiguration slackConfiguration;
 
     @Autowired
-    public SlackClient(SlackConfiguration slackConfiguration) {
+    public SlackClient(SlackConfiguration slackConfiguration, CakeConfiguration cakeConfiguration) {
         this.slackConfiguration = slackConfiguration;
+        this.cakeConfiguration = cakeConfiguration;
         slack = SlackSessionFactory.createWebSocketSlackSession(slackConfiguration.token);
         connectIfNessesary();
     }
@@ -51,7 +54,7 @@ public class SlackClient {
         if(submitterImage != null) {
             attachment.setAuthorIcon(submitterImage);
         }
-        attachment.setTitleLink("http://javazone.no/cakeredux/secured/#/showTalk/" + id);
+        attachment.setTitleLink(cakeConfiguration.baseUri + "/secured/#/showTalk/" + id);
         attachment.setAuthorName("Speaker: " + submitterName);
         attachment.addMarkdownIn("text");
 
