@@ -43,59 +43,59 @@ update msg model =
             ( { model | autosave = not model.autosave }, Cmd.none )
 
         Title title ->
-            updateField model <|
+            updateField model (\_ -> Cmd.none) <|
                 \s -> { s | title = title }
 
         Abstract abstract ->
-            updateField model <|
+            updateField model (\_ -> Cmd.none) <|
                 \s -> { s | abstract = abstract }
 
         Equipment equipment ->
-            updateField model <|
+            updateField model (\_ -> Cmd.none) <|
                 \s -> { s | equipment = equipment }
 
         Format format ->
-            updateField model <|
+            updateField model (\_ -> Cmd.none) <|
                 \s -> { s | format = format, length = getLength format }
 
         Status status ->
-            updateField model <|
+            updateField model (\_ -> Cmd.none) <|
                 \s -> { s | status = status }
 
         IntendedAudience intendedAudience ->
-            updateField model <|
+            updateField model (\_ -> Cmd.none) <|
                 \s -> { s | intendedAudience = intendedAudience }
 
         Language language ->
-            updateField model <|
+            updateField model (\_ -> Cmd.none) <|
                 \s -> { s | language = language }
 
         Length length ->
-            updateField model <|
+            updateField model (\_ -> Cmd.none) <|
                 \s -> { s | length = length }
 
         Outline outline ->
-            updateField model <|
+            updateField model (\_ -> Cmd.none) <|
                 \s -> { s | outline = outline }
 
         Level level ->
-            updateField model <|
+            updateField model (\_ -> Cmd.none) <|
                 \s -> { s | level = level }
 
         SuggestedKeywords suggestedKeywords ->
-            updateField model <|
+            updateField model (\_ -> Cmd.none) <|
                 \s -> { s | suggestedKeywords = suggestedKeywords }
 
         InfoToProgramCommittee infoToProgramCommittee ->
-            updateField model <|
+            updateField model (\_ -> Cmd.none) <|
                 \s -> { s | infoToProgramCommittee = infoToProgramCommittee }
 
         AddSpeaker ->
-            updateField model <|
+            updateField model (\s -> saveSubmission s) <|
                 \s -> { s | speakers = s.speakers ++ [ initSpeaker s.speakers ] }
 
         SpeakerName i name ->
-            updateField model <|
+            updateField model (\_ -> Cmd.none) <|
                 \s ->
                     let
                         updatedSpeakers =
@@ -106,7 +106,7 @@ update msg model =
                         { s | speakers = updatedSpeakers }
 
         SpeakerEmail i email ->
-            updateField model <|
+            updateField model (\_ -> Cmd.none) <|
                 \s ->
                     let
                         updatedSpeakers =
@@ -117,7 +117,7 @@ update msg model =
                         { s | speakers = updatedSpeakers }
 
         SpeakerBio i bio ->
-            updateField model <|
+            updateField model (\_ -> Cmd.none) <|
                 \s ->
                     let
                         updatedSpeakers =
@@ -128,7 +128,7 @@ update msg model =
                         { s | speakers = updatedSpeakers }
 
         SpeakerZipCode i zipCode ->
-            updateField model <|
+            updateField model (\_ -> Cmd.none) <|
                 \s ->
                     let
                         speakers =
@@ -139,7 +139,7 @@ update msg model =
                         { s | speakers = speakers }
 
         SpeakerTwitter i twitter ->
-            updateField model <|
+            updateField model (\_ -> Cmd.none) <|
                 \s ->
                     let
                         speakers =
@@ -150,7 +150,7 @@ update msg model =
                         { s | speakers = speakers }
 
         RemoveSpeaker i ->
-            updateField model <|
+            updateField model (\s -> saveSubmission s) <|
                 \s ->
                     let
                         speakers =
@@ -169,7 +169,7 @@ update msg model =
                     ( model, Cmd.none )
 
         FileUploaded image ->
-            updateField model <|
+            updateField model (\_ -> Cmd.none) <|
                 \s ->
                     let
                         speakers =
@@ -180,11 +180,11 @@ update msg model =
                         { s | speakers = speakers }
 
 
-updateField : Model -> (Submission -> Submission) -> ( Model, Cmd Msg )
-updateField model updateFunction =
+updateField : Model -> (Submission -> Cmd Msg) -> (Submission -> Submission) -> ( Model, Cmd Msg )
+updateField model cmdFn updateFunction =
     case model.submission of
         Complete submission ->
-            ( { model | dirty = True, submission = Complete <| updateFunction submission }, Cmd.none )
+            ( { model | dirty = True, submission = Complete <| updateFunction submission }, cmdFn submission )
 
         _ ->
             ( model, Cmd.none )
