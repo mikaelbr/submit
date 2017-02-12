@@ -33,8 +33,18 @@ update msg model =
         Saved (Err _) ->
             ( model, Cmd.none )
 
-        Saved (Ok _) ->
-            ( { model | dirty = False }, Task.perform TimeUpdated Time.now )
+        Saved (Ok s) ->
+            case model.submission of
+                Complete submission ->
+                    ( { model
+                        | dirty = False
+                        , submission = Complete { submission | speakers = s.speakers }
+                      }
+                    , Task.perform TimeUpdated Time.now
+                    )
+
+                _ ->
+                    ( model, Cmd.none )
 
         TimeUpdated time ->
             ( { model | lastSaved = Just time }, Cmd.none )
