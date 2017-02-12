@@ -49,7 +49,7 @@ public class SlackClient {
         if(submitterImage != null) {
             attachment.setAuthorIcon(submitterImage);
         }
-        attachment.setTitleLink("http://javazone.no/cakeredux?talkId=" + id);
+        attachment.setTitleLink("http://javazone.no/cakeredux/secured/#/showTalk/" + id);
         attachment.setAuthorName("Speaker: " + submitterName);
         attachment.addMarkdownIn("text");
 
@@ -71,7 +71,6 @@ public class SlackClient {
         if(submitterImage != null) {
             attachment.setAuthorIcon(submitterImage);
         }
-        attachment.setTitleLink("http://javazone.no/cakeredux?talkId=" + id);
         attachment.setAuthorName("Speaker: " + submitterName);
         attachment.addMarkdownIn("text");
 
