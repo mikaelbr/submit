@@ -184,7 +184,11 @@ updateField : Model -> (Submission -> Cmd Msg) -> (Submission -> Submission) -> 
 updateField model cmdFn updateFunction =
     case model.submission of
         Complete submission ->
-            ( { model | dirty = True, submission = Complete <| updateFunction submission }, cmdFn submission )
+            let
+                updated =
+                    updateFunction submission
+            in
+                ( { model | dirty = True, submission = Complete updated }, cmdFn updated )
 
         _ ->
             ( model, Cmd.none )
