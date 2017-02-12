@@ -1,5 +1,6 @@
 package no.javazone.submit.integrations.slack;
 
+import no.javazone.submit.config.CakeConfiguration;
 import no.javazone.submit.config.SlackConfiguration;
 import no.javazone.submit.config.SleepingPillConfiguration;
 import no.javazone.submit.integrations.sleepingpill.SleepingPillClient;
@@ -18,7 +19,11 @@ public class SlackClientManualTest {
     public void before() {
         SlackConfiguration slackConfiguration = new SlackConfiguration();
         slackConfiguration.setToken("SECRET");
-        slack = new SlackClient(slackConfiguration);
+
+        CakeConfiguration cakeConfiguration = new CakeConfiguration();
+        cakeConfiguration.setBaseUri("http://cake.example.com");
+
+        slack = new SlackClient(slackConfiguration, cakeConfiguration);
 
         SleepingPillConfiguration configuration = new SleepingPillConfiguration();
         configuration.baseUri = "https://sleepingpill.javazone.no";
