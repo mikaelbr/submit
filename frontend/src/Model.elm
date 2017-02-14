@@ -1,11 +1,9 @@
-module Model exposing (Model, Flags)
+module Model exposing (Model, Flags, initModel)
 
-import Login.Model as Login
+import Model.Login
 import Nav.Model exposing (Page(..))
-import Thanks.Thanks as Thanks
-import Usetoken.Model
-import Submissions.Model
-import Submission.Model
+import Model.Submissions
+import Model.Submission
 
 
 type alias Flags =
@@ -13,11 +11,19 @@ type alias Flags =
 
 
 type alias Model =
-    { login : Login.Model
-    , thanks : Thanks.Model
-    , usetoken : Usetoken.Model.Model
-    , submissions : Submissions.Model.Model
-    , submission : Submission.Model.Model
+    { login : Model.Login.Model
+    , submissions : Model.Submissions.Model
+    , submission : Model.Submission.Model
     , page : Page
     , flags : Flags
     }
+
+
+initModel : Flags -> Page -> Model
+initModel flags page =
+    Model
+        Model.Login.init
+        Model.Submissions.initModel
+        Model.Submission.initModel
+        page
+        flags

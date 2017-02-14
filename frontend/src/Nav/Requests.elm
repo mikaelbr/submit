@@ -10,13 +10,11 @@ module Nav.Requests
         )
 
 import Http
-import Login.Message
-import Submissions.Messages
-import Submissions.Decoder
-import Submission.Messages
-import Submission.Model
-import Submission.Decoder
-import Submission.Encoder
+import Messages
+import Decoder.Submissions
+import Decoder.Submission
+import Encoder.Submission
+import Model.Submission
 import Json.Decode exposing (Decoder)
 import LocalStorage
 import Lazy
@@ -34,20 +32,20 @@ loginFailed =
         \_ -> Navigation.newUrl ((\_ -> "#") <| LocalStorage.remove "login_token")
 
 
-getLoginToken : String -> Cmd Login.Message.Msg
+getLoginToken : String -> Cmd Messages.Msg
 getLoginToken email =
-    Http.send Login.Message.Submit <|
+    Http.send Messages.LoginSubmit <|
         jsonPost Http.expectString Http.emptyBody <|
             url [ "users", "authtoken" ]
                 ++ "?email="
                 ++ email
 
 
-deleteLoginToken : Lazy.Lazy (Cmd Submissions.Messages.Msg)
+deleteLoginToken : Lazy.Lazy (Cmd Messages.Msg)
 deleteLoginToken =
     Lazy.lazy <|
         \() ->
-            Http.send Submissions.Messages.LoggedOut <|
+            Http.send Messages.SubmissionsLoggedOut <|
                 Http.request
                     { method = "DELETE"
                     , headers = headers []
@@ -59,38 +57,38 @@ deleteLoginToken =
                     }
 
 
-getSubmissions : Lazy.Lazy (Cmd Submissions.Messages.Msg)
+getSubmissions : Lazy.Lazy (Cmd Messages.Msg)
 getSubmissions =
     Lazy.lazy <|
         \() ->
-            Http.send Submissions.Messages.Get <|
-                jsonGet Submissions.Decoder.decoder <|
+            Http.send Messages.SubmissionsGet <|
+                jsonGet Decoder.Submissions.decoder <|
                     url [ "submissions" ]
 
 
-getSubmission : String -> Cmd Submission.Messages.Msg
+getSubmission : String -> Cmd Messages.Msg
 getSubmission id =
-    Http.send Submission.Messages.Get <|
-        jsonGet Submission.Decoder.decoder <|
+    Http.send Messages.GetSubmission <|
+        jsonGet Decoder.Submission.decoder <|
             url [ "submissions", id ]
 
 
-saveSubmission : Submission.Model.Submission -> Cmd Submission.Messages.Msg
+saveSubmission : Model.Submission.Submission -> Cmd Messages.Msg
 saveSubmission submission =
-    Http.send Submission.Messages.Saved <|
+    Http.send Messages.SavedSubmission <|
         jsonPut
-            (Http.expectJson Submission.Decoder.decoder)
-            (Http.jsonBody <| Submission.Encoder.encoder submission)
+            (Http.expectJson Decoder.Submission.decoder)
+            (Http.jsonBody <| Encoder.Submission.encoder submission)
         <|
             url [ "submissions", submission.id ]
 
 
-createSubmission : Lazy.Lazy (Cmd Submissions.Messages.Msg)
+createSubmission : Lazy.Lazy (Cmd Messages.Msg)
 createSubmission =
     Lazy.lazy <|
         \() ->
-            Http.send Submissions.Messages.Created <|
-                jsonPost (Http.expectJson Submission.Decoder.decoder) Http.emptyBody <|
+            Http.send Messages.SubmissionsCreated <|
+                jsonPost (Http.expectJson Decoder.Submission.decoder) Http.emptyBody <|
                     url [ "submissions" ]
 
 

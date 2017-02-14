@@ -1,7 +1,6 @@
-module Submissions.View exposing (view)
+module View.Submissions exposing (view)
 
-import Submissions.Model exposing (..)
-import Submissions.Messages exposing (..)
+import Model.Submissions exposing (..)
 import Html exposing (Html, div, h1, h2, p, text, a, button, img)
 import Html.Attributes exposing (class, href, src)
 import Html.Events exposing (onClick)
@@ -9,6 +8,7 @@ import Nav.Nav exposing (toHash)
 import Nav.Model
 import Backend.Network exposing (RequestStatus(..))
 import String
+import Messages exposing (Msg(..))
 
 
 view : Model -> Html Msg
@@ -58,13 +58,13 @@ viewSubmissions submissions =
     in
         [ div [ class "flex-header" ]
             [ h1 [ class "flex-header-element" ] [ text "Your JavaZone Talks" ]
-            , div [ class "flex-header-element" ] [ button [ onClick CreateTalk, class "new-talk button-new" ] [ text "Create new draft" ] ]
+            , div [ class "flex-header-element" ] [ button [ onClick SubmissionsCreateTalk, class "new-talk button-new" ] [ text "Create new draft" ] ]
             ]
         , introtext
         , div [ class "submissions" ] years
         , div [ class "logout" ]
             [ p [] [ text "We'll keep you signed in on this machine for your convenience. If you don't want us to remember you on this computer, that's okay to. Use the button :)" ]
-            , button [ onClick Logout, class "forget-me-button" ] [ text "Forget me on this computer" ]
+            , button [ onClick SubmissionsLogout, class "forget-me-button" ] [ text "Forget me on this computer" ]
             ]
         ]
 

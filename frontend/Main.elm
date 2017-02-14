@@ -3,39 +3,23 @@ module Main exposing (..)
 import Html exposing (Html, div, map)
 import Navigation
 import Html.Attributes exposing (class)
-import Login.Update as Login
 import Nav.Nav exposing (hashParser, toHash)
-import Model exposing (Model, Flags)
-import Message exposing (Msg(..))
+import Model exposing (Model, Flags, initModel)
+import Messages exposing (Msg(..))
 import Nav.Model exposing (Page(..))
-import Login.Login as Login
-import Login.Update as LoginUpdate
-import Thanks.Thanks as Thanks
-import Usetoken.View
-import Usetoken.Model
-import Usetoken.Update exposing (saveToken)
-import Submissions.View
-import Submissions.Model
-import Submissions.Update
-import Submission.View
-import Submission.Model
-import Submission.Update
-import Submission.Subscriptions
-import Nav.Requests exposing (getSubmissions, getSubmission)
+import View.Login
+import View.Thanks
+import View.Submissions
+import View.Submission
+import Model.Submission
+import Submission exposing (updateSubmissionField)
+import Subscriptions
+import Nav.Requests exposing (getSubmissions, getSubmission, getLoginToken, createSubmission, loginFailed, deleteLoginToken, saveSubmission)
 import Lazy
 import Backend.Network exposing (RequestStatus(..))
-
-
-initModel : Flags -> Page -> Model
-initModel flags page =
-    Model
-        (Login.initModel)
-        (Thanks.initModel)
-        (Usetoken.Model.initModel "")
-        (Submissions.Model.initModel)
-        (Submission.Model.initModel)
-        page
-        flags
+import Task
+import LocalStorage
+import Time
 
 
 init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
@@ -47,58 +31,110 @@ init flags location =
         ( initModel flags page, Navigation.newUrl <| toHash page )
 
 
+saveToken : String -> Cmd Msg
+saveToken token =
+    Task.perform TokenSaved <|
+        LocalStorage.set "login_token" token
+
+
+removeLocalToken : Lazy.Lazy (Cmd Msg)
+removeLocalToken =
+    Lazy.lazy <| \() -> Task.perform SubmissionsTokenRemoved <| Task.succeed <| LocalStorage.remove "login_token"
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
+update msg ({ login, submissions, submission } as model) =
     case msg of
         UpdateUrl page ->
             updatePage page model
 
-        LoginMsg loginMsg ->
+        LoginEmail email ->
+            ( { model | login = { login | email = email } }, Cmd.none )
+
+        LoginSubmitEmail ->
+            ( { model | login = { login | loading = True } }, getLoginToken model.login.email )
+
+        LoginSubmit (Err _) ->
+            ( { model | login = { login | loading = False } }, Cmd.none )
+
+        LoginSubmit (Ok _) ->
+            ( model, Navigation.newUrl <| toHash Thanks )
+
+        TokenSaved _ ->
+            ( model, Navigation.newUrl <| toHash Submissions )
+
+        SubmissionsCreateTalk ->
+            ( model, Lazy.force createSubmission )
+
+        SubmissionsGet (Err message) ->
+            ( { model | submissions = { submissions | submissions = Error <| toString message } }, Lazy.force loginFailed )
+
+        SubmissionsGet (Ok s) ->
+            ( { model | submissions = { submissions | submissions = Complete s } }, Cmd.none )
+
+        SubmissionsCreated (Err _) ->
+            ( model, Lazy.force getSubmissions )
+
+        SubmissionsCreated (Ok submission) ->
+            ( model, Navigation.newUrl << toHash <| Nav.Model.Submission submission.id )
+
+        SubmissionsLogout ->
+            ( model, Lazy.force deleteLoginToken )
+
+        SubmissionsLoggedOut (Err err) ->
+            ( model, Lazy.force removeLocalToken )
+
+        SubmissionsLoggedOut (Ok _) ->
+            ( model, Lazy.force removeLocalToken )
+
+        SubmissionsTokenRemoved _ ->
+            ( model, Navigation.newUrl << toHash <| Nav.Model.Register )
+
+        GetSubmission (Err error) ->
+            ( { model | submission = { submission | submission = Error <| toString error } }, Lazy.force loginFailed )
+
+        GetSubmission (Ok sub) ->
+            ( { model | submission = { submission | submission = Complete sub } }, Cmd.none )
+
+        SaveSubmission _ ->
+            case submission.submission of
+                Complete submission ->
+                    ( model, saveSubmission submission )
+
+                _ ->
+                    ( model, Cmd.none )
+
+        SavedSubmission (Err _) ->
+            ( model, Cmd.none )
+
+        SavedSubmission (Ok s) ->
+            case submission.submission of
+                Complete sub ->
+                    ( { model
+                        | submission =
+                            { submission
+                                | dirty = False
+                                , submission = Complete { sub | speakers = s.speakers }
+                            }
+                      }
+                    , Task.perform TimeUpdatedSubmission Time.now
+                    )
+
+                _ ->
+                    ( model, Cmd.none )
+
+        ToggleAutosaveSubmission ->
+            ( { model | submission = { submission | autosave = not submission.autosave } }, Cmd.none )
+
+        TimeUpdatedSubmission time ->
+            ( { model | submission = { submission | lastSaved = Just time } }, Cmd.none )
+
+        UpdateSubmission field ->
             let
-                ( newLogin, loginCmd ) =
-                    LoginUpdate.update loginMsg model.login
-
-                mappedCmd =
-                    Cmd.map LoginMsg loginCmd
+                ( sub, cmd ) =
+                    updateSubmissionField field submission
             in
-                ( { model | login = newLogin }, mappedCmd )
-
-        ThanksMsg thanksMsg ->
-            let
-                newThanks =
-                    Thanks.update thanksMsg model.thanks
-            in
-                ( { model | thanks = newThanks }, Cmd.none )
-
-        UsetokenMsg tokenMsg ->
-            let
-                ( newUsetoken, tokenCmd ) =
-                    Usetoken.Update.update tokenMsg model.usetoken
-
-                mappedCmd =
-                    Cmd.map UsetokenMsg tokenCmd
-            in
-                ( { model | usetoken = newUsetoken }, mappedCmd )
-
-        SubmissionsMsg submissionsMsg ->
-            let
-                ( newSubmissions, submissionsCmd ) =
-                    Submissions.Update.update submissionsMsg model.submissions
-
-                mappedCmd =
-                    Cmd.map SubmissionsMsg submissionsCmd
-            in
-                ( { model | submissions = newSubmissions }, mappedCmd )
-
-        SubmissionMsg submissionMsg ->
-            let
-                ( newSubmission, submissionCmd ) =
-                    Submission.Update.update submissionMsg model.submission
-
-                mappedCmd =
-                    Cmd.map SubmissionMsg submissionCmd
-            in
-                ( { model | submission = newSubmission }, mappedCmd )
+                ( { model | submission = sub }, cmd )
 
 
 updatePage : Page -> Model -> ( Model, Cmd Msg )
@@ -112,9 +148,7 @@ updatePage page m =
     in
         case page of
             UseToken token ->
-                ( { model | usetoken = Usetoken.Model.initModel token }
-                , Cmd.map UsetokenMsg <| saveToken token
-                )
+                ( model, saveToken token )
 
             Submissions ->
                 let
@@ -127,7 +161,7 @@ updatePage page m =
                                 | submissions = Loading
                             }
                       }
-                    , Cmd.map SubmissionsMsg <| Lazy.force getSubmissions
+                    , Lazy.force getSubmissions
                     )
 
             Submission id ->
@@ -141,7 +175,7 @@ updatePage page m =
                                 | submission = Loading
                             }
                       }
-                    , Cmd.map SubmissionMsg <| getSubmission id
+                    , getSubmission id
                     )
 
             _ ->
@@ -152,7 +186,7 @@ leftPage : Page -> Model -> Model
 leftPage oldPage model =
     case oldPage of
         Submission _ ->
-            { model | submission = Submission.Model.initModel }
+            { model | submission = Model.Submission.initModel }
 
         _ ->
             model
@@ -167,24 +201,24 @@ pageView : Model -> Html Msg
 pageView model =
     case model.page of
         Register ->
-            map LoginMsg (Login.view model.login)
+            View.Login.view model.login
 
         Thanks ->
-            map ThanksMsg (Thanks.view model.thanks)
+            View.Thanks.view
 
         UseToken _ ->
-            map UsetokenMsg (Usetoken.View.view model.usetoken)
+            div [] []
 
         Submissions ->
-            map SubmissionsMsg (Submissions.View.view model.submissions)
+            View.Submissions.view model.submissions
 
         Submission _ ->
-            map SubmissionMsg (Submission.View.view model.submission)
+            View.Submission.view model.submission
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.map SubmissionMsg <| Submission.Subscriptions.subscriptions model.submission
+    Subscriptions.subscriptions model.submission
 
 
 main : Program Flags Model Msg

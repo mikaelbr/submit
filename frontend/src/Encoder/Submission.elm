@@ -1,6 +1,6 @@
-module Submission.Encoder exposing (encoder)
+module Encoder.Submission exposing (encoder)
 
-import Submission.Model exposing (..)
+import Model.Submission exposing (..)
 import Json.Encode exposing (Value, object, string, list)
 
 

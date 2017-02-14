@@ -1,6 +1,6 @@
-module Submission.Decoder exposing (decoder)
+module Decoder.Submission exposing (decoder)
 
-import Submission.Model exposing (..)
+import Model.Submission exposing (..)
 import Json.Decode exposing (Decoder, string, list, map, bool)
 import Json.Decode.Pipeline exposing (decode, required, optional)
 

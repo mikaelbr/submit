@@ -1,4 +1,4 @@
-module Submissions.Model exposing (Model, Year, Submission, initModel, Submissions)
+module Model.Submissions exposing (Model, Year, Submission, initModel, Submissions)
 
 import Backend.Network exposing (RequestStatus(..))
 

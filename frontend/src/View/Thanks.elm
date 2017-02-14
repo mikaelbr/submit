@@ -1,31 +1,12 @@
-module Thanks.Thanks exposing (..)
+module View.Thanks exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, src)
+import Messages exposing (Msg(..))
 
 
-type alias Model =
-    String
-
-
-type Msg
-    = Update
-
-
-initModel : Model
-initModel =
-    ""
-
-
-update : Msg -> Model -> Model
-update msg model =
-    case msg of
-        Update ->
-            model
-
-
-view : Model -> Html Msg
-view model =
+view : Html Msg
+view =
     div [ class "wrapper login " ]
         [ div [ class "logo-wrapper" ]
             [ img [ src "assets/neon-logo.svg", class "logo" ] []

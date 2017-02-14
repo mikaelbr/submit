@@ -1,7 +1,7 @@
-module Submission.Subscriptions exposing (subscriptions)
+module Subscriptions exposing (subscriptions)
 
-import Submission.Model exposing (..)
-import Submission.Messages exposing (..)
+import Model.Submission exposing (..)
+import Messages exposing (..)
 import Time exposing (every, second)
 import Backend.Network exposing (RequestStatus(..))
 import Ports exposing (fileUploadSucceeded, UploadedImageData)
@@ -11,10 +11,10 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
     let
         saveSub =
-            every (30 * second) Save
+            every (30 * second) SaveSubmission
 
         uploadSub =
-            fileUploadSucceeded FileUploaded
+            fileUploadSucceeded <| (\a -> UpdateSubmission <| FileUploaded a)
     in
         case model.submission of
             Complete submission ->

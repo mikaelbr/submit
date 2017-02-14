@@ -1,4 +1,4 @@
-module Submission.Model exposing (Model, initModel, Submission, Speaker, initSpeaker)
+module Model.Submission exposing (Model, initModel, Submission, Speaker, initSpeaker)
 
 import Backend.Network exposing (RequestStatus(..))
 import Time

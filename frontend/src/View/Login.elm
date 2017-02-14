@@ -1,21 +1,11 @@
-module Login.Login exposing (..)
+module View.Login exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, src, type_, id, placeholder, value, disabled)
 import Html.Events exposing (on, onClick, onInput, keyCode)
-import Login.Model exposing (Model)
-import Login.Message exposing (Msg(..))
+import Model.Login exposing (Model)
+import Messages exposing (Msg(..))
 import Json.Decode
-
-
-init : ( Model, Cmd Msg )
-init =
-    ( initModel, Cmd.none )
-
-
-initModel : Model
-initModel =
-    Model "" False
 
 
 view : Model -> Html Msg
@@ -25,7 +15,7 @@ view model =
             [ img [ src "assets/neon-logo.svg", class "logo" ] [] ]
         , h1 [] [ text "Get ready to speak at", br [] [], text "JavaZone 2017" ]
         , div [ class "email-wrapper" ]
-            [ input [ value model.email, onInput Email, onEnter SubmitEmail, type_ "email", class "email", id "email-address", placeholder "Your email address" ] []
+            [ input [ value model.email, onInput LoginEmail, onEnter LoginSubmitEmail, type_ "email", class "email", id "email-address", placeholder "Your email address" ] []
             , if model.loading then
                 div [ class "spinner" ]
                     [ div [ class "bounce1" ] []
@@ -33,7 +23,7 @@ view model =
                     , div [ class "bounce3" ] []
                     ]
               else
-                button [ class "submit", type_ "submit", onClick SubmitEmail, disabled model.loading ] []
+                button [ class "submit", type_ "submit", onClick LoginSubmitEmail, disabled model.loading ] []
             ]
         , div [ class "explanation" ]
             [ div [ class "arrow" ] []

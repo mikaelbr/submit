@@ -1,29 +1,9 @@
-module Submission.View exposing (view)
+module View.Submission exposing (view)
 
-import Submission.Model exposing (..)
-import Submission.Messages exposing (..)
-import Html
-    exposing
-        ( Html
-        , div
-        , text
-        , input
-        , textarea
-        , button
-        , img
-        , h1
-        , h2
-        , h3
-        , p
-        , strong
-        , span
-        , a
-        , ul
-        , li
-        , label
-        , select
-        , option
-        )
+import Model.Submission exposing (..)
+import Messages exposing (..)
+import Messages exposing (..)
+import Html exposing (..)
 import Html.Attributes exposing (class, style, type_, value, src, placeholder, href, name, checked, selected, id, for)
 import Html.Events exposing (onInput, onClick, on)
 import Nav.Nav exposing (toHash)
@@ -63,28 +43,40 @@ viewLoading =
 viewSubmission : Submission -> Model -> Html Msg
 viewSubmission submission model =
     div [ class "wrapper" ]
-        [ div [ class "sticky-footer" ]
-            [ div [ class "sticky-footer-content" ]
-                [ div []
-                    [ a [ href << toHash <| Nav.Model.Submissions ]
-                        [ button [ class "button-back" ] [ text "Back to list" ] ]
-                    ]
-                , div [ class <| "save-controls " ++ hideIfNotEditable submission.editable ]
-                    [ div [ class "autosave" ]
-                        [ div []
-                            [ label [ for "autosave" ] [ text "Autosave changes" ]
-                            , div [ class "lastsaved" ] [ text <| viewLastSaved model.lastSaved ]
-                            ]
-                        , div [ class "autosave-checkbox" ]
-                            [ input [ id "autosave", type_ "checkbox", onClick ToggleAutosave, checked model.autosave ] []
-                            ]
+        [ viewFooter submission model
+        , Html.map UpdateSubmission <| viewSubmissionDetails submission model
+        ]
+
+
+viewFooter : Submission -> Model -> Html Msg
+viewFooter submission model =
+    div [ class "sticky-footer" ]
+        [ div [ class "sticky-footer-content" ]
+            [ div []
+                [ a [ href << toHash <| Nav.Model.Submissions ]
+                    [ button [ class "button-back" ] [ text "Back to list" ] ]
+                ]
+            , div [ class <| "save-controls " ++ hideIfNotEditable submission.editable ]
+                [ div [ class "autosave" ]
+                    [ div []
+                        [ label [ for "autosave" ] [ text "Autosave changes" ]
+                        , div [ class "lastsaved" ] [ text <| viewLastSaved model.lastSaved ]
                         ]
-                    , div []
-                        [ button [ class "button-save", onClick (Save 0) ] [ text "Save now" ] ]
+                    , div [ class "autosave-checkbox" ]
+                        [ input [ id "autosave", type_ "checkbox", onClick ToggleAutosaveSubmission, checked model.autosave ] []
+                        ]
                     ]
+                , div []
+                    [ button [ class "button-save", onClick (SaveSubmission 0) ] [ text "Save now" ] ]
                 ]
             ]
-        , div [ class "logo-wrapper" ] [ img [ src "assets/neon-logo.svg", class "logo" ] [] ]
+        ]
+
+
+viewSubmissionDetails : Submission -> Model -> Html SubmissionField
+viewSubmissionDetails submission model =
+    div []
+        [ div [ class "logo-wrapper" ] [ img [ src "assets/neon-logo.svg", class "logo" ] [] ]
         , div [ class <| "edit-intro " ++ hideIfNotEditable submission.editable ]
             [ h1 [] [ text "Ready? Let's make your talk a reality!" ]
             , p [ class "ingress" ] [ text "JavaZone takes place in Oslo, Norway, on September 13th-14th 2017. Do YOU want to be one of the great speakers at our conference? Fantastic! That's what this thing is for! Let's get you started!" ]
@@ -193,7 +185,7 @@ viewSubmission submission model =
         ]
 
 
-viewLength : Submission -> Html Msg
+viewLength : Submission -> Html SubmissionField
 viewLength s =
     case s.format of
         "presentation" ->
@@ -216,7 +208,7 @@ viewLength s =
                 ]
 
 
-viewSpeaker : Submission -> Int -> ( Int, Speaker ) -> Html Msg
+viewSpeaker : Submission -> Int -> ( Int, Speaker ) -> Html SubmissionField
 viewSpeaker submission n ( i, speaker ) =
     let
         removeButton =
@@ -334,7 +326,7 @@ zeroPad n =
         n
 
 
-speakerImage : Speaker -> Html Msg
+speakerImage : Speaker -> Html SubmissionField
 speakerImage speaker =
     if speaker.hasPicture then
         div [ style <| [ ( "background-image", "url(" ++ speaker.pictureUrl ++ ")" ) ], class "speaker-image" ] []

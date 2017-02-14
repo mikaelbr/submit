@@ -1,7 +1,8 @@
-module Submission.Update exposing (update)
+module Submission exposing (updateSubmissionField)
 
-import Submission.Model exposing (..)
-import Submission.Messages exposing (..)
+import Model.Submission exposing (..)
+import Messages exposing (..)
+import Messages exposing (..)
 import Backend.Network exposing (RequestStatus(..))
 import Nav.Requests exposing (saveSubmission, loginFailed)
 import Time
@@ -10,48 +11,9 @@ import Lazy
 import Ports exposing (fileSelected, ImagePostData)
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    case msg of
-        Message ->
-            ( model, Cmd.none )
-
-        Get (Err error) ->
-            ( { model | submission = Error <| toString error }, Lazy.force loginFailed )
-
-        Get (Ok submission) ->
-            ( { model | submission = Complete submission }, Cmd.none )
-
-        Save _ ->
-            case model.submission of
-                Complete submission ->
-                    ( model, saveSubmission submission )
-
-                _ ->
-                    ( model, Cmd.none )
-
-        Saved (Err _) ->
-            ( model, Cmd.none )
-
-        Saved (Ok s) ->
-            case model.submission of
-                Complete submission ->
-                    ( { model
-                        | dirty = False
-                        , submission = Complete { submission | speakers = s.speakers }
-                      }
-                    , Task.perform TimeUpdated Time.now
-                    )
-
-                _ ->
-                    ( model, Cmd.none )
-
-        TimeUpdated time ->
-            ( { model | lastSaved = Just time }, Cmd.none )
-
-        ToggleAutosave ->
-            ( { model | autosave = not model.autosave }, Cmd.none )
-
+updateSubmissionField : SubmissionField -> Model -> ( Model, Cmd Msg )
+updateSubmissionField field model =
+    case field of
         Title title ->
             updateField model (\_ -> Cmd.none) <|
                 \s -> { s | title = title }
