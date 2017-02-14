@@ -9,6 +9,7 @@ import no.javazone.submit.config.CakeConfiguration;
 import no.javazone.submit.config.SlackConfiguration;
 import no.javazone.submit.integrations.sleepingpill.model.common.SessionStatus;
 import no.javazone.submit.integrations.sleepingpill.model.common.Speaker;
+import no.javazone.submit.integrations.sleepingpill.model.get.Session;
 import no.javazone.submit.integrations.sleepingpill.model.get.Sessions;
 import no.javazone.submit.util.AuditLogger;
 import org.slf4j.Logger;
@@ -20,7 +21,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
+import static no.javazone.submit.integrations.sleepingpill.model.common.SessionStatus.SUBMITTED;
 import static no.javazone.submit.util.AuditLogger.Event.SENT_SLACK_MESSAGE;
 
 @Service
@@ -97,53 +100,53 @@ public class SlackClient {
         }
     }
 
-    public void postStatistics(Sessions talks) {
-        int total = talks.sessions.size();
-        long draft = count(talks, SessionStatus.DRAFT);
-        long submitted = count(talks, SessionStatus.SUBMITTED);
-        long approved = count(talks, SessionStatus.APPROVED);
-        long rejected = count(talks, SessionStatus.REJECTED);
+    public void postStatistics(Sessions sessions) {
 
-        long presentations45 = talks.sessions.stream().filter(s -> "presentation".equals(s.getFormat()) && "45".equals(s.getLength())).count();
-        long presentations60 = talks.sessions.stream().filter(s -> "presentation".equals(s.getFormat()) && "60".equals(s.getLength())).count();
-        long lightningTalks10 = talks.sessions.stream().filter(s -> "lightning-talk".equals(s.getFormat()) && "10".equals(s.getLength())).count();
-        long lightningTalks20 = talks.sessions.stream().filter(s -> "lightning-talk".equals(s.getFormat()) && "20".equals(s.getLength())).count();
-        long workshops = talks.sessions.stream().filter(s -> "workshop".equals(s.getFormat())).count();
+        List<Session> allTalks = sessions.sessions;
+        List<Session> submittedTalks = allTalks.stream().filter(s -> s.status == SUBMITTED).collect(toList());
 
-        long norwegian = talks.sessions.stream().filter(s -> "no".equals(s.getLanguage())).count();
-        long english = talks.sessions.stream().filter(s -> "en".equals(s.getLanguage())).count();
+        int total = allTalks.size();
+        long draft = count(allTalks, SessionStatus.DRAFT);
+        long submitted = count(allTalks, SUBMITTED);
+        long approved = count(allTalks, SessionStatus.APPROVED);
+        long rejected = count(allTalks, SessionStatus.REJECTED);
 
-        long totalSpeakers = talks.sessions.stream().map(s -> s.speakers).flatMap(List::stream).map(s -> s.email).count();
-        int uniqueSpeakers = talks.sessions.stream().map(s -> s.speakers).flatMap(List::stream).map(s -> s.email).collect(toSet()).size();
-        long speakersWithImage = talks.sessions.stream().map(s -> s.speakers).flatMap(List::stream).map(Speaker::getPictureId).filter(Objects::nonNull).count();
+        long presentations45 = submittedTalks.stream().filter(s -> "presentation".equals(s.getFormat()) && "45".equals(s.getLength())).count();
+        long presentations60 = submittedTalks.stream().filter(s -> "presentation".equals(s.getFormat()) && "60".equals(s.getLength())).count();
+        long lightningTalks10 = submittedTalks.stream().filter(s -> "lightning-talk".equals(s.getFormat()) && "10".equals(s.getLength())).count();
+        long lightningTalks20 = submittedTalks.stream().filter(s -> "lightning-talk".equals(s.getFormat()) && "20".equals(s.getLength())).count();
+        long workshops = submittedTalks.stream().filter(s -> "workshop".equals(s.getFormat())).count();
+
+        long norwegian = submittedTalks.stream().filter(s -> "no".equals(s.getLanguage())).count();
+        long english = submittedTalks.stream().filter(s -> "en".equals(s.getLanguage())).count();
+
+        long totalSpeakers = submittedTalks.stream().map(s -> s.speakers).flatMap(List::stream).map(s -> s.email).count();
+        int uniqueSpeakers = submittedTalks.stream().map(s -> s.speakers).flatMap(List::stream).map(s -> s.email).collect(toSet()).size();
+        long speakersWithImage = submittedTalks.stream().map(s -> s.speakers).flatMap(List::stream).map(Speaker::getPictureId).filter(Objects::nonNull).count();
 
         connectIfNessesary();
 
         SlackChannel channel = slack.findChannelByName(slackConfiguration.channel);
 
-        SlackAttachment attachment = new SlackAttachment("Some statistics about the submitted talks", "", "_These statistics are posted 16.00 every day_", null);
+        SlackAttachment attachment = new SlackAttachment("Some statistics about the submitted talks", "", "_These statistics are posted 16.00 every day. All statistics are based on submitted talks (i.e excluding drafts) unless noted_", null);
         attachment.setColor("#3abae9");
         attachment.addMarkdownIn("text");
 
-        attachment.addField("Talks submitted - total", total + " talks", true);
-        attachment.addField("Speakers - total", totalSpeakers + " speakers", true);
+        attachment.addField("Talks: Draft", draft + " talks", true);
+        attachment.addField("Talks: Submitted", submitted + " talks", true);
+        attachment.addField("Talks: Approved", approved + " talks", true);
+        attachment.addField("Talks: Rejected", rejected + " talks", true);
 
-        attachment.addField("Unique speakers", uniqueSpeakers + " speakers (by email)", true);
-        attachment.addField("Speakers with picture", speakersWithImage + " speakers", true);
-
-        attachment.addField("Draft status", draft + " talks", true);
-        attachment.addField("Submitted status", submitted + " talks", true);
-        attachment.addField("Approved status", approved + " talks", true);
-        attachment.addField("Rejected status", rejected + " talks", true);
-
-        attachment.addField("Norwegian", norwegian + " stk", true);
-        attachment.addField("English", english + " stk", true);
+        attachment.addField("Norwegian", norwegian + " talks", true);
+        attachment.addField("English", english + " talks", true);
 
         attachment.addField("Presentations - 45 min", presentations45 + " stk", true);
         attachment.addField("Presentations - 60 min", presentations60 + " stk", true);
         attachment.addField("Lightning talks - 10 min", lightningTalks10 + " stk", true);
         attachment.addField("Lightning talks - 20 min", lightningTalks20 + " stk", true);
         attachment.addField("Workshops", workshops + " stk", true);
+
+        attachment.addField("Speakers", totalSpeakers + " speakers, " + speakersWithImage + " with picture (" + uniqueSpeakers + " unique emails)", false);
 
         SlackPreparedMessage message = new SlackPreparedMessage.Builder()
                 .addAttachment(attachment)
@@ -154,7 +157,7 @@ public class SlackClient {
 
     }
 
-    private long count(Sessions talks, SessionStatus status) {
-        return talks.sessions.stream().filter(s -> s.status == status).count();
+    private long count(List<Session> talks, SessionStatus status) {
+        return talks.stream().filter(s -> s.status == status).count();
     }
 }
