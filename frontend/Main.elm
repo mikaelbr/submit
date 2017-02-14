@@ -5,7 +5,7 @@ import Navigation
 import Html.Attributes exposing (class)
 import Login.Update as Login
 import Nav.Nav exposing (hashParser, toHash)
-import Model exposing (Model)
+import Model exposing (Model, Flags)
 import Message exposing (Msg(..))
 import Nav.Model exposing (Page(..))
 import Login.Login as Login
@@ -26,8 +26,8 @@ import Lazy
 import Backend.Network exposing (RequestStatus(..))
 
 
-initModel : Page -> Model
-initModel page =
+initModel : Flags -> Page -> Model
+initModel flags page =
     Model
         (Login.initModel)
         (Thanks.initModel)
@@ -35,15 +35,16 @@ initModel page =
         (Submissions.Model.initModel)
         (Submission.Model.initModel)
         page
+        flags
 
 
-init : Navigation.Location -> ( Model, Cmd Msg )
-init location =
+init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
+init flags location =
     let
         page =
             hashParser location
     in
-        ( initModel page, Navigation.newUrl <| toHash page )
+        ( initModel flags page, Navigation.newUrl <| toHash page )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -186,9 +187,9 @@ subscriptions model =
     Sub.map SubmissionMsg <| Submission.Subscriptions.subscriptions model.submission
 
 
-main : Program Never Model Msg
+main : Program Flags Model Msg
 main =
-    Navigation.program (UpdateUrl << hashParser)
+    Navigation.programWithFlags (UpdateUrl << hashParser)
         { init = init
         , update = update
         , view = view

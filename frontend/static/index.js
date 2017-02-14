@@ -1,5 +1,7 @@
 (function() {
-    var app = Elm.Main.fullscreen();
+    var app = Elm.Main.fullscreen({
+        host: window.location.host
+    });
 
     function checkStatus(response) {
         if (response.status >= 200 && response.status < 300) {
