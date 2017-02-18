@@ -129,12 +129,12 @@ public class SubmissionService {
 
         AuditLogger.log(UPDATE_TALK, "user " + authenticatedUser, "session " + submissionId);
 
-        notifySlackAndEmail(submissionId, submission, previousSubmission);
+        notifySlackAndEmailAndLog(authenticatedUser, submissionId, submission, previousSubmission);
 
         return getSubmissionForUser(authenticatedUser, submissionId);
     }
 
-    private void notifySlackAndEmail(String submissionId, Submission submission, Submission previousSubmission) {
+    private void notifySlackAndEmailAndLog(AuthenticatedUser authenticatedUser, String submissionId, Submission submission, Submission previousSubmission) {
         try {
             if (SessionStatus.valueOf(previousSubmission.status) != SUBMITTED && SessionStatus.valueOf(submission.status) == SUBMITTED) {
                 slackClient.postTalkMarkedForInReview(
@@ -147,6 +147,7 @@ public class SubmissionService {
                         previousSubmission.speakers.get(0).hasPicture ? previousSubmission.speakers.get(0).pictureUrl : null
                 );
                 emailService.notifySpeakerAboutStatusChangeToInReview(submission);
+                AuditLogger.log(CHANGE_STATUS_TO_SUBMITTED, "user " + authenticatedUser, "session " + submissionId);
             } else if(SessionStatus.valueOf(previousSubmission.status) == SUBMITTED && SessionStatus.valueOf(submission.status) != SUBMITTED) {
                 slackClient.postTalkMarkedForNotInReview(
                         submissionId, submission.title,
@@ -154,6 +155,7 @@ public class SubmissionService {
                         submission.speakers.get(0).email,
                         previousSubmission.speakers.get(0).hasPicture ? previousSubmission.speakers.get(0).pictureUrl : null
                 );
+                AuditLogger.log(CHANGE_STATUS_TO_DRAFT, "user " + authenticatedUser, "session " + submissionId);
             }
         } catch (Exception e) {
             LOG.warn("Some error happened when submitting status update to slack", e);
