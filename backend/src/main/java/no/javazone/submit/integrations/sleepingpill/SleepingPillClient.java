@@ -2,6 +2,7 @@ package no.javazone.submit.integrations.sleepingpill;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -208,6 +209,7 @@ public class SleepingPillClient {
     private static ObjectMapper createObjectmapper() {
         ObjectMapper mapper = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true)
                 .setSerializationInclusion(JsonInclude.Include.NON_NULL);
         mapper.setVisibility(
                 mapper.getSerializationConfig().getDefaultVisibilityChecker()
