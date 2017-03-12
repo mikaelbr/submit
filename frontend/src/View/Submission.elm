@@ -97,6 +97,12 @@ viewSubmissionDetails submission model =
                 , p [] [ text "By the end of June, all speakers will be get info about whether their talk is selected or not. Fingers crossed! If you are selected, you get to talk at JavaZone 2017!" ]
                 ]
             ]
+        , div [ class <| "comments-wrapper " ++ hideIfNoComments submission ] 
+            [ h2 [] [ text "Comments from the program committee" ]
+            , p [] [text "The program committee has reviewed your talk and have the following comments. Please review them, and respond either by your own comment or by updating your talk accordingly." ]
+            ,  ul [ class "comments" ] <|
+                    List.map (viewComment submission <| List.length submission.comments) submission.comments
+            ]
         , div [ class "edit-submission" ]
             [ div [ class <| "cant-edit-message " ++ hideIfEditable submission.editable ] [ text "You can't edit this talk. Only talks from the current year is editable." ]
             , div [ class "input-section" ]
@@ -258,6 +264,12 @@ viewSpeaker submission n ( i, speaker ) =
                 ]
             ]
 
+viewComment : Submission -> Int -> ( Int, Comment ) -> Html SubmissionField
+viewComment submission n ( i, comment ) =
+    li [ class "comment" ]
+        [ h3 [] [ text comment.name ]
+        , p [] [ text comment.comment ]
+        ]
 
 viewError : String -> Html Msg
 viewError message =
@@ -275,6 +287,13 @@ hideIfEditable editable =
 hideIfNotEditable : Bool -> String
 hideIfNotEditable editable =
     if not editable then
+        "hide"
+    else
+        ""
+
+hideIfNoComments : Submission -> String
+hideIfNoComments submission =
+    if List.isEmpty submission.comments then
         "hide"
     else
         ""

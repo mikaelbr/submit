@@ -1,4 +1,4 @@
-module Model.Submission exposing (Model, initModel, Submission, Speaker, initSpeaker)
+module Model.Submission exposing (Model, initModel, Submission, Speaker, Comment, initSpeaker)
 
 import Backend.Network exposing (RequestStatus(..))
 import Time
@@ -30,6 +30,7 @@ type alias Submission =
     , infoToProgramCommittee : String
     , editable : Bool
     , status : String
+    , comments : List (Int, Comment )
     }
 
 
@@ -43,6 +44,11 @@ type alias Speaker =
     , deletable : Bool
     , hasPicture : Bool
     , pictureUrl : String
+    }
+
+type alias Comment =
+    { name : String
+    , comment: String
     }
 
 
@@ -63,3 +69,16 @@ initSpeaker speakers =
                     0
     in
         ( nextInt, Speaker "" "" "" "" "" "" True False "" )
+
+initComment : List ( Int, Comment ) -> ( Int, Comment )
+initComment comments =
+    let
+        nextInt =
+            case List.head (List.reverse comments) of
+                Just ( i, s ) ->
+                    i + 1
+
+                _ ->
+                    0
+    in
+        ( nextInt, Comment "" "" )
