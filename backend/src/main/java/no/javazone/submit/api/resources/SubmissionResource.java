@@ -1,6 +1,7 @@
 package no.javazone.submit.api.resources;
 
 import no.javazone.submit.api.filters.AuthenticatedWithToken;
+import no.javazone.submit.api.representations.Comment;
 import no.javazone.submit.api.representations.Submission;
 import no.javazone.submit.api.session.AuthenticatedUser;
 import no.javazone.submit.services.SubmissionService;
@@ -105,6 +106,19 @@ public class SubmissionResource {
                 .ok(submissionService.getSpeakerPicture(submissionId, speakerId))
                 .header("Content-Type", "image/jpeg")
                 .build();
+    }
+
+    @POST
+    @AuthenticatedWithToken
+    @Path("/{submissionId}/comments")
+    @Produces(APPLICATION_JSON)
+    @Consumes(APPLICATION_JSON)
+    public Response postComment(@Context ContainerRequestContext context,
+                                @PathParam("submissionId") String submissionId,
+                                Comment comment) {
+        return assertLoggedInUser(context, authenticatedUser ->
+                Response.ok(submissionService.postComment(authenticatedUser, submissionId, comment)).build()
+        );
     }
 
     private Response assertLoggedInUser(ContainerRequestContext context, Function<AuthenticatedUser, Response> requestHandler) {

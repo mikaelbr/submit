@@ -23,12 +23,10 @@ import org.springframework.stereotype.Service;
 
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotFoundException;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -200,7 +198,8 @@ public class SubmissionService {
                 session.getSuggestedKeywords(),
                 session.getInfoToProgramCommittee(),
                 session.speakers.stream().map((speaker) -> fromSleepingPillSpeaker(session.sessionId, speaker, authenticatedUser)).collect(toList()),
-                isEditableBySubmitter(session.conferenceId)
+                isEditableBySubmitter(session.conferenceId),
+                comments()
         );
     }
 
@@ -258,5 +257,19 @@ public class SubmissionService {
             AuditLogger.log(GET_SPEAKER_IMAGE_MISSING_SPEAKER, "session " + submissionId, "speaker " + speakerId);
             throw new NotFoundException("Didn't find speaker for speakerid " + speakerId + " on session " + submissionId);
         }
+    }
+
+    public Submission postComment(AuthenticatedUser authenticatedUser, String submissionId, Comment comment) {
+        // TODO (EHH): Store comment in SleepingPill
+        AuditLogger.log(POST_COMMENT, "user " + authenticatedUser, "session " + submissionId, "comment " + comment.comment);
+        return getSubmissionForUser(authenticatedUser, submissionId);
+    }
+
+    private List<Comment> comments() {
+        // TODO (EHH): Hent dette fra SleepingPill
+        return asList(
+                new Comment("The Program Committee", "This is a nice comment! Very good talk.\n\nMultiline support FTW"),
+                new Comment("Speaker", "This is also a nice comment, this time from the speaker him-/herself")
+        );
     }
 }
