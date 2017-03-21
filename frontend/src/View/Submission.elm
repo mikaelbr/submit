@@ -283,8 +283,9 @@ viewComment comment =
 
 viewCommentSubmission : Html SubmissionField
 viewCommentSubmission =
-    div []
-        [ textarea [ onInput NewComment ] []
+    div [ class "send-comment" ]
+        [ h2 [] [ text "Reply" ]
+        , textarea [ onInput NewComment, class "comment-area" ] []
         , button [ onClick SaveComment ] [ text "Send" ]
         ]
 
