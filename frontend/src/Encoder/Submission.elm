@@ -1,4 +1,4 @@
-module Encoder.Submission exposing (encoder)
+module Encoder.Submission exposing (encoder, encodeComment)
 
 import Model.Submission exposing (..)
 import Json.Encode exposing (Value, object, string, list)
@@ -34,3 +34,9 @@ encodeSpeaker ( i, speaker ) =
         , ( "zipCode", string speaker.zipCode )
         , ( "twitter", string speaker.twitter )
         ]
+
+
+encodeComment : Model.Submission.Model -> Value
+encodeComment model =
+    object
+        [ ( "comment", string model.comment ) ]

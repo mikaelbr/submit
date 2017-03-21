@@ -25,16 +25,13 @@ decoder =
         |> optional "infoToProgramCommittee" string ""
         |> required "editable" bool
         |> required "status" string
-        |> required "comments" (map commentsToTuples <| list decodeComment)
+        |> required "comments" (list decodeComment)
 
 
 speakersToTuples : List Speaker -> List ( Int, Speaker )
 speakersToTuples speakers =
     List.map2 (,) (List.range 0 (List.length speakers)) speakers
 
-commentsToTuples : List Comment -> List ( Int, Comment )
-commentsToTuples comments =
-    List.map2 (,) (List.range 0 (List.length comments)) comments
 
 decodeSpeaker : Decoder Speaker
 decodeSpeaker =
@@ -48,6 +45,7 @@ decodeSpeaker =
         |> required "deletable" bool
         |> required "hasPicture" bool
         |> optional "pictureUrl" string ""
+
 
 decodeComment : Decoder Comment
 decodeComment =

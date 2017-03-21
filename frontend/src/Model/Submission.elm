@@ -9,6 +9,7 @@ type alias Model =
     , lastSaved : Maybe Time.Time
     , dirty : Bool
     , autosave : Bool
+    , comment : String
     }
 
 
@@ -30,7 +31,7 @@ type alias Submission =
     , infoToProgramCommittee : String
     , editable : Bool
     , status : String
-    , comments : List (Int, Comment )
+    , comments : List Comment
     }
 
 
@@ -46,15 +47,16 @@ type alias Speaker =
     , pictureUrl : String
     }
 
+
 type alias Comment =
     { name : String
-    , comment: String
+    , comment : String
     }
 
 
 initModel : Model
 initModel =
-    Model Initial Nothing False True
+    Model Initial Nothing False True ""
 
 
 initSpeaker : List ( Int, Speaker ) -> ( Int, Speaker )
@@ -69,6 +71,7 @@ initSpeaker speakers =
                     0
     in
         ( nextInt, Speaker "" "" "" "" "" "" True False "" )
+
 
 initComment : List ( Int, Comment ) -> ( Int, Comment )
 initComment comments =
