@@ -1,15 +1,19 @@
 package no.javazone.submit.integrations.sleepingpill.model.update;
 
+import no.javazone.submit.integrations.sleepingpill.model.common.SessionComment;
 import no.javazone.submit.integrations.sleepingpill.model.common.SessionData;
 import no.javazone.submit.integrations.sleepingpill.model.common.SessionStatus;
 
 import java.util.List;
+
+import static java.util.Collections.emptyList;
 
 public class UpdatedSession {
 
     public SessionData data;
     public SessionStatus status;
     public List<UpdatedSpeaker> speakers;
+    public List<SessionComment> comments;
 
     @SuppressWarnings("unused")
     private UpdatedSession() { }
@@ -20,6 +24,7 @@ public class UpdatedSession {
 
         this.status = status;
         this.speakers = speakers;
+	this.comments = emptyList();
 
         data = new SessionData();
         data.setTitle(title);
@@ -33,5 +38,9 @@ public class UpdatedSession {
         data.setLevel(level);
         data.setSuggestedKeywords(suggestedKeywords);
         data.setInfoToProgramCommittee(infoToProgramCommittee);
+    }
+
+    public void addComment(SessionComment comment) {
+	comments.add(comment);
     }
 }

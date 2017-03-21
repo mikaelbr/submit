@@ -21,6 +21,7 @@ import javax.ws.rs.core.Response;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
@@ -78,7 +79,7 @@ public class SubmissionResource {
                                      @PathParam("submissionId") String submissionId,
                                      Submission submission) {
         return assertLoggedInUser(context, authenticatedUser ->
-                Response.ok(submissionService.updateSubmission(authenticatedUser, submissionId, submission)).build()
+		Response.ok(submissionService.updateSubmission(authenticatedUser, submissionId, submission, empty())).build()
         );
     }
 

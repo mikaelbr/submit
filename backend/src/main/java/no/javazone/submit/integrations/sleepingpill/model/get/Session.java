@@ -1,5 +1,6 @@
 package no.javazone.submit.integrations.sleepingpill.model.get;
 
+import no.javazone.submit.integrations.sleepingpill.model.common.SessionComment;
 import no.javazone.submit.integrations.sleepingpill.model.common.SessionData;
 import no.javazone.submit.integrations.sleepingpill.model.common.SessionStatus;
 import no.javazone.submit.integrations.sleepingpill.model.common.Speaker;
@@ -13,6 +14,7 @@ public class Session {
     public String conferenceId;
     public SessionStatus status;
     public List<Speaker> speakers;
+    public List<SessionComment> comments;
     public SessionData data;
 
     public String getTitle() {
@@ -81,6 +83,7 @@ public class Session {
                 ", conferenceId='" + conferenceId + '\'' +
                 ", status=" + status +
                 ", speakers=" + speakers +
+		", comments=" + comments +
                 ", data=" + data +
                 '}';
     }
