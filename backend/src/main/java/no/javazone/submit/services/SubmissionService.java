@@ -24,12 +24,10 @@ import org.springframework.stereotype.Service;
 
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotFoundException;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static java.lang.String.format;
+import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.*;
 import static no.javazone.submit.integrations.sleepingpill.model.common.SessionStatus.SUBMITTED;
@@ -125,36 +123,36 @@ public class SubmissionService {
                 submission.infoToProgramCommittee,
                 submission.speakers.stream().map(UpdatedSpeaker::fromApiObject).collect(toList())
         );
-	newComment.ifPresent(comment -> {
-	    String speakerName = submission.speakers.stream()
-		    .filter(s -> authenticatedUser.emailAddress.toString().equals(s.email))
-		    .findAny()
-		    .map(s -> s.name)
-		    .orElse("Speaker");
-	    SessionComment sessionComment = new SessionComment(speakerName, authenticatedUser.emailAddress, comment.comment);
-	    updatedSession.addComment(sessionComment);
-	});
+        newComment.ifPresent(comment -> {
+            String speakerName = submission.speakers.stream()
+                    .filter(s -> authenticatedUser.emailAddress.toString().equals(s.email))
+                    .findAny()
+                    .map(s -> s.name)
+                    .orElse("Speaker");
+            SessionComment sessionComment = new SessionComment(speakerName, authenticatedUser.emailAddress, comment.comment);
+            updatedSession.addComment(sessionComment);
+        });
         sleepingPill.updateSession(submissionId, updatedSession);
 
         AuditLogger.log(UPDATE_TALK, "user " + authenticatedUser, "session " + submissionId);
 
-	notifySlackAndEmailAndLog(authenticatedUser, submissionId, submission, previousSubmission, newComment);
+        notifySlackAndEmailAndLog(authenticatedUser, submissionId, submission, previousSubmission, newComment);
 
         return getSubmissionForUser(authenticatedUser, submissionId);
     }
 
     private void notifySlackAndEmailAndLog(AuthenticatedUser authenticatedUser, String submissionId, Submission submission, Submission previousSubmission, Optional<Comment> newComment) {
         try {
-	    if(newComment.isPresent()) {
-		slackClient.postTalkReceivedNewComment(
-			submissionId,
-			submission.title,
-			newComment.get()
-		);
-	    } else if (SessionStatus.valueOf(previousSubmission.status) != SUBMITTED && SessionStatus.valueOf(submission.status) == SUBMITTED) {
+            if (newComment.isPresent()) {
+                slackClient.postTalkReceivedNewComment(
+                        submissionId,
+                        submission.title,
+                        newComment.get()
+                );
+            } else if (SessionStatus.valueOf(previousSubmission.status) != SUBMITTED && SessionStatus.valueOf(submission.status) == SUBMITTED) {
                 slackClient.postTalkMarkedForInReview(
-			submissionId,
-			submission.title,
+                        submissionId,
+                        submission.title,
                         submission.format,
                         submission.length,
                         submission.language,
@@ -163,14 +161,14 @@ public class SubmissionService {
                         previousSubmission.speakers.get(0).hasPicture ? previousSubmission.speakers.get(0).pictureUrl : null
                 );
                 emailService.notifySpeakerAboutStatusChangeToInReview(submission);
-		AuditLogger.log(CHANGE_STATUS_TO_SUBMITTED, "user " + authenticatedUser, "session " + submissionId);
-	    } else if (SessionStatus.valueOf(previousSubmission.status) == SUBMITTED && SessionStatus.valueOf(submission.status) != SUBMITTED) {
-		slackClient.postTalkMarkedForNotInReview(
-			submissionId,
-			submission.title,
-			submission.speakers.get(0).name,
-			submission.speakers.get(0).email,
-			previousSubmission.speakers.get(0).hasPicture ? previousSubmission.speakers.get(0).pictureUrl : null
+                AuditLogger.log(CHANGE_STATUS_TO_SUBMITTED, "user " + authenticatedUser, "session " + submissionId);
+            } else if (SessionStatus.valueOf(previousSubmission.status) == SUBMITTED && SessionStatus.valueOf(submission.status) != SUBMITTED) {
+                slackClient.postTalkMarkedForNotInReview(
+                        submissionId,
+                        submission.title,
+                        submission.speakers.get(0).name,
+                        submission.speakers.get(0).email,
+                        previousSubmission.speakers.get(0).hasPicture ? previousSubmission.speakers.get(0).pictureUrl : null
                 );
                 AuditLogger.log(CHANGE_STATUS_TO_DRAFT, "user " + authenticatedUser, "session " + submissionId);
             }
@@ -218,7 +216,7 @@ public class SubmissionService {
                 session.getInfoToProgramCommittee(),
                 session.speakers.stream().map((speaker) -> fromSleepingPillSpeaker(session.sessionId, speaker, authenticatedUser)).collect(toList()),
                 isEditableBySubmitter(session.conferenceId),
-		session.comments.stream().map(comment -> new Comment(comment.from, comment.comment)).collect(toList())
+                session.comments != null ? session.comments.stream().map(comment -> new Comment(comment.from, comment.comment)).collect(toList()) : emptyList()
         );
     }
 
@@ -252,7 +250,7 @@ public class SubmissionService {
             CreatedPicture createdPicture = sleepingPill.uploadPicture(pictureStream, mediaType);
             speaker.get().setPictureId(createdPicture.id);
             AuditLogger.log(UPLOAD_SPEAKER_PICTURE, "user " + authenticatedUser, "session " + submissionId, "speaker " + speakerId);
-	    updateSubmission(authenticatedUser, submissionId, submission, empty());
+            updateSubmission(authenticatedUser, submissionId, submission, empty());
             return new UploadedPicture(serverConfiguration.apiBaseUri + "/submissions/" + submissionId + "/speakers/" + speakerId + "/picture");
         } else {
             AuditLogger.log(ILLEGAL_SPEAKER_FOR_PICTURE_UPLOAD, "user " + authenticatedUser, "session " + submissionId, "speaker " + speakerId);
@@ -279,8 +277,8 @@ public class SubmissionService {
     }
 
     public Submission postComment(AuthenticatedUser authenticatedUser, String submissionId, Comment comment) {
-	Submission existingSubmission = getSubmissionForUser(authenticatedUser, submissionId);
-	updateSubmission(authenticatedUser, submissionId, existingSubmission, Optional.of(comment));
+        Submission existingSubmission = getSubmissionForUser(authenticatedUser, submissionId);
+        updateSubmission(authenticatedUser, submissionId, existingSubmission, Optional.of(comment));
         AuditLogger.log(POST_COMMENT, "user " + authenticatedUser, "session " + submissionId, "comment " + comment.comment);
         return getSubmissionForUser(authenticatedUser, submissionId);
     }
