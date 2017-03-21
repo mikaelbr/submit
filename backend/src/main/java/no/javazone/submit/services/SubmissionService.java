@@ -138,16 +138,23 @@ public class SubmissionService {
 
         AuditLogger.log(UPDATE_TALK, "user " + authenticatedUser, "session " + submissionId);
 
-        notifySlackAndEmailAndLog(authenticatedUser, submissionId, submission, previousSubmission);
+	notifySlackAndEmailAndLog(authenticatedUser, submissionId, submission, previousSubmission, newComment);
 
         return getSubmissionForUser(authenticatedUser, submissionId);
     }
 
-    private void notifySlackAndEmailAndLog(AuthenticatedUser authenticatedUser, String submissionId, Submission submission, Submission previousSubmission) {
+    private void notifySlackAndEmailAndLog(AuthenticatedUser authenticatedUser, String submissionId, Submission submission, Submission previousSubmission, Optional<Comment> newComment) {
         try {
-            if (SessionStatus.valueOf(previousSubmission.status) != SUBMITTED && SessionStatus.valueOf(submission.status) == SUBMITTED) {
+	    if(newComment.isPresent()) {
+		slackClient.postTalkReceivedNewComment(
+			submissionId,
+			submission.title,
+			newComment.get()
+		);
+	    } else if (SessionStatus.valueOf(previousSubmission.status) != SUBMITTED && SessionStatus.valueOf(submission.status) == SUBMITTED) {
                 slackClient.postTalkMarkedForInReview(
-                        submissionId, submission.title,
+			submissionId,
+			submission.title,
                         submission.format,
                         submission.length,
                         submission.language,
@@ -156,13 +163,14 @@ public class SubmissionService {
                         previousSubmission.speakers.get(0).hasPicture ? previousSubmission.speakers.get(0).pictureUrl : null
                 );
                 emailService.notifySpeakerAboutStatusChangeToInReview(submission);
-                AuditLogger.log(CHANGE_STATUS_TO_SUBMITTED, "user " + authenticatedUser, "session " + submissionId);
+		AuditLogger.log(CHANGE_STATUS_TO_SUBMITTED, "user " + authenticatedUser, "session " + submissionId);
 	    } else if (SessionStatus.valueOf(previousSubmission.status) == SUBMITTED && SessionStatus.valueOf(submission.status) != SUBMITTED) {
-                slackClient.postTalkMarkedForNotInReview(
-                        submissionId, submission.title,
-                        submission.speakers.get(0).name,
-                        submission.speakers.get(0).email,
-                        previousSubmission.speakers.get(0).hasPicture ? previousSubmission.speakers.get(0).pictureUrl : null
+		slackClient.postTalkMarkedForNotInReview(
+			submissionId,
+			submission.title,
+			submission.speakers.get(0).name,
+			submission.speakers.get(0).email,
+			previousSubmission.speakers.get(0).hasPicture ? previousSubmission.speakers.get(0).pictureUrl : null
                 );
                 AuditLogger.log(CHANGE_STATUS_TO_DRAFT, "user " + authenticatedUser, "session " + submissionId);
             }

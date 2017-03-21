@@ -5,6 +5,7 @@ import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackPreparedMessage;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
+import no.javazone.submit.api.representations.Comment;
 import no.javazone.submit.config.CakeConfiguration;
 import no.javazone.submit.config.SlackConfiguration;
 import no.javazone.submit.integrations.sleepingpill.model.common.SessionStatus;
@@ -88,6 +89,26 @@ public class SlackClient {
         slack.sendMessage(channel, message);
 
         AuditLogger.log(SENT_SLACK_MESSAGE, "session " + id, "type marked-for-not-in-review");
+    }
+
+    public void postTalkReceivedNewComment(String id, String title, Comment comment) {
+	connectIfNessesary();
+
+	SlackChannel channel = slack.findChannelByName(slackConfiguration.channel);
+
+	SlackAttachment attachment = new SlackAttachment(title, "", "_Speaker added new comment to his talk. Somebody should probably reply_", null);
+	attachment.setColor("#f28e31");
+	attachment.setAuthorName("Speaker: " + comment.name);
+	attachment.addMarkdownIn("text");
+
+	attachment.addField("The new comment", comment.comment, false);
+
+	SlackPreparedMessage message = new SlackPreparedMessage.Builder()
+		.addAttachment(attachment)
+		.build();
+	slack.sendMessage(channel, message);
+
+	AuditLogger.log(SENT_SLACK_MESSAGE, "session " + id, "type new-comment-from-speaker");
     }
 
     private void connectIfNessesary() {
