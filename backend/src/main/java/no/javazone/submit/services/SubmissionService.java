@@ -148,6 +148,7 @@ public class SubmissionService {
                         submissionId,
                         submission.title,
                         submission.speakers.stream().map(s -> s.name).collect(joining(" & ")),
+                        previousSubmission.speakers.get(0).hasPicture ? previousSubmission.speakers.get(0).pictureUrl : null,
                         newComment.get()
                 );
             } else if (SessionStatus.valueOf(previousSubmission.status) != SUBMITTED && SessionStatus.valueOf(submission.status) == SUBMITTED) {

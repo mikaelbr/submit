@@ -55,7 +55,7 @@ public class SlackClient {
         attachment.addField("Description of the talk", theAbstract, false);
         attachment.addField("Format", format + " (" + length + "min)", true);
         attachment.addField("Language", language, true);
-        if(submitterImage != null) {
+        if (submitterImage != null) {
             attachment.setAuthorIcon(submitterImage);
         }
         attachment.setTitleLink(cakeConfiguration.baseUri + "/secured/#/showTalk/" + id);
@@ -77,7 +77,7 @@ public class SlackClient {
 
         SlackAttachment attachment = new SlackAttachment(title, "", "_Speaker has changed the talk status back to 'not in review'_", null);
         attachment.setColor("#b63d9d");
-        if(submitterImage != null) {
+        if (submitterImage != null) {
             attachment.setAuthorIcon(submitterImage);
         }
         attachment.setAuthorName("Speaker: " + submitterName);
@@ -91,28 +91,32 @@ public class SlackClient {
         AuditLogger.log(SENT_SLACK_MESSAGE, "session " + id, "type marked-for-not-in-review");
     }
 
-    public void postTalkReceivedNewComment(String id, String title, String speaker, Comment comment) {
-	connectIfNessesary();
+    public void postTalkReceivedNewComment(String id, String title, String speaker, String submitterImage, Comment comment) {
+        connectIfNessesary();
 
-	SlackChannel channel = slack.findChannelByName(slackConfiguration.channel);
+        SlackChannel channel = slack.findChannelByName(slackConfiguration.channel);
 
-	SlackAttachment attachment = new SlackAttachment(title, "", "_Speaker added new comment to his talk. Somebody should probably reply :)_", null);
-	attachment.setColor("#F012BE");
-	attachment.setAuthorName("Speaker: " + speaker);
-	attachment.addMarkdownIn("text");
+        SlackAttachment attachment = new SlackAttachment(title, "", "_Speaker added new comment to his talk. Somebody should probably reply :)_", null);
+        attachment.setColor("#F012BE");
+        if (submitterImage != null) {
+            attachment.setAuthorIcon(submitterImage);
+        }
+        attachment.setTitleLink(cakeConfiguration.baseUri + "/secured/#/showTalk/" + id);
+        attachment.setAuthorName("Speaker: " + speaker);
+        attachment.addMarkdownIn("text");
 
-	attachment.addField("The new comment", comment.comment, false);
+        attachment.addField("The new comment", comment.comment, false);
 
-	SlackPreparedMessage message = new SlackPreparedMessage.Builder()
-		.addAttachment(attachment)
-		.build();
-	slack.sendMessage(channel, message);
+        SlackPreparedMessage message = new SlackPreparedMessage.Builder()
+                .addAttachment(attachment)
+                .build();
+        slack.sendMessage(channel, message);
 
-	AuditLogger.log(SENT_SLACK_MESSAGE, "session " + id, "type new-comment-from-speaker");
+        AuditLogger.log(SENT_SLACK_MESSAGE, "session " + id, "type new-comment-from-speaker");
     }
 
     private void connectIfNessesary() {
-        if(!slack.isConnected()) {
+        if (!slack.isConnected()) {
             try {
                 slack.connect();
             } catch (IOException e) {
