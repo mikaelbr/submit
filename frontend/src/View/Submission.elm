@@ -277,7 +277,7 @@ viewComment : Comment -> Html SubmissionField
 viewComment comment =
     li [ class "comment" ]
         [ h3 [] [ text comment.name ]
-        , p [] [ text comment.comment ]
+        , p [ class "comment-text" ] [ text comment.comment ]
         ]
 
 
