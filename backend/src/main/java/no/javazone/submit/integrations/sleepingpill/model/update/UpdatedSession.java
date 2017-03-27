@@ -4,9 +4,8 @@ import no.javazone.submit.integrations.sleepingpill.model.common.SessionComment;
 import no.javazone.submit.integrations.sleepingpill.model.common.SessionData;
 import no.javazone.submit.integrations.sleepingpill.model.common.SessionStatus;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.Collections.emptyList;
 
 public class UpdatedSession {
 
@@ -24,7 +23,7 @@ public class UpdatedSession {
 
         this.status = status;
         this.speakers = speakers;
-	this.comments = emptyList();
+	    this.comments = new ArrayList<>();
 
         data = new SessionData();
         data.setTitle(title);
