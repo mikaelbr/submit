@@ -147,6 +147,7 @@ public class SubmissionService {
                 slackClient.postTalkReceivedNewComment(
                         submissionId,
                         submission.title,
+                        submission.speakers.stream().map(s -> s.name).collect(joining(" & ")),
                         newComment.get()
                 );
             } else if (SessionStatus.valueOf(previousSubmission.status) != SUBMITTED && SessionStatus.valueOf(submission.status) == SUBMITTED) {

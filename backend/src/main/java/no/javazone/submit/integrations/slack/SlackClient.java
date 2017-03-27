@@ -91,14 +91,14 @@ public class SlackClient {
         AuditLogger.log(SENT_SLACK_MESSAGE, "session " + id, "type marked-for-not-in-review");
     }
 
-    public void postTalkReceivedNewComment(String id, String title, Comment comment) {
+    public void postTalkReceivedNewComment(String id, String title, String speaker, Comment comment) {
 	connectIfNessesary();
 
 	SlackChannel channel = slack.findChannelByName(slackConfiguration.channel);
 
-	SlackAttachment attachment = new SlackAttachment(title, "", "_Speaker added new comment to his talk. Somebody should probably reply_", null);
-	attachment.setColor("#f28e31");
-	attachment.setAuthorName("Speaker: " + comment.name);
+	SlackAttachment attachment = new SlackAttachment(title, "", "_Speaker added new comment to his talk. Somebody should probably reply :)_", null);
+	attachment.setColor("#F012BE");
+	attachment.setAuthorName("Speaker: " + speaker);
 	attachment.addMarkdownIn("text");
 
 	attachment.addField("The new comment", comment.comment, false);
@@ -181,4 +181,6 @@ public class SlackClient {
     private long count(List<Session> talks, SessionStatus status) {
         return talks.stream().filter(s -> s.status == status).count();
     }
+
+
 }
