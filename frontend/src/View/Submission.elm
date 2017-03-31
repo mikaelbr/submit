@@ -285,7 +285,7 @@ viewCommentSubmission : Model -> Html SubmissionField
 viewCommentSubmission model =
     div [ class "send-comment" ]
         [ h2 [] [ text "Reply" ]
-        , textarea [ onInput NewComment, class "comment-area" ] []
+        , textarea [ onInput NewComment, class "comment-area", value model.comment ] []
         , button [ onClick SaveComment, disabled <| String.isEmpty model.comment ] [ text "Send" ]
         ]
 

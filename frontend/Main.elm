@@ -144,7 +144,7 @@ update msg ({ login, submissions, submission } as model) =
                 submission =
                     model.submission
             in
-                ( { model | submission = { submission | submission = Complete s } }, Cmd.none )
+                ( { model | submission = { submission | submission = Complete s, comment = "" } }, Cmd.none )
 
 
 updatePage : Page -> Model -> ( Model, Cmd Msg )
