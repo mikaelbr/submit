@@ -4,7 +4,7 @@ import Model.Submission exposing (..)
 import Messages exposing (..)
 import Messages exposing (..)
 import Html exposing (..)
-import Html.Attributes exposing (class, style, type_, value, src, placeholder, href, name, checked, selected, id, for)
+import Html.Attributes exposing (class, style, type_, value, src, placeholder, href, name, checked, selected, id, for, disabled)
 import Html.Events exposing (onInput, onClick, on)
 import Nav.Nav exposing (toHash)
 import Nav.Model
@@ -100,7 +100,7 @@ viewSubmissionDetails submission model =
         , div [ class <| "comments-wrapper " ++ hideIfNoComments submission ]
             [ h2 [] [ text "Comments from the program committee" ]
             , p [] [ text "The program committee has reviewed your talk and have the following comments. Please review them, and respond either by your own comment or by updating your talk accordingly." ]
-            , viewComments submission
+            , viewComments submission model
             ]
         , div [ class "edit-submission" ]
             [ div [ class <| "cant-edit-message " ++ hideIfEditable submission.editable ] [ text "You can't edit this talk. Only talks from the current year is editable." ]
@@ -264,12 +264,12 @@ viewSpeaker submission n ( i, speaker ) =
             ]
 
 
-viewComments : Submission -> Html SubmissionField
-viewComments submission =
+viewComments : Submission -> Model -> Html SubmissionField
+viewComments submission model =
     div [ class "comment-section" ]
         [ ul [ class "comments" ] <|
             List.map (\comment -> viewComment comment) submission.comments
-        , viewCommentSubmission
+        , viewCommentSubmission model
         ]
 
 
@@ -281,12 +281,12 @@ viewComment comment =
         ]
 
 
-viewCommentSubmission : Html SubmissionField
-viewCommentSubmission =
+viewCommentSubmission : Model -> Html SubmissionField
+viewCommentSubmission model =
     div [ class "send-comment" ]
         [ h2 [] [ text "Reply" ]
         , textarea [ onInput NewComment, class "comment-area" ] []
-        , button [ onClick SaveComment ] [ text "Send" ]
+        , button [ onClick SaveComment, disabled <| String.isEmpty model.comment ] [ text "Send" ]
         ]
 
 
