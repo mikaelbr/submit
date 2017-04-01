@@ -12,7 +12,7 @@ public class EmailAddress {
 
     @Override
     public String toString() {
-        return emailAddress;
+        return emailAddress.replace(" ", "+");
     }
 
     @Override
