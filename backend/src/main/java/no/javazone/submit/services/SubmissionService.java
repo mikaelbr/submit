@@ -128,7 +128,7 @@ public class SubmissionService {
                     .filter(s -> authenticatedUser.emailAddress.toString().equals(s.email))
                     .filter(s -> s.name != null && !s.name.isEmpty())
                     .findAny()
-                    .map(s -> s.name)
+                    .map(s -> "Speaker: " + s.name)
                     .orElse("Speaker");
             SessionComment sessionComment = new SessionComment(speakerName, authenticatedUser.emailAddress, comment.comment);
             updatedSession.addComment(sessionComment);
