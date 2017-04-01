@@ -126,6 +126,7 @@ public class SubmissionService {
         newComment.ifPresent(comment -> {
             String speakerName = submission.speakers.stream()
                     .filter(s -> authenticatedUser.emailAddress.toString().equals(s.email))
+                    .filter(s -> s.name != null && !s.name.isEmpty())
                     .findAny()
                     .map(s -> s.name)
                     .orElse("Speaker");
