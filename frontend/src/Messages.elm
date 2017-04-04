@@ -26,6 +26,7 @@ type Msg
     | ToggleAutosaveSubmission
     | TimeUpdatedSubmission Time.Time
     | UpdateSubmission SubmissionField
+    | CommentSent (Result Http.Error Submission)
 
 
 type SubmissionField
@@ -50,3 +51,5 @@ type SubmissionField
     | RemoveSpeaker Int
     | FileSelected Speaker Int String
     | FileUploaded UploadedImageData
+    | NewComment String
+    | SaveComment

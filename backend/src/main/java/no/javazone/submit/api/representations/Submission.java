@@ -30,13 +30,14 @@ public class Submission {
     public String infoToProgramCommittee;
     public List<Speaker> speakers;
     public boolean editable;
+    public List<Comment> comments;
 
     @SuppressWarnings("unused")
     private Submission() { }
 
     public Submission(String sessionId, String conferenceId, String status, String title, String theAbstract,
                       String intendedAudience, String format, String language, String outline, String equipment, String length, String level,
-                      String suggestedKeywords, String infoToProgramCommittee, List<Speaker> speakers, boolean editable) {
+                      String suggestedKeywords, String infoToProgramCommittee, List<Speaker> speakers, boolean editable, List<Comment> comments) {
         this.id = sessionId;
         this.conferenceId = conferenceId;
         this.status = status;
@@ -53,6 +54,7 @@ public class Submission {
         this.infoToProgramCommittee = infoToProgramCommittee;
         this.speakers = speakers;
         this.editable = editable;
+        this.comments = comments;
     }
 
     public void validate() {

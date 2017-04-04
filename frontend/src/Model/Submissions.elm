@@ -1,6 +1,7 @@
 module Model.Submissions exposing (Model, Year, Submission, initModel, Submissions)
 
 import Backend.Network exposing (RequestStatus(..))
+import Model.Submission exposing (Comment)
 
 
 type alias Model =
@@ -23,6 +24,7 @@ type alias Submission =
     { id : String
     , name : String
     , status : String
+    , comments : List Comment
     }
 
 

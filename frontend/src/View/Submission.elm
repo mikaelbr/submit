@@ -4,7 +4,7 @@ import Model.Submission exposing (..)
 import Messages exposing (..)
 import Messages exposing (..)
 import Html exposing (..)
-import Html.Attributes exposing (class, style, type_, value, src, placeholder, href, name, checked, selected, id, for)
+import Html.Attributes exposing (class, style, type_, value, src, placeholder, href, name, checked, selected, id, for, disabled)
 import Html.Events exposing (onInput, onClick, on)
 import Nav.Nav exposing (toHash)
 import Nav.Model
@@ -96,6 +96,11 @@ viewSubmissionDetails submission model =
                 [ strong [] [ span [] [ text "June 26th" ], text "Know your result" ]
                 , p [] [ text "By the end of June, all speakers will be get info about whether their talk is selected or not. Fingers crossed! If you are selected, you get to talk at JavaZone 2017!" ]
                 ]
+            ]
+        , div [ class <| "comments-wrapper " ++ hideIfNoComments submission ]
+            [ h2 [] [ text "Comments from the program committee" ]
+            , p [] [ text "The program committee has reviewed your talk and have the following comments. Please review them, and respond either by your own comment or by updating your talk accordingly." ]
+            , viewComments submission model
             ]
         , div [ class "edit-submission" ]
             [ div [ class <| "cant-edit-message " ++ hideIfEditable submission.editable ] [ text "You can't edit this talk. Only talks from the current year is editable." ]
@@ -259,6 +264,32 @@ viewSpeaker submission n ( i, speaker ) =
             ]
 
 
+viewComments : Submission -> Model -> Html SubmissionField
+viewComments submission model =
+    div [ class "comment-section" ]
+        [ ul [ class "comments" ] <|
+            List.map (\comment -> viewComment comment) submission.comments
+        , viewCommentSubmission model
+        ]
+
+
+viewComment : Comment -> Html SubmissionField
+viewComment comment =
+    li [ class "comment" ]
+        [ h3 [] [ text comment.name ]
+        , p [ class "comment-text" ] [ text comment.comment ]
+        ]
+
+
+viewCommentSubmission : Model -> Html SubmissionField
+viewCommentSubmission model =
+    div [ class "send-comment" ]
+        [ h2 [] [ text "Reply" ]
+        , textarea [ onInput NewComment, class "comment-area", value model.comment ] []
+        , button [ onClick SaveComment, disabled <| String.isEmpty model.comment ] [ text "Send" ]
+        ]
+
+
 viewError : String -> Html Msg
 viewError message =
     div [] [ text message ]
@@ -275,6 +306,14 @@ hideIfEditable editable =
 hideIfNotEditable : Bool -> String
 hideIfNotEditable editable =
     if not editable then
+        "hide"
+    else
+        ""
+
+
+hideIfNoComments : Submission -> String
+hideIfNoComments submission =
+    if List.isEmpty submission.comments then
         "hide"
     else
         ""

@@ -35,6 +35,11 @@ button {
     text-transform: uppercase;
     font-weight: 700;
     cursor: pointer;
+    transition: opacity .4s ease-in-out;
+}
+
+button[disabled] {
+    opacity: .4;
 }
 
 .icon-button(@icon-url, @background-color: transparent) {

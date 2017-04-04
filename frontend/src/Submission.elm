@@ -4,7 +4,7 @@ import Model.Submission exposing (..)
 import Messages exposing (..)
 import Messages exposing (..)
 import Backend.Network exposing (RequestStatus(..))
-import Nav.Requests exposing (saveSubmission, loginFailed)
+import Nav.Requests exposing (saveSubmission, loginFailed, saveComment)
 import Time
 import Task
 import Lazy
@@ -150,6 +150,17 @@ updateSubmissionField field model =
                                 s.speakers
                     in
                         { s | speakers = speakers }
+
+        NewComment comment ->
+            ( { model | comment = comment }, Cmd.none )
+
+        SaveComment ->
+            case model.submission of
+                Complete submission ->
+                    ( model, saveComment model submission )
+
+                _ ->
+                    ( model, Cmd.none )
 
 
 updateField : Model -> (Submission -> Cmd Msg) -> (Submission -> Submission) -> ( Model, Cmd Msg )

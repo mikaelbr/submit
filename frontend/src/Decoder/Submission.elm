@@ -1,4 +1,4 @@
-module Decoder.Submission exposing (decoder)
+module Decoder.Submission exposing (decoder, decodeComment)
 
 import Model.Submission exposing (..)
 import Json.Decode exposing (Decoder, string, list, map, bool)
@@ -17,7 +17,7 @@ decoder =
         |> optional "language" string ""
         |> optional "length" string "60"
         |> optional "outline" string ""
-        |> required "speakers" (map toTuples <| list decodeSpeaker)
+        |> required "speakers" (map speakersToTuples <| list decodeSpeaker)
         |> required "status" string
         |> optional "title" string ""
         |> optional "level" string "beginner"
@@ -25,10 +25,11 @@ decoder =
         |> optional "infoToProgramCommittee" string ""
         |> required "editable" bool
         |> required "status" string
+        |> required "comments" (list decodeComment)
 
 
-toTuples : List Speaker -> List ( Int, Speaker )
-toTuples speakers =
+speakersToTuples : List Speaker -> List ( Int, Speaker )
+speakersToTuples speakers =
     List.map2 (,) (List.range 0 (List.length speakers)) speakers
 
 
@@ -44,3 +45,10 @@ decodeSpeaker =
         |> required "deletable" bool
         |> required "hasPicture" bool
         |> optional "pictureUrl" string ""
+
+
+decodeComment : Decoder Comment
+decodeComment =
+    decode Comment
+        |> optional "name" string ""
+        |> optional "comment" string ""

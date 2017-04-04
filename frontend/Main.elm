@@ -136,6 +136,16 @@ update msg ({ login, submissions, submission } as model) =
             in
                 ( { model | submission = sub }, cmd )
 
+        CommentSent (Err _) ->
+            ( model, Cmd.none )
+
+        CommentSent (Ok s) ->
+            let
+                submission =
+                    model.submission
+            in
+                ( { model | submission = { submission | submission = Complete s, comment = "" } }, Cmd.none )
+
 
 updatePage : Page -> Model -> ( Model, Cmd Msg )
 updatePage page m =

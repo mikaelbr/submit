@@ -7,6 +7,7 @@ module Nav.Requests
         , saveSubmission
         , deleteLoginToken
         , loginFailed
+        , saveComment
         )
 
 import Http
@@ -90,6 +91,16 @@ createSubmission =
             Http.send Messages.SubmissionsCreated <|
                 jsonPost (Http.expectJson Decoder.Submission.decoder) Http.emptyBody <|
                     url [ "submissions" ]
+
+
+saveComment : Model.Submission.Model -> Model.Submission.Submission -> Cmd Messages.Msg
+saveComment model submission =
+    Http.send Messages.CommentSent <|
+        jsonPost
+            (Http.expectJson Decoder.Submission.decoder)
+            (Http.jsonBody <| Encoder.Submission.encodeComment model)
+        <|
+            url [ "submissions", submission.id, "comments" ]
 
 
 url : List String -> String

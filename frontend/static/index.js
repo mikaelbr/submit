@@ -21,7 +21,7 @@
         var id = props.id;
         var submission = props.submission;
         var speaker = props.speaker;
-        var i = props.i
+        var i = props.i;
         var input = document.getElementById(id);
         if (input == null) {
             return;

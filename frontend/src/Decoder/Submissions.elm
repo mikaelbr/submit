@@ -1,6 +1,7 @@
 module Decoder.Submissions exposing (decoder)
 
 import Model.Submissions exposing (..)
+import Decoder.Submission exposing (decodeComment)
 import Json.Decode exposing (Decoder, string, field, map, map2, int, list)
 import Json.Decode.Pipeline exposing (decode, required)
 
@@ -24,3 +25,4 @@ decodeSubmission =
         |> required "id" string
         |> required "title" string
         |> required "status" string
+        |> required "comments" (list decodeComment)
