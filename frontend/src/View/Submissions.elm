@@ -2,7 +2,7 @@ module View.Submissions exposing (view)
 
 import Model.Submissions exposing (..)
 import Html exposing (Html, div, h1, h2, p, text, a, button, img)
-import Html.Attributes exposing (class, href, src)
+import Html.Attributes exposing (class, href, src, title)
 import Html.Events exposing (onClick)
 import Nav.Nav exposing (toHash)
 import Nav.Model
@@ -98,8 +98,22 @@ viewSubmission submission =
             [ div [ class <| "status-light status-light-" ++ String.toLower submission.status ] [ text "-" ]
             , div [ class "submission-details" ]
                 [ div [ class "title" ] [ text submission.name ]
+                , viewCommentIndicator submission
                 , div [ class "status" ] [ text submission.status ]
                 , div [ class "open-arrow" ] [ text "-" ]
                 ]
             ]
         ]
+
+
+viewCommentIndicator : Submission -> Html Msg
+viewCommentIndicator submission =
+    if hasComments submission then
+        div [ class "has-comments", title <| toString (List.length submission.comments) ++ " comments" ] []
+    else
+        div [ class "no-comments" ] []
+
+
+hasComments : Submission -> Bool
+hasComments s =
+    not <| List.isEmpty s.comments

@@ -1,4 +1,4 @@
-module Decoder.Submission exposing (decoder)
+module Decoder.Submission exposing (decoder, decodeComment)
 
 import Model.Submission exposing (..)
 import Json.Decode exposing (Decoder, string, list, map, bool)
