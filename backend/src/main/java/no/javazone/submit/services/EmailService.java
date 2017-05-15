@@ -46,7 +46,7 @@ public class EmailService {
                 .filter(Objects::nonNull)
                 .forEach(emailAddress -> {
                     Token token = authenticationService.createTokenForEmail(emailAddress);
-                    send(emailAddress, emailConfiguration.subjectPrefix + "Talk marked for review: " + submission.title, generateReviewEmail(submission, token));
+                    send(emailAddress, emailConfiguration.subjectPrefix + "Foredrag sendt inn: " + submission.title, generateReviewEmail(submission, token));
                 });
     }
 
@@ -121,12 +121,11 @@ public class EmailService {
                 .collect(joining(" & "));
 
         StringBuilder b = new StringBuilder();
-        b.append("Dear " + speakerNames + "\n\n");
-        b.append("Thank your for submitting your talk '" + submission.title + "' :)\n\n");
-        b.append("You just marked your talk as ready for review, meaning that the program committee will consider it for inclusion.\n\n");
-        b.append("Feel free to edit your talk further at any time. Just use the same browser as before - the submission system will keep you logged in. Alternatively, you can use this link to log any browser into the submission system to keep working on your talk:\n");
-        b.append(emailConfiguration.tokenLinkPrefix).append("/").append(token).append("\n\n");
-        b.append("Best regards,").append("\n").append("The BEKK Program Committee");
+        b.append("Hei " + speakerNames + "\n\n");
+        b.append("Dette er en kjapp bekreftelse på at du har markert ditt foredrag '" + submission.title + "' som klar for gjennomgang :)\n\n");
+        b.append("Du kan fortsatt redigere foredraget, men etter at innsendelsesfristen er utløpt eller foredraget er godkjent bør du begrense deg til å kun gjøre mindre endringer. Rediger foredraget her: \n");
+        b.append(emailConfiguration.tokenLinkPrefix).append("\n\n");
+        b.append("Vennlig hilsen,").append("\n").append("fagdag-komiteen");
         return b.toString();
     }
 }
