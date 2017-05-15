@@ -131,7 +131,7 @@ viewSubmissionDetails submission model =
                 [ div [ class "flex-header" ]
                     [ h2 [ class "flex-header-element" ] [ text "Hvem er du? (eller dere)" ]
                     , div [ class "flex-header-element" ]
-                        [ if List.length submission.speakers > 1 then
+                        [ if List.length submission.speakers > 4 then
                             div [] []
                           else
                             button [ onClick AddSpeaker, class "button-new" ] [ text "Legg til foredragsholder" ]
