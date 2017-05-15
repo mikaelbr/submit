@@ -32,15 +32,15 @@ var proxy = httpProxy.createProxyServer({});
 http.createServer(function(req, res) {
     var pathname = url.parse(req.url).pathname;
 
-    var proxyAndLogRequest = function(proxyPort, appName) {
+    var proxyAndLogRequest = function(proxyTo, appName) {
         console.log(pathname, '=>', 'proxying to', appName, '=>', url.parse(req.url).pathname);
-        proxy.web(req, res, { target: 'http://localhost:' + proxyPort });
+        proxy.web(req, res, { target: proxyTo });
     };
 
     if(pathname.startsWith('/api')) {
-        proxyAndLogRequest(8080, 'backend');
+        proxyAndLogRequest("http://submit-prod-bekk.eu-central-1.elasticbeanstalk.com", 'backend');
     } else {
-        proxyAndLogRequest(8000, 'frontend');
+        proxyAndLogRequest("http://localhost:8000", 'frontend');
     }
 }).listen(9000, function() {
     console.log('proxy listening on port 9000');
