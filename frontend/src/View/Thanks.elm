@@ -9,7 +9,7 @@ view : Html Msg
 view =
     div [ class "wrapper login " ]
         [ div [ class "logo-wrapper" ]
-            [ img [ src "assets/neon-logo.svg", class "logo" ] []
+            [ div [ class "logo" ] []
             ]
         , h1 [] [ text "Awesome!", br [] [], text " We are on it!" ]
         , div [ class "success-image-wrapper" ]
