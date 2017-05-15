@@ -19,7 +19,7 @@ view model =
             div [] []
 
         Loading ->
-            viewWrapper [ div [ class "submissions-list loading" ] [ text "Loading..." ] ]
+            viewWrapper [ div [ class "submissions-list loading" ] [ text "Laster..." ] ]
 
         Complete submissions ->
             viewWrapper <| viewSubmissions model submissions
@@ -55,10 +55,10 @@ viewSubmissions model submissions =
             if List.length submissions.years == 0 then
                 text ""
             else
-                p [ class "intro-text" ] [ text "These are all talks you have submitted or participated on. You can edit all talks from the currect active event. All earlier talks are also available for your reference." ]
+                p [ class "intro-text" ] [ text "Dette er alle foredragene du har sendt inn til fagdag. Foredrag der du er lagt til som foredragsholder vises også. Du kan redigere alle foredrag frem til fagdagen; eldre foredrag vises også, men er låst for redigering." ]
     in
         [ div [ class "flex-header" ]
-            [ h1 [ class "flex-header-element" ] [ text "Your Talks" ]
+            [ h1 [ class "flex-header-element" ] [ text "Dine foredrag" ]
             , viewCreateSubmission model
             ]
         , introtext
@@ -70,12 +70,12 @@ viewCreateSubmission : Model -> Html Msg
 viewCreateSubmission model =
     if model.appConfig.submissionsOpen then
         div [ class "flex-header-element" ]
-            [ button [ onClick SubmissionsCreateTalk, class "new-talk button-new" ] [ text "Create new draft" ]
+            [ button [ onClick SubmissionsCreateTalk, class "new-talk button-new" ] [ text "Opprett ny kladd" ]
             ]
     else
         div [ class "flex-header-element flex-header-element-vertical" ]
-            [ button [ disabled True, class "new-talk button-new" ] [ text "Call for speakers is closed" ]
-            , div [ class "disabled-text" ] [ text "(but you can still edit your already submitted ones!)" ]
+            [ button [ disabled True, class "new-talk button-new" ] [ text "Innsending er stengt" ]
+            , div [ class "disabled-text" ] [ text "(men du kan redigere allerede innsendte foredrag!)" ]
             ]
 
 
@@ -84,8 +84,8 @@ viewEmpty =
     div [ class "no-talks" ]
         [ img [ src "assets/robot.png", class "welcome-robot" ] []
         , h2 [] [ text "Blank slate, baby!" ]
-        , p [] [ text "It looks like you don't have any talks submitted yet." ]
-        , p [ class "last" ] [ text "Go ahead, create your first draft. You can keep working on it, and edit it again and again until you're happy. Then, you mark it for submission and off it goes." ]
+        , p [] [ text "Det ser ut som om du ikke har sendt inn noen foredrag enda." ]
+        , p [ class "last" ] [ text "Lag din første kladd og fyr løs! Du kan jobbe videre med kladden helt til du er fornøyd. Vi autolagrer for deg så du ikke risikerer å miste noe. Når du er ferdig, så markerer du det som klart og krysser fingrene for at akkurat _du_ får snakke på fagdag! :)" ]
         ]
 
 
