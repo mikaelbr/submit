@@ -36,7 +36,7 @@ public class EmailService {
     }
 
     public void sendTokenToUser(EmailAddress emailAddress, Token token) {
-        send(emailAddress, emailConfiguration.subjectPrefix + "JavaZone submission login", generateTokenEmail(token));
+        send(emailAddress, emailConfiguration.subjectPrefix + "Talk submission login", generateTokenEmail(token));
     }
 
     public void notifySpeakerAboutStatusChangeToInReview(Submission submission) {
@@ -46,7 +46,7 @@ public class EmailService {
                 .filter(Objects::nonNull)
                 .forEach(emailAddress -> {
                     Token token = authenticationService.createTokenForEmail(emailAddress);
-                    send(emailAddress, emailConfiguration.subjectPrefix + "JavaZone submission marked for review: " + submission.title, generateReviewEmail(submission, token));
+                    send(emailAddress, emailConfiguration.subjectPrefix + "Talk marked for review: " + submission.title, generateReviewEmail(submission, token));
                 });
     }
 
@@ -68,7 +68,7 @@ public class EmailService {
             email.setSmtpPort(465);
             email.setAuthenticator(new DefaultAuthenticator(emailConfiguration.smtpUser, emailConfiguration.smtpPass));
             email.setSSLOnConnect(true);
-            email.setFrom("program@java.no", "JavaZone Program Committee");
+            email.setFrom("no-reply@example.com", "Program Committee");
             email.setSubject(subject);
             email.setMsg(emailBody);
             email.addTo(address.toString());
@@ -79,7 +79,7 @@ public class EmailService {
     }
 
     private void sendViaSendGrid(EmailAddress address, String subject, String emailBody) {
-	com.sendgrid.Email from = new com.sendgrid.Email("no-reply@bekk.no");
+	com.sendgrid.Email from = new com.sendgrid.Email("no-reply@bekk.no", "BEKK Program Committee");
 	com.sendgrid.Email to = new com.sendgrid.Email(address.toString());
 	Content content = new Content("text/plain", emailBody);
 	Mail mail = new Mail(from, subject, to, content);
@@ -105,12 +105,11 @@ public class EmailService {
 
     private String generateTokenEmail(Token token) {
         StringBuilder b = new StringBuilder();
-        b.append("Ready to submit a talk to JavaZone, or editing your talk?\n\n");
-        b.append("Use this link to log your browser in to our submitting system:\n");
+        b.append("Ready to submit or edit your talk?\n\n");
+        b.append("Use this link to log your browser in to our submission system:\n");
         b.append(emailConfiguration.tokenLinkPrefix).append("/").append(token).append("\n\n");
         b.append("Clicking this link will authenticate your browser and keep you logged in. Using a public computer? Use the 'forget me' button on the logged in page.").append("\n\n");
-        b.append("Don't know why you received this email? Someone probably just misspelled their email address. Don't worry, they can't do anything on your behalf without this link").append("\n\n");
-        b.append("Best regards,").append("\n").append("The JavaZone Program Committee");
+        b.append("Best regards,").append("\n").append("The BEKK Program Committee");
         return b.toString();
     }
 
@@ -123,11 +122,11 @@ public class EmailService {
 
         StringBuilder b = new StringBuilder();
         b.append("Dear " + speakerNames + "\n\n");
-        b.append("Thank your for submitting your talk '" + submission.title + "' to JavaZone :)\n\n");
-        b.append("You just marked your talk as ready for review, meaning that the program committee will have a look at it at their earliest convenience. This year, we are trying to give speakers who send their talks in early some feedback. In case the program committee has any feedback for you, they will send it to you by email.\n\n");
-        b.append("Feel free to edit your talk further at any time. Just use the same browser as before - the submission system will keep you logged in. Alternatively, you can use this link to log any browser into our submission system to keep working on your talk:\n");
+        b.append("Thank your for submitting your talk '" + submission.title + "' :)\n\n");
+        b.append("You just marked your talk as ready for review, meaning that the program committee will consider it for inclusion.\n\n");
+        b.append("Feel free to edit your talk further at any time. Just use the same browser as before - the submission system will keep you logged in. Alternatively, you can use this link to log any browser into the submission system to keep working on your talk:\n");
         b.append(emailConfiguration.tokenLinkPrefix).append("/").append(token).append("\n\n");
-        b.append("Best regards,").append("\n").append("The JavaZone Program Committee");
+        b.append("Best regards,").append("\n").append("The BEKK Program Committee");
         return b.toString();
     }
 }
