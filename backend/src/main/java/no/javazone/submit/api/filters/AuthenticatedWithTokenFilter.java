@@ -1,6 +1,7 @@
 package no.javazone.submit.api.filters;
 
 import no.javazone.submit.api.representations.Token;
+import no.javazone.submit.config.TokenConfig;
 import no.javazone.submit.services.AuthenticationService;
 import no.javazone.submit.api.session.AuthenticatedUser;
 import no.javazone.submit.util.AuditLogger;
@@ -24,10 +25,12 @@ public class AuthenticatedWithTokenFilter implements ContainerRequestFilter {
 
     public static final String AUTHENTICATED_USER_PROPERTY = "submit.authenticated-user";
 
+    private TokenConfig tokenConfig;
     private final AuthenticationService authenticationService;
 
     @Autowired
-    public AuthenticatedWithTokenFilter(AuthenticationService authenticationService) {
+    public AuthenticatedWithTokenFilter(TokenConfig tokenConfig, AuthenticationService authenticationService) {
+	this.tokenConfig = tokenConfig;
         this.authenticationService = authenticationService;
     }
 
@@ -35,6 +38,10 @@ public class AuthenticatedWithTokenFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
+	if (!tokenConfig.enabled) {
+	    return;
+	}
+
         Token token = new Token(requestContext.getHeaderString("X-token"));
 
         Optional<AuthenticatedUser> authenticatedUser = authenticationService.validateToken(token);

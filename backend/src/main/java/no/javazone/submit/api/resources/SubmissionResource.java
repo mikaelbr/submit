@@ -1,5 +1,6 @@
 package no.javazone.submit.api.resources;
 
+import no.javazone.submit.api.filters.AuthenticatedWithAuth0;
 import no.javazone.submit.api.filters.AuthenticatedWithToken;
 import no.javazone.submit.api.representations.Comment;
 import no.javazone.submit.api.representations.Submission;
@@ -43,6 +44,7 @@ public class SubmissionResource {
 
     @GET
     @AuthenticatedWithToken
+    @AuthenticatedWithAuth0
     @Produces(APPLICATION_JSON)
     public Response getAllSubmissionsForLoggedInUser(@Context ContainerRequestContext context) {
         return assertLoggedInUser(context, authenticatedUser ->
@@ -52,6 +54,7 @@ public class SubmissionResource {
 
     @GET
     @AuthenticatedWithToken
+    @AuthenticatedWithAuth0
     @Path("/{submissionId}")
     @Produces(APPLICATION_JSON)
     public Response getSingleSubmissionsForLoggedInUser(@Context ContainerRequestContext context,
@@ -63,6 +66,7 @@ public class SubmissionResource {
 
     @POST
     @AuthenticatedWithToken
+    @AuthenticatedWithAuth0
     @Produces(APPLICATION_JSON)
     public Response newDraft(@Context ContainerRequestContext context) {
         return assertLoggedInUser(context, authenticatedUser ->
@@ -72,6 +76,7 @@ public class SubmissionResource {
 
     @PUT
     @AuthenticatedWithToken
+    @AuthenticatedWithAuth0
     @Path("/{submissionId}")
     @Produces(APPLICATION_JSON)
     @Consumes(APPLICATION_JSON)
@@ -85,6 +90,7 @@ public class SubmissionResource {
 
     @POST
     @AuthenticatedWithToken
+    @AuthenticatedWithAuth0
     @Path("/{submissionId}/speakers/{speakerId}/picture")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(APPLICATION_JSON)
@@ -111,6 +117,7 @@ public class SubmissionResource {
 
     @POST
     @AuthenticatedWithToken
+    @AuthenticatedWithAuth0
     @Path("/{submissionId}/comments")
     @Produces(APPLICATION_JSON)
     @Consumes(APPLICATION_JSON)
