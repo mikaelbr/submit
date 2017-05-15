@@ -1,7 +1,7 @@
 (function() {
     function redirectUrl() {
         if (window.location.host.indexOf('localhost') >= 0) {
-            return 'http://localhost:8000';
+            return 'http://localhost:9000';
         } else {
             return 'https://cfp.bekk.no';
         }
