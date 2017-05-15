@@ -44,11 +44,11 @@ public class NewSession {
         return new NewSession(
                 SessionStatus.DRAFT,
                 postedBy.toString(),
-                "New draft for your talk",
+                "Ny kladd på et fantastisk foredrag",
                 "",
                 "",
                 "presentation",
-                "en",
+                "no",
                 "",
                 "",
                 "40",
