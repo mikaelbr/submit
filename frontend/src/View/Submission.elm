@@ -110,20 +110,9 @@ viewSubmissionDetails submission model =
                 , input [ type_ "text", value submission.title, onInput Title, placeholder "A short and snappy title catching people's interest" ] []
                 ]
             , div [ class "input-section" ]
-                [ h2 [] [ text "Language" ]
-                , p [ class "input-description" ] [ text "Which language will you be holding the talk in? It is permitted to use English in your slides, even though you may be talking in Norwegian, but you should write the rest of the abstract in the language you will speak in. We generally recommend that you hold the talk in the language you are most comfortable with." ]
-                , radio "Norwegian" "language" "no" (Language "no") <| submission.language == "no"
-                , radio "English" "language" "en" (Language "en") <| submission.language == "en"
-                ]
-            , div [ class "input-section" ]
                 [ h2 [] [ text "Description" ]
                 , p [ class "input-description" ] [ text "Give a concise description of the content and goals of your talk. Try not to exceed 300 words, as shorter and more to-the-point descriptions are more likely to be read by the participants." ]
                 , textarea [ value submission.abstract, onInput Abstract, placeholder "Try to sell your presentation as best as possible to the audience. \n\nShort and to the point is often a good starting point!" ] []
-                ]
-            , div [ class "input-section" ]
-                [ h2 [] [ text "Expected audience and code level" ]
-                , p [ class "input-description" ] [ text "Who should attend this session?  How will the participants benefit from attending?  Please indicate how code will factor into your presentation (for example \"no code\", \"code in slides\" or \"live coding\")." ]
-                , textarea [ class "small-textarea", value submission.intendedAudience, onInput IntendedAudience, placeholder "Who do you hope will be sitting in the audience for your talk?" ] []
                 ]
             , div [ class "input-section" ]
                 [ h2 [] [ text "Presentation format" ]
@@ -138,31 +127,9 @@ viewSubmissionDetails submission model =
                 , viewLength submission
                 ]
             , div [ class "input-section" ]
-                [ h2 [] [ text "Experience level" ]
-                , p [ class "input-description" ] [ text "Who is your talk pitched at?  Beginners, Experts or perhaps those in between?" ]
-                , radio "Beginner" "experience" "beginner" (Level "beginner") <| submission.level == "beginner"
-                , radio "Intermediate" "experience" "intermediate" (Level "intermediate") <| submission.level == "intermediate"
-                , radio "Advanced" "experience" "advanced" (Level "advanced") <| submission.level == "advanced"
-                ]
-            , div [ class "input-section" ]
-                [ h2 [] [ text "Suggested keywords" ]
-                , p [ class "input-description" ] [ text "Suggest up to five keywords that describe your talk. These will be used by the program committee to group the talks into categories. We reserve the right to edit these suggestions to make them fit into this years selected categories." ]
-                , input [ type_ "text", value submission.suggestedKeywords, onInput SuggestedKeywords, placeholder "Keyword 1, Keyword 2, ..." ] []
-                ]
-            , div [ class "input-section" ]
-                [ h2 [] [ text "Outline (not public)" ]
-                , p [ class "input-description" ] [ text "The information will be used by the Program Committee to review the details of your talk. The outline should be a rough agenda for the talk, with a short description for each section, and with a rough estimate of the time spent on each. Omitting this section will reduce the chances of your submission being accepted." ]
-                , textarea [ value submission.outline, onInput Outline, placeholder "The more detailed you are, the bigger your changes of being accepted.\n\nA good format to follow:\n- Part 1: Introduction (xx minutes)\n   - detail...\n   - detail...\n- Part 2: ... (yy minutes)\n   - detail...\n- (more)" ] []
-                ]
-            , div [ class "input-section" ]
                 [ h2 [] [ text "Equipment (not public)" ]
                 , p [ class "input-description" ] [ text "Please specify any additional special equipment you may need. Note that all get access to WiFi and a projector." ]
                 , textarea [ class "small-textarea", value submission.equipment, onInput Equipment, placeholder "Let us know if your talk or workshop depends on us providing you with anything to ensure it's success." ] []
-                ]
-            , div [ class "input-section" ]
-                [ h2 [] [ text "Additional information for the Program Committee (not public)" ]
-                , p [ class "input-description" ] [ text "Please include any information relevant to the Program Committee. Here you can write a few words about your motivation for speaking at JavaZone, and optionally include links to videos and slides from previous speaker engagements, or other links that tell us about you (e.g. your GitHub profile)." ]
-                , textarea [ class "small-textarea", value submission.infoToProgramCommittee, onInput InfoToProgramCommittee, placeholder "Let us know who you are, why you are passionate about this subject, and why YOU are the best person to hold this talk.\n\nNorwegian rules do not apply: it's allowed to brag a bit ;)" ] []
                 ]
             , div [ class "input-section" ]
                 [ div [ class "flex-header" ]
@@ -195,14 +162,13 @@ viewLength s =
     case s.format of
         "presentation" ->
             select [ onInput Length ]
-                [ option [ value "45", selected <| s.length == "45" ] [ text "45 minutes" ]
-                , option [ value "60", selected <| s.length == "60" ] [ text "60 minutes" ]
+                [ option [ value "40", selected <| s.length == "40" ] [ text "40 minutes" ]
+                , option [ value "20", selected <| s.length == "20" ] [ text "20 minutes" ]
                 ]
 
         "lightning-talk" ->
             select [ onInput Length ]
                 [ option [ value "10", selected <| s.length == "10" ] [ text "10 minutes" ]
-                , option [ value "20", selected <| s.length == "20" ] [ text "20 minutes" ]
                 ]
 
         _ ->
