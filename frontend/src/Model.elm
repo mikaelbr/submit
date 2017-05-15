@@ -7,12 +7,15 @@ import Model.Submission
 
 
 type alias Flags =
-    { host : String }
+    { host : String
+    , token : String
+    }
 
 
 type alias AppConfig =
     { host : String
     , submissionsOpen : Bool
+    , token : String
     }
 
 
@@ -37,4 +40,4 @@ initModel flags page =
 
 initAppConfig : Flags -> AppConfig
 initAppConfig flags =
-    AppConfig flags.host True
+    AppConfig flags.host True flags.token

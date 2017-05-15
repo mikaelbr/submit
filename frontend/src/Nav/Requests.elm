@@ -2,11 +2,8 @@ module Nav.Requests
     exposing
         ( getSubmissions
         , getSubmission
-        , getLoginToken
         , createSubmission
         , saveSubmission
-        , deleteLoginToken
-        , loginFailed
         , saveComment
         )
 
@@ -17,95 +14,55 @@ import Decoder.Submission
 import Encoder.Submission
 import Model.Submission
 import Json.Decode exposing (Decoder)
-import LocalStorage
 import Lazy
-import Navigation
 
 
--- This is so horribly, horribly wrong, but right now
--- the only way I see to both remove token and
--- navigate to register page in one function
+getSubmissions : String -> Cmd Messages.Msg
+getSubmissions token =
+    Http.send Messages.SubmissionsGet <|
+        jsonGet Decoder.Submissions.decoder token <|
+            url [ "submissions" ]
 
 
-loginFailed : Lazy.Lazy (Cmd msg)
-loginFailed =
-    Lazy.lazy <|
-        \_ -> Navigation.newUrl ((\_ -> "#") <| LocalStorage.remove "login_token")
-
-
-getLoginToken : String -> Cmd Messages.Msg
-getLoginToken email =
-    Http.send Messages.LoginSubmit <|
-        jsonPost Http.expectString Http.emptyBody <|
-            url [ "users", "authtoken" ]
-                ++ "?email="
-                ++ email
-
-
-deleteLoginToken : Lazy.Lazy (Cmd Messages.Msg)
-deleteLoginToken =
-    Lazy.lazy <|
-        \() ->
-            Http.send Messages.SubmissionsLoggedOut <|
-                Http.request
-                    { method = "DELETE"
-                    , headers = headers []
-                    , url = url [ "users", "authtoken" ] ++ "?token=" ++ (Maybe.withDefault "" <| LocalStorage.get "login_token")
-                    , body = Http.emptyBody
-                    , expect = Http.expectString
-                    , timeout = Nothing
-                    , withCredentials = False
-                    }
-
-
-getSubmissions : Lazy.Lazy (Cmd Messages.Msg)
-getSubmissions =
-    Lazy.lazy <|
-        \() ->
-            Http.send Messages.SubmissionsGet <|
-                jsonGet Decoder.Submissions.decoder <|
-                    url [ "submissions" ]
-
-
-getSubmission : String -> Cmd Messages.Msg
-getSubmission id =
+getSubmission : String -> String -> Cmd Messages.Msg
+getSubmission id token =
     Http.send Messages.GetSubmission <|
-        jsonGet Decoder.Submission.decoder <|
+        jsonGet Decoder.Submission.decoder token <|
             url [ "submissions", id ]
 
 
-saveSubmission : Model.Submission.Submission -> Cmd Messages.Msg
-saveSubmission submission =
+saveSubmission : Model.Submission.Submission -> String -> Cmd Messages.Msg
+saveSubmission submission token =
     Http.send Messages.SavedSubmission <|
         jsonPut
             (Http.expectJson Decoder.Submission.decoder)
             (Http.jsonBody <| Encoder.Submission.encoder submission)
+            token
         <|
             url [ "submissions", submission.id ]
 
 
-createSubmission : Lazy.Lazy (Cmd Messages.Msg)
-createSubmission =
-    Lazy.lazy <|
-        \() ->
-            Http.send Messages.SubmissionsCreated <|
-                jsonPost (Http.expectJson Decoder.Submission.decoder) Http.emptyBody <|
-                    url [ "submissions" ]
+createSubmission : String -> Cmd Messages.Msg
+createSubmission token =
+    Http.send Messages.SubmissionsCreated <|
+        jsonPost (Http.expectJson Decoder.Submission.decoder) Http.emptyBody token <|
+            url [ "submissions" ]
 
 
-saveComment : Model.Submission.Model -> Model.Submission.Submission -> Cmd Messages.Msg
-saveComment model submission =
+saveComment : Model.Submission.Model -> Model.Submission.Submission -> String -> Cmd Messages.Msg
+saveComment model submission token =
     Http.send Messages.CommentSent <|
         jsonPost
             (Http.expectJson Decoder.Submission.decoder)
             (Http.jsonBody <| Encoder.Submission.encodeComment model)
+            token
         <|
             url [ "submissions", submission.id, "comments" ]
 
 
 url : List String -> String
 url ls =
-    "/api/" ++ String.join "/" ls
+    "https://test-submit.javazone.no/api/" ++ String.join "/" ls
 
 
 get : Json.Decode.Decoder a -> String -> Http.Request a
@@ -113,11 +70,11 @@ get =
     flip Http.get
 
 
-jsonPost : Http.Expect a -> Http.Body -> String -> Http.Request a
-jsonPost expect body url =
+jsonPost : Http.Expect a -> Http.Body -> String -> String -> Http.Request a
+jsonPost expect body token url =
     Http.request
         { method = "POST"
-        , headers = headers [ Http.header "Accept" "application/json" ]
+        , headers = [ Http.header "Accept" "application/json", tokenHeader token ]
         , url = url
         , body = body
         , expect = expect
@@ -126,11 +83,11 @@ jsonPost expect body url =
         }
 
 
-jsonPut : Http.Expect a -> Http.Body -> String -> Http.Request a
-jsonPut expect body url =
+jsonPut : Http.Expect a -> Http.Body -> String -> String -> Http.Request a
+jsonPut expect body token url =
     Http.request
         { method = "PUT"
-        , headers = headers [ Http.header "Accept" "application/json" ]
+        , headers = [ Http.header "Accept" "application/json", tokenHeader token ]
         , url = url
         , body = body
         , expect = expect
@@ -139,11 +96,11 @@ jsonPut expect body url =
         }
 
 
-jsonGet : Decoder a -> String -> Http.Request a
-jsonGet decoder url =
+jsonGet : Decoder a -> String -> String -> Http.Request a
+jsonGet decoder token url =
     Http.request
         { method = "GET"
-        , headers = headers [ Http.header "Accept" "application/json" ]
+        , headers = [ Http.header "Accept" "application/json", tokenHeader token ]
         , url = url
         , body = Http.emptyBody
         , expect = Http.expectJson decoder
@@ -152,11 +109,6 @@ jsonGet decoder url =
         }
 
 
-headers : List Http.Header -> List Http.Header
-headers ls =
-    case LocalStorage.get "login_token" of
-        Just token ->
-            Http.header "X-token" token :: ls
-
-        _ ->
-            ls
+tokenHeader : String -> Http.Header
+tokenHeader token =
+    Http.header "X-token" token

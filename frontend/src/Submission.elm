@@ -1,18 +1,16 @@
 module Submission exposing (updateSubmissionField)
 
+import Model exposing (AppConfig)
 import Model.Submission exposing (..)
 import Messages exposing (..)
 import Messages exposing (..)
 import Backend.Network exposing (RequestStatus(..))
-import Nav.Requests exposing (saveSubmission, loginFailed, saveComment)
-import Time
-import Task
-import Lazy
+import Nav.Requests exposing (saveSubmission, saveComment)
 import Ports exposing (fileSelected, ImagePostData)
 
 
-updateSubmissionField : SubmissionField -> Model -> ( Model, Cmd Msg )
-updateSubmissionField field model =
+updateSubmissionField : SubmissionField -> Model -> AppConfig -> ( Model, Cmd Msg )
+updateSubmissionField field model appConfig =
     case field of
         Title title ->
             updateField model (\_ -> Cmd.none) <|
@@ -63,7 +61,7 @@ updateSubmissionField field model =
                 \s -> { s | infoToProgramCommittee = infoToProgramCommittee }
 
         AddSpeaker ->
-            updateField model (\s -> saveSubmission s) <|
+            updateField model (\s -> saveSubmission s appConfig.token) <|
                 \s -> { s | speakers = s.speakers ++ [ initSpeaker s.speakers ] }
 
         SpeakerName i name ->
@@ -122,7 +120,7 @@ updateSubmissionField field model =
                         { s | speakers = speakers }
 
         RemoveSpeaker i ->
-            updateField model (\s -> saveSubmission s) <|
+            updateField model (\s -> saveSubmission s appConfig.token) <|
                 \s ->
                     let
                         speakers =
@@ -157,7 +155,7 @@ updateSubmissionField field model =
         SaveComment ->
             case model.submission of
                 Complete submission ->
-                    ( model, saveComment model submission )
+                    ( model, saveComment model submission appConfig.token )
 
                 _ ->
                     ( model, Cmd.none )

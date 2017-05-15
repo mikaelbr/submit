@@ -14,7 +14,7 @@ import View.Submission
 import Model.Submission
 import Submission exposing (updateSubmissionField)
 import Subscriptions
-import Nav.Requests exposing (getSubmissions, getSubmission, getLoginToken, createSubmission, loginFailed, deleteLoginToken, saveSubmission)
+import Nav.Requests exposing (getSubmissions, getSubmission, createSubmission, saveSubmission)
 import Lazy
 import Backend.Network exposing (RequestStatus(..))
 import Task
@@ -29,12 +29,6 @@ init flags location =
             hashParser location
     in
         ( initModel flags page, Navigation.newUrl <| toHash page )
-
-
-saveToken : String -> Cmd Msg
-saveToken token =
-    Task.perform TokenSaved <|
-        LocalStorage.set "login_token" token
 
 
 removeLocalToken : Lazy.Lazy (Cmd Msg)
@@ -52,7 +46,7 @@ update msg ({ login, submissions, submission } as model) =
             ( { model | login = { login | email = email } }, Cmd.none )
 
         LoginSubmitEmail ->
-            ( { model | login = { login | loading = True } }, getLoginToken model.login.email )
+            ( { model | login = { login | loading = True } }, Cmd.none )
 
         LoginSubmit (Err _) ->
             ( { model | login = { login | loading = False } }, Cmd.none )
@@ -64,22 +58,22 @@ update msg ({ login, submissions, submission } as model) =
             ( model, Navigation.newUrl <| toHash Submissions )
 
         SubmissionsCreateTalk ->
-            ( model, Lazy.force createSubmission )
+            ( model, createSubmission model.appConfig.token )
 
         SubmissionsGet (Err message) ->
-            ( { model | submissions = { submissions | submissions = Error <| toString message } }, Lazy.force loginFailed )
+            ( { model | submissions = { submissions | submissions = Error <| toString message } }, Cmd.none )
 
         SubmissionsGet (Ok s) ->
             ( { model | submissions = { submissions | submissions = Complete s } }, Cmd.none )
 
         SubmissionsCreated (Err _) ->
-            ( model, Lazy.force getSubmissions )
+            ( model, getSubmissions model.appConfig.token )
 
         SubmissionsCreated (Ok submission) ->
             ( model, Navigation.newUrl << toHash <| Nav.Model.Submission submission.id )
 
         SubmissionsLogout ->
-            ( model, Lazy.force deleteLoginToken )
+            ( model, Cmd.none )
 
         SubmissionsLoggedOut (Err err) ->
             ( model, Lazy.force removeLocalToken )
@@ -91,7 +85,7 @@ update msg ({ login, submissions, submission } as model) =
             ( model, Navigation.newUrl << toHash <| Nav.Model.Register )
 
         GetSubmission (Err error) ->
-            ( { model | submission = { submission | submission = Error <| toString error } }, Lazy.force loginFailed )
+            ( { model | submission = { submission | submission = Error <| toString error } }, Cmd.none )
 
         GetSubmission (Ok sub) ->
             ( { model | submission = { submission | submission = Complete sub } }, Cmd.none )
@@ -99,7 +93,7 @@ update msg ({ login, submissions, submission } as model) =
         SaveSubmission _ ->
             case submission.submission of
                 Complete submission ->
-                    ( model, saveSubmission submission )
+                    ( model, saveSubmission submission model.appConfig.token )
 
                 _ ->
                     ( model, Cmd.none )
@@ -132,7 +126,7 @@ update msg ({ login, submissions, submission } as model) =
         UpdateSubmission field ->
             let
                 ( sub, cmd ) =
-                    updateSubmissionField field submission
+                    updateSubmissionField field submission model.appConfig
             in
                 ( { model | submission = sub }, cmd )
 
@@ -158,7 +152,7 @@ updatePage page m =
     in
         case page of
             UseToken token ->
-                ( model, saveToken token )
+                ( model, Cmd.none )
 
             Submissions ->
                 let
@@ -171,7 +165,7 @@ updatePage page m =
                                 | submissions = Loading
                             }
                       }
-                    , Lazy.force getSubmissions
+                    , getSubmissions model.appConfig.token
                     )
 
             Submission id ->
@@ -185,7 +179,7 @@ updatePage page m =
                                 | submission = Loading
                             }
                       }
-                    , getSubmission id
+                    , getSubmission id model.appConfig.token
                     )
 
             _ ->
