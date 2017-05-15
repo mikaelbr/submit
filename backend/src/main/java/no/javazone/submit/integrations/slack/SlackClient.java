@@ -9,7 +9,6 @@ import no.javazone.submit.api.representations.Comment;
 import no.javazone.submit.config.CakeConfiguration;
 import no.javazone.submit.config.SlackConfiguration;
 import no.javazone.submit.integrations.sleepingpill.model.common.SessionStatus;
-import no.javazone.submit.integrations.sleepingpill.model.common.Speaker;
 import no.javazone.submit.integrations.sleepingpill.model.get.Session;
 import no.javazone.submit.integrations.sleepingpill.model.get.Sessions;
 import no.javazone.submit.util.AuditLogger;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -153,24 +151,18 @@ public class SlackClient {
         List<Session> allTalks = sessions.sessions;
         List<Session> submittedTalks = allTalks.stream().filter(s -> s.status == SUBMITTED).collect(toList());
 
-        int total = allTalks.size();
         long draft = count(allTalks, SessionStatus.DRAFT);
         long submitted = count(allTalks, SUBMITTED);
         long approved = count(allTalks, SessionStatus.APPROVED);
         long rejected = count(allTalks, SessionStatus.REJECTED);
 
-        long presentations45 = submittedTalks.stream().filter(s -> "presentation".equals(s.getFormat()) && "45".equals(s.getLength())).count();
-        long presentations60 = submittedTalks.stream().filter(s -> "presentation".equals(s.getFormat()) && "60".equals(s.getLength())).count();
+        long presentations40 = submittedTalks.stream().filter(s -> "presentation".equals(s.getFormat()) && "40".equals(s.getLength())).count();
+        long presentations20 = submittedTalks.stream().filter(s -> "presentation".equals(s.getFormat()) && "20".equals(s.getLength())).count();
         long lightningTalks10 = submittedTalks.stream().filter(s -> "lightning-talk".equals(s.getFormat()) && "10".equals(s.getLength())).count();
-        long lightningTalks20 = submittedTalks.stream().filter(s -> "lightning-talk".equals(s.getFormat()) && "20".equals(s.getLength())).count();
         long workshops = submittedTalks.stream().filter(s -> "workshop".equals(s.getFormat())).count();
-
-        long norwegian = submittedTalks.stream().filter(s -> "no".equals(s.getLanguage())).count();
-        long english = submittedTalks.stream().filter(s -> "en".equals(s.getLanguage())).count();
 
         long totalSpeakers = submittedTalks.stream().map(s -> s.speakers).flatMap(List::stream).map(s -> s.email).count();
         int uniqueSpeakers = submittedTalks.stream().map(s -> s.speakers).flatMap(List::stream).map(s -> s.email).collect(toSet()).size();
-        long speakersWithImage = submittedTalks.stream().map(s -> s.speakers).flatMap(List::stream).map(Speaker::getPictureId).filter(Objects::nonNull).count();
 
         connectIfNessesary();
 
@@ -185,16 +177,12 @@ public class SlackClient {
         attachment.addField("Talks: Approved", approved + " talks", true);
         attachment.addField("Talks: Rejected", rejected + " talks", true);
 
-        attachment.addField("Norwegian", norwegian + " talks", true);
-        attachment.addField("English", english + " talks", true);
-
-        attachment.addField("Presentations - 45 min", presentations45 + " stk", true);
-        attachment.addField("Presentations - 60 min", presentations60 + " stk", true);
+        attachment.addField("Presentations - 40 min", presentations40 + " stk", true);
+        attachment.addField("Presentations - 20 min", presentations20 + " stk", true);
         attachment.addField("Lightning talks - 10 min", lightningTalks10 + " stk", true);
-        attachment.addField("Lightning talks - 20 min", lightningTalks20 + " stk", true);
         attachment.addField("Workshops", workshops + " stk", true);
 
-        attachment.addField("Speakers", totalSpeakers + " speakers, " + speakersWithImage + " with picture (" + uniqueSpeakers + " unique emails)", false);
+        attachment.addField("Speakers", totalSpeakers + " speakers (" + uniqueSpeakers + " unique emails)", false);
 
         SlackPreparedMessage message = new SlackPreparedMessage.Builder()
                 .addAttachment(attachment)
