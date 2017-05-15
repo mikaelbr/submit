@@ -187,7 +187,7 @@ getLength : String -> String
 getLength format =
     case format of
         "presentation" ->
-            "45"
+            "40"
 
         "lightning-talk" ->
             "10"
