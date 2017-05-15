@@ -78,23 +78,19 @@ viewSubmissionDetails submission model =
     div []
         [ div [ class "logo-wrapper" ] [ div [ class "logo" ] [] ]
         , div [ class <| "edit-intro " ++ hideIfNotEditable submission.editable ]
-            [ h1 [] [ text "Ready? Let's make your talk a reality!" ]
-            , p [ class "ingress" ] [ text "JavaZone takes place in Oslo, Norway, on September 13th-14th 2017. Do YOU want to be one of the great speakers at our conference? Fantastic! That's what this thing is for! Let's get you started!" ]
+            [ h1 [] [ text "Let's make this talk happen!" ]
+            , p [ class "ingress" ] [ text "Fill in the form below to create your talk. Don't forget to mark it as submitted at the end of the form when you are happy with your draft." ]
             , div [ class "help-part" ]
-                [ strong [] [ span [] [ text "February 13th" ], text "Create your talk" ]
-                , p [] [ text "Start creating your talk by filling in all the fields. We'll auto-save the talk for you as you edit, making sure you don't lose your great ideas." ]
+                [ strong [] [ span [] [ text "Month XXth" ], text "Deadline for submissions" ]
+                , p [] [ text "Start creating your talk by filling in all the fields. We'll auto-save the talk for you as you edit, making sure you don't lose your great ideas. When you are done, mark the talk as ready for review." ]
                 ]
             , div [ class "help-part" ]
-                [ strong [] [ span [] [ text "March 27th" ], text "Get some feedback" ]
-                , p [] [ text "If you mark your talk for review before March 27th, we'll try to give you some personal feedback. We receive hundreds of talks, so we can't promise the world, but we'll do our best." ]
+                [ strong [] [ span [] [ text "Month YYth" ], text "Deadline for reviews" ]
+                , p [] [ text "We'll give you a notice by this date about whether your talk is selected, meaning you'll have plenty of time to prepare." ]
                 ]
             , div [ class "help-part" ]
-                [ strong [] [ span [] [ text "April 24th" ], text "Submission deadline" ]
-                , p [] [ text "Get all your last touches in by April 24th. After that, the program committee will go through all talks and select what will be a part of the program." ]
-                ]
-            , div [ class "help-part" ]
-                [ strong [] [ span [] [ text "June 26th" ], text "Know your result" ]
-                , p [] [ text "By the end of June, all speakers will be get info about whether their talk is selected or not. Fingers crossed! If you are selected, you get to talk at JavaZone 2017!" ]
+                [ strong [] [ span [] [ text "Month ZZth" ], text "Let's present!" ]
+                , p [] [ text "Get everything in order by this date, then you can enter the stage and start presenting! :)" ]
                 ]
             ]
         , div [ class <| "comments-wrapper " ++ hideIfNoComments submission ]
@@ -103,7 +99,7 @@ viewSubmissionDetails submission model =
             , viewComments submission model
             ]
         , div [ class "edit-submission" ]
-            [ div [ class <| "cant-edit-message " ++ hideIfEditable submission.editable ] [ text "You can't edit this talk. Only talks from the current year is editable." ]
+            [ div [ class <| "cant-edit-message " ++ hideIfEditable submission.editable ] [ text "You can't edit this talk. Only talks from the current event is editable." ]
             , div [ class "input-section" ]
                 [ h2 [] [ text "Title" ]
                 , p [ class "input-description" ] [ text "Select an expressive and snappy title that captures the content of your talk without being too long. Remember that the title must be attractive and should make people curious." ]
@@ -147,8 +143,8 @@ viewSubmissionDetails submission model =
                 ]
             , div [ class <| "input-section " ++ hideIfNotEditable submission.editable ]
                 [ h2 [] [ text "How finished are you with your abstract?" ]
-                , p [ class "input-description" ] [ text "Keep it as a draft until you have filled in everything. If you set it to ready for review before March 27th, we'll try to give you some personal feedback. Don't worry, you can still make changes after marking it as ready for review." ]
-                , p [ class "input-description input-description-strong" ] [ text "Make sure you mark it as ready by April 24th at the latest to have your talk considered for JavaZone 2017! Mark your calendar! ;)" ]
+                , p [ class "input-description" ] [ text "Keep it as a draft until you have filled in everything. Don't worry, you can still make changes after marking it as ready for review." ]
+                , p [ class "input-description input-description-strong" ] [ text "Make sure you mark it as ready by the submission deadline to have your talk considered for inclusion!" ]
                 , radio "Not ready: Keep it as my personal draft" "status" "DRAFT" (Status "DRAFT") <| submission.status == "DRAFT"
                 , radio "Ready: Let the program committee look at it" "status" "SUBMITTED" (Status "SUBMITTED") <| submission.status == "SUBMITTED"
                 ]
@@ -208,14 +204,6 @@ viewSpeaker submission n ( i, speaker ) =
             , div [ class "speaker-input-section" ]
                 [ h3 [] [ text "Short description of the speaker (try not to exceed 150 words)" ]
                 , textarea [ value speaker.bio, placeholder "Tell the audience who this speaker is, and why she/he is the perfect person to hold this talk.", onInput <| SpeakerBio i ] []
-                ]
-            , div [ class "speaker-input-section" ]
-                [ h3 [] [ text "Your Twitter handle (optional)" ]
-                , input [ type_ "text", value speaker.twitter, placeholder "@YourTwitterName", onInput <| SpeakerTwitter i ] []
-                ]
-            , div [ class "speaker-input-section" ]
-                [ h3 [] [ text "Your norwegian ZIP Code (optional)" ]
-                , input [ type_ "text", value speaker.zipCode, onInput <| SpeakerZipCode i, placeholder "Will let us contact you about future speaking opportunities in local javaBin user groups :)" ] []
                 ]
             , div [ class "speaker-input-section" ]
                 [ h3 [] [ text "Speakers image" ]
@@ -299,13 +287,13 @@ formatText : String -> String
 formatText format =
     case format of
         "presentation" ->
-            "Please select the length of the presentation (in minutes). Presentations can have a length of 45 or 60 minutes. Including Q&A"
+            "Please select the length of the presentation (in minutes)."
 
         "lightning-talk" ->
-            "Please select the length of the presentation (in minutes). Lightning talks can be 10 or 20 minutes long. The time limit is strictly enforced"
+            "Please select the length of the lightning talk (in minutes)."
 
         _ ->
-            "Please select the length of the presentation (in minutes). Workshops last 2, 4 or 8 hours (120, 240 or 480 minutes)"
+            "Please select the length of the workshop (in minutes)."
 
 
 viewLastSaved : Maybe Time.Time -> String
