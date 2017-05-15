@@ -205,15 +205,6 @@ viewSpeaker submission n ( i, speaker ) =
                 [ h3 [] [ text "Short description of the speaker (try not to exceed 150 words)" ]
                 , textarea [ value speaker.bio, placeholder "Tell people who this speaker is, and why she/he is the perfect person to hold this talk.", onInput <| SpeakerBio i ] []
                 ]
-            , div [ class "speaker-input-section" ]
-                [ h3 [] [ text "Speakers image" ]
-                , p [ class "input-description" ]
-                    [ text "Please upload a good image of yourself."
-                    , b [] [ text " Max 500 KB. " ]
-                    ]
-                , input [ class "speaker-image-input", type_ "file", id <| "SpeakerImage" ++ toString i, on "change" (succeed <| FileSelected speaker i <| "SpeakerImage" ++ toString i) ] []
-                , speakerImage speaker
-                ]
             ]
 
 
