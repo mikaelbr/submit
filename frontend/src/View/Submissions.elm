@@ -73,9 +73,8 @@ viewSubmissions model submissions =
 viewCreateSubmission : Model -> Html Msg
 viewCreateSubmission model =
     if model.appConfig.submissionsOpen then
-        div [ class "flex-header-element flex-header-element-vertical" ]
-            [ button [ disabled True, class "new-talk button-new" ] [ text "Call for speakers is closed" ]
-            , div [ class "disabled-text" ] [ text "(but you can still edit your already submitted ones!)" ]
+        div [ class "flex-header-element" ]
+            [ button [ onClick SubmissionsCreateTalk, class "new-talk button-new" ] [ text "Create new draft" ]
             ]
     else
         div [ class "flex-header-element flex-header-element-vertical" ]
