@@ -63,10 +63,6 @@ viewSubmissions model submissions =
             ]
         , introtext
         , div [ class "submissions" ] years
-        , div [ class "logout" ]
-            [ p [] [ text "We'll keep you signed in on this machine for your convenience. If you don't want us to remember you on this computer, that's okay to. Use the button :)" ]
-            , button [ onClick SubmissionsLogout, class "forget-me-button" ] [ text "Forget me on this computer" ]
-            ]
         ]
 
 
