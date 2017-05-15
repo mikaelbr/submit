@@ -13,7 +13,7 @@ view model =
     div [ class "wrapper login" ]
         [ div [ class "logo-wrapper" ]
             [ div [ class "logo" ] [] ]
-        , h1 [] [ text "Get ready to speak at", br [] [], text "JavaZone 2017" ]
+        , h1 [] [ text "Submit your talks", br [] [], text "BEKK fagdag" ]
         , div [ class "email-wrapper" ]
             [ input [ value model.email, onInput LoginEmail, onEnter LoginSubmitEmail, type_ "email", class "email", id "email-address", placeholder "Your email address" ] []
             , if model.loading then
