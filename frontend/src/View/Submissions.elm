@@ -55,10 +55,10 @@ viewSubmissions model submissions =
             if List.length submissions.years == 0 then
                 text ""
             else
-                p [ class "intro-text" ] [ text "These are all BEKK talks you have submitted or participated on. You can edit all talks from the currect active event. All earlier talks are also available for your reference." ]
+                p [ class "intro-text" ] [ text "These are all talks you have submitted or participated on. You can edit all talks from the currect active event. All earlier talks are also available for your reference." ]
     in
         [ div [ class "flex-header" ]
-            [ h1 [ class "flex-header-element" ] [ text "Your BEKK Talks" ]
+            [ h1 [ class "flex-header-element" ] [ text "Your Talks" ]
             , viewCreateSubmission model
             ]
         , introtext

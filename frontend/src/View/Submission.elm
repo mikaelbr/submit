@@ -85,7 +85,7 @@ viewSubmissionDetails submission model =
                 , p [] [ text "Start creating your talk by filling in all the fields. We'll auto-save the talk for you as you edit, making sure you don't lose your great ideas. When you are done, mark the talk as ready for review." ]
                 ]
             , div [ class "help-part" ]
-                [ strong [] [ span [] [ text "Month YYth" ], text "Deadline for reviews" ]
+                [ strong [] [ span [] [ text "Month YYth" ], text "Talk selection deadline" ]
                 , p [] [ text "We'll give you a notice by this date about whether your talk is selected, meaning you'll have plenty of time to prepare." ]
                 ]
             , div [ class "help-part" ]
@@ -124,7 +124,7 @@ viewSubmissionDetails submission model =
                 ]
             , div [ class "input-section" ]
                 [ h2 [] [ text "Equipment (not public)" ]
-                , p [ class "input-description" ] [ text "Please specify any additional special equipment you may need. Note that all get access to WiFi and a projector." ]
+                , p [ class "input-description" ] [ text "Please specify any additional special equipment you may need. You don't have to specify obvious things line WiFi and projector ;)" ]
                 , textarea [ class "small-textarea", value submission.equipment, onInput Equipment, placeholder "Let us know if your talk or workshop depends on us providing you with anything to ensure it's success." ] []
                 ]
             , div [ class "input-section" ]
@@ -203,14 +203,13 @@ viewSpeaker submission n ( i, speaker ) =
                 ]
             , div [ class "speaker-input-section" ]
                 [ h3 [] [ text "Short description of the speaker (try not to exceed 150 words)" ]
-                , textarea [ value speaker.bio, placeholder "Tell the audience who this speaker is, and why she/he is the perfect person to hold this talk.", onInput <| SpeakerBio i ] []
+                , textarea [ value speaker.bio, placeholder "Tell people who this speaker is, and why she/he is the perfect person to hold this talk.", onInput <| SpeakerBio i ] []
                 ]
             , div [ class "speaker-input-section" ]
                 [ h3 [] [ text "Speakers image" ]
                 , p [ class "input-description" ]
                     [ text "Please upload a good image of yourself."
                     , b [] [ text " Max 500 KB. " ]
-                    , text "If you don't upload a picture, we'll try to use the gravatar image connected to your email address."
                     ]
                 , input [ class "speaker-image-input", type_ "file", id <| "SpeakerImage" ++ toString i, on "change" (succeed <| FileSelected speaker i <| "SpeakerImage" ++ toString i) ] []
                 , speakerImage speaker
