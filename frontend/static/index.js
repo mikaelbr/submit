@@ -16,7 +16,7 @@
                 if (acc) {
                     return acc;
                 } else {
-                    if (val[0] === 'access_token') {
+                    if (val[0] === 'id_token') {
                         return val[1];
                     } else {
                         return acc;
