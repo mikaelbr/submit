@@ -10,11 +10,12 @@ body {
     color: @text;
     font-size: 10px;
     line-height: 1.5;
-    font-family: 'Open Sans', serif;
+    font-family: @font-body;
 }
 
 h1 {
-    .eurostile;
+    font-family: @font-header;
+    font-weight: normal;
     font-size: 4em;
     text-transform: uppercase;
 }
@@ -23,7 +24,8 @@ h2 {
 }
 
 button {
-    .eurostile;
+    font-family: @font-header;
+    font-weight: normal;
     background-color: @green--dark;
     letter-spacing: 1px;
     border: none;
