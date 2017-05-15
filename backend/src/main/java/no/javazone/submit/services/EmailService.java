@@ -84,7 +84,7 @@ public class EmailService {
 	Content content = new Content("text/plain", emailBody);
 	Mail mail = new Mail(from, subject, to, content);
 
-	SendGrid sg = new SendGrid(System.getenv(emailConfiguration.sendgridApikey));
+	SendGrid sg = new SendGrid(emailConfiguration.sendgridApikey);
 	Request request = new Request();
 	try {
 	    request.method = Method.POST;
