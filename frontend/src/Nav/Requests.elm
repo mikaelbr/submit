@@ -62,7 +62,7 @@ saveComment model submission token =
 
 url : List String -> String
 url ls =
-    "https://test-submit.javazone.no/api/" ++ String.join "/" ls
+    "/api/" ++ String.join "/" ls
 
 
 get : Json.Decode.Decoder a -> String -> Http.Request a
@@ -111,4 +111,4 @@ jsonGet decoder token url =
 
 tokenHeader : String -> Http.Header
 tokenHeader token =
-    Http.header "X-token" token
+    Http.header "Authorization" <| "Bearer " ++ token
