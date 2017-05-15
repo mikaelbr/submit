@@ -7,9 +7,15 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "email")
 public class EmailConfiguration {
 
+    public boolean enableSmtp;
+
     public String smtpUser;
 
     public String smtpPass;
+
+    public boolean enableSendgrid;
+
+    public String sendgridApikey;
 
     public String tokenLinkPrefix;
 
@@ -29,5 +35,17 @@ public class EmailConfiguration {
 
     public void setSubjectPrefix(String subjectPrefix) {
         this.subjectPrefix = subjectPrefix;
+    }
+
+    public void setEnableSmtp(boolean enableSmtp) {
+	this.enableSmtp = enableSmtp;
+    }
+
+    public void setEnableSendgrid(boolean enableSendgrid) {
+	this.enableSendgrid = enableSendgrid;
+    }
+
+    public void setSendgridApikey(String sendgridApikey) {
+	this.sendgridApikey = sendgridApikey;
     }
 }

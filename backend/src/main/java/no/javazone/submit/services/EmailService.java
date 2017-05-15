@@ -1,5 +1,6 @@
 package no.javazone.submit.services;
 
+import com.sendgrid.*;
 import no.javazone.submit.api.representations.EmailAddress;
 import no.javazone.submit.api.representations.Submission;
 import no.javazone.submit.api.representations.Token;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Objects;
 
 import static java.util.stream.Collectors.joining;
@@ -49,6 +51,17 @@ public class EmailService {
     }
 
     private void send(EmailAddress address, String subject, String emailBody) {
+	if (emailConfiguration.enableSmtp) {
+	    sendViaSmtp(address, subject, emailBody);
+	} else if (emailConfiguration.enableSendgrid) {
+	    sendViaSendGrid(address, subject, emailBody);
+	} else {
+	    log(address, subject, emailBody);
+	}
+	AuditLogger.log(SENT_EMAIL, "emailaddress " + address);
+    }
+
+    private void sendViaSmtp(EmailAddress address, String subject, String emailBody) {
         try {
             Email email = new SimpleEmail();
             email.setHostName("smtp.googlemail.com");
@@ -60,10 +73,34 @@ public class EmailService {
             email.setMsg(emailBody);
             email.addTo(address.toString());
             email.send();
-            AuditLogger.log(SENT_EMAIL, "emailaddress " + address);
         } catch (EmailException e) {
             LOG.warn("Couldn't send email to " + address, e);
         }
+    }
+
+    private void sendViaSendGrid(EmailAddress address, String subject, String emailBody) {
+	com.sendgrid.Email from = new com.sendgrid.Email("no-reply@bekk.no");
+	com.sendgrid.Email to = new com.sendgrid.Email(address.toString());
+	Content content = new Content("text/plain", emailBody);
+	Mail mail = new Mail(from, subject, to, content);
+
+	SendGrid sg = new SendGrid(System.getenv(emailConfiguration.sendgridApikey));
+	Request request = new Request();
+	try {
+	    request.method = Method.POST;
+	    request.endpoint = "mail/send";
+	    request.body = mail.build();
+	    Response response = sg.api(request);
+	    System.out.println(response.statusCode);
+	    System.out.println(response.body);
+	    System.out.println(response.headers);
+	} catch (IOException e) {
+	    LOG.warn("Couldn't send email to " + address, e);
+	}
+    }
+
+    private void log(EmailAddress address, String subject, String emailBody) {
+	LOG.info(String.format("Did not send email since no email sender is configured. Address: %s, Subject: %s, Body: %s", address, subject, emailBody));
     }
 
     private String generateTokenEmail(Token token) {
