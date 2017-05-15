@@ -30,7 +30,7 @@ public class AuthenticatedWithTokenFilter implements ContainerRequestFilter {
 
     @Autowired
     public AuthenticatedWithTokenFilter(TokenConfig tokenConfig, AuthenticationService authenticationService) {
-	this.tokenConfig = tokenConfig;
+        this.tokenConfig = tokenConfig;
         this.authenticationService = authenticationService;
     }
 
@@ -38,9 +38,9 @@ public class AuthenticatedWithTokenFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-	if (!tokenConfig.enabled) {
-	    return;
-	}
+        if (!tokenConfig.enabled) {
+            return;
+        }
 
         Token token = new Token(requestContext.getHeaderString("X-token"));
 

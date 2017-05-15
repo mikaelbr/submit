@@ -32,33 +32,33 @@ public class AuthenticatedWithAuth0Filter implements ContainerRequestFilter {
 
     @Autowired
     public AuthenticatedWithAuth0Filter(Auth0Config auth0Config, Auth0Service service) {
-	this.auth0Config = auth0Config;
-	this.service = service;
+        this.auth0Config = auth0Config;
+        this.service = service;
     }
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-	if (!auth0Config.enabled) {
-	    return;
-	}
-	DecodedJWT jwt = getToken(requestContext.getHeaderString("authorization"))
-		.flatMap(service::verify)
-		.orElseThrow(ForbiddenException::new);
+        if (!auth0Config.enabled) {
+            return;
+        }
+        DecodedJWT jwt = getToken(requestContext.getHeaderString("authorization"))
+                .flatMap(service::verify)
+                .orElseThrow(ForbiddenException::new);
 
-	String email = jwt.getClaim("email").asString();
-	AuthenticatedUser authenticatedUser = new AuthenticatedUser(new EmailAddress(email));
+        String email = jwt.getClaim("email").asString();
+        AuthenticatedUser authenticatedUser = new AuthenticatedUser(new EmailAddress(email));
 
-	AuditLogger.log(USER_AUTHENTICATION_OK, "user " + authenticatedUser, "token auth0");
-	requestContext.setProperty(AUTHENTICATED_USER_PROPERTY, authenticatedUser);
+        AuditLogger.log(USER_AUTHENTICATION_OK, "user " + authenticatedUser, "token auth0");
+        requestContext.setProperty(AUTHENTICATED_USER_PROPERTY, authenticatedUser);
     }
 
     private Optional<String> getToken(String authHeader) {
-	if (authHeader == null) {
-	    LOG.info("No authorization header found");
-	    return Optional.empty();
-	}
+        if (authHeader == null) {
+            LOG.info("No authorization header found");
+            return Optional.empty();
+        }
 
-	String token = authHeader.replace("Bearer ", "");
-	return Optional.of(token);
+        String token = authHeader.replace("Bearer ", "");
+        return Optional.of(token);
     }
 }
