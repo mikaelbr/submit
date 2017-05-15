@@ -3,7 +3,7 @@
         if (window.location.host.indexOf('localhost') >= 0) {
             return 'http://localhost:8000';
         } else {
-            return 'https://cfs.bekk.no';
+            return 'https://cfp.bekk.no';
         }
     }
 
