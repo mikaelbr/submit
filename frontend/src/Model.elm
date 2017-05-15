@@ -1,4 +1,4 @@
-module Model exposing (Model, Flags, initModel)
+module Model exposing (Model, Flags, AppConfig, initModel)
 
 import Model.Login
 import Nav.Model exposing (Page(..))
@@ -10,12 +10,18 @@ type alias Flags =
     { host : String }
 
 
+type alias AppConfig =
+    { host : String
+    , submissionsOpen : Bool
+    }
+
+
 type alias Model =
     { login : Model.Login.Model
-    , submissions : Model.Submissions.Model
+    , submissions : Model.Submissions.SubmissionsModel
     , submission : Model.Submission.Model
     , page : Page
-    , flags : Flags
+    , appConfig : AppConfig
     }
 
 
@@ -26,4 +32,9 @@ initModel flags page =
         Model.Submissions.initModel
         Model.Submission.initModel
         page
-        flags
+        (initAppConfig flags)
+
+
+initAppConfig : Flags -> AppConfig
+initAppConfig flags =
+    AppConfig flags.host True

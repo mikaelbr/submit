@@ -1,10 +1,10 @@
-module Model.Submissions exposing (Model, Year, Submission, initModel, Submissions)
+module Model.Submissions exposing (SubmissionsModel, Year, Submission, initModel, Submissions)
 
 import Backend.Network exposing (RequestStatus(..))
 import Model.Submission exposing (Comment)
 
 
-type alias Model =
+type alias SubmissionsModel =
     { submissions : RequestStatus Submissions
     }
 
@@ -28,6 +28,6 @@ type alias Submission =
     }
 
 
-initModel : Model
+initModel : SubmissionsModel
 initModel =
-    Model Initial
+    SubmissionsModel Initial

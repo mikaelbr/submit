@@ -1,5 +1,6 @@
 module View.Submissions exposing (view)
 
+import Model exposing (..)
 import Model.Submissions exposing (..)
 import Html exposing (Html, div, h1, h2, p, text, a, button, img)
 import Html.Attributes exposing (class, href, src, title, disabled)
@@ -13,7 +14,7 @@ import Messages exposing (Msg(..))
 
 view : Model -> Html Msg
 view model =
-    case model.submissions of
+    case model.submissions.submissions of
         Initial ->
             div [] []
 
@@ -21,7 +22,7 @@ view model =
             viewWrapper [ div [ class "submissions-list loading" ] [ text "Loading..." ] ]
 
         Complete submissions ->
-            viewWrapper <| viewSubmissions submissions
+            viewWrapper <| viewSubmissions model submissions
 
         Error message ->
             viewWrapper <| viewError message
@@ -41,8 +42,8 @@ viewError message =
     [ text message ]
 
 
-viewSubmissions : Submissions -> List (Html Msg)
-viewSubmissions submissions =
+viewSubmissions : Model -> Submissions -> List (Html Msg)
+viewSubmissions model submissions =
     let
         years =
             if List.length submissions.years == 0 then
@@ -58,10 +59,7 @@ viewSubmissions submissions =
     in
         [ div [ class "flex-header" ]
             [ h1 [ class "flex-header-element" ] [ text "Your JavaZone Talks" ]
-            , div [ class "flex-header-element flex-header-element-vertical" ]
-                [ button [ disabled True, class "new-talk button-new" ] [ text "Call for speakers is closed" ]
-                , div [ class "disabled-text" ] [ text "(but you can still edit your already submitted ones!)" ]
-                ]
+            , viewCreateSubmission model
             ]
         , introtext
         , div [ class "submissions" ] years
@@ -70,6 +68,20 @@ viewSubmissions submissions =
             , button [ onClick SubmissionsLogout, class "forget-me-button" ] [ text "Forget me on this computer" ]
             ]
         ]
+
+
+viewCreateSubmission : Model -> Html Msg
+viewCreateSubmission model =
+    if model.appConfig.submissionsOpen then
+        div [ class "flex-header-element flex-header-element-vertical" ]
+            [ button [ disabled True, class "new-talk button-new" ] [ text "Call for speakers is closed" ]
+            , div [ class "disabled-text" ] [ text "(but you can still edit your already submitted ones!)" ]
+            ]
+    else
+        div [ class "flex-header-element flex-header-element-vertical" ]
+            [ button [ disabled True, class "new-talk button-new" ] [ text "Call for speakers is closed" ]
+            , div [ class "disabled-text" ] [ text "(but you can still edit your already submitted ones!)" ]
+            ]
 
 
 viewEmpty : Html Msg

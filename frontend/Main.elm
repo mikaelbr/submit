@@ -220,7 +220,7 @@ pageView model =
             div [] []
 
         Submissions ->
-            View.Submissions.view model.submissions
+            View.Submissions.view model
 
         Submission _ ->
             View.Submission.view model.submission
