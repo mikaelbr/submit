@@ -25,7 +25,7 @@
             }, null);
             localStorage.setItem('login_token', token);
         } else {
-            window.location = 'https://bekk.eu.auth0.com/authorize/?client_id=o49bHOfUDukdCku6Ak4DngHc2wSwv3CT&scope=email&response_type=token&redirect_uri=' + redirectUrl() + '&connection=Bekk';
+            window.location = 'https://bekk.eu.auth0.com/authorize/?client_id=o49bHOfUDukdCku6Ak4DngHc2wSwv3CT&scope=openid email&response_type=token&redirect_uri=' + redirectUrl() + '&connection=Bekk';
             return;
         }
     }
