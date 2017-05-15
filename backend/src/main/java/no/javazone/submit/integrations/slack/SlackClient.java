@@ -32,7 +32,7 @@ public class SlackClient {
 
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
-    private final SlackSession slack;
+    private SlackSession slack = null;
     private final CakeConfiguration cakeConfiguration;
     private final SlackConfiguration slackConfiguration;
 
@@ -40,11 +40,20 @@ public class SlackClient {
     public SlackClient(SlackConfiguration slackConfiguration, CakeConfiguration cakeConfiguration) {
         this.slackConfiguration = slackConfiguration;
         this.cakeConfiguration = cakeConfiguration;
+        if (!slackConfiguration.enabled) {
+            LOG.info("Doesn't configure slack, it is not enabled");
+            return;
+        }
         slack = SlackSessionFactory.createWebSocketSlackSession(slackConfiguration.token);
         connectIfNessesary();
     }
 
     public void postTalkMarkedForInReview(String id, String title, String format, String length, String language, String theAbstract, String submitterName, String submitterImage) {
+        if (!slackConfiguration.enabled) {
+            LOG.info("Doesn't send slack message, it is not enabled");
+            return;
+        }
+
         connectIfNessesary();
 
         SlackChannel channel = slack.findChannelByName(slackConfiguration.channel);
@@ -71,6 +80,11 @@ public class SlackClient {
     }
 
     public void postTalkMarkedForNotInReview(String id, String title, String submitterName, String submitterEmail, String submitterImage) {
+        if (!slackConfiguration.enabled) {
+            LOG.info("Doesn't send slack message, it is not enabled");
+            return;
+        }
+
         connectIfNessesary();
 
         SlackChannel channel = slack.findChannelByName(slackConfiguration.channel);
@@ -92,6 +106,11 @@ public class SlackClient {
     }
 
     public void postTalkReceivedNewComment(String id, String title, String speaker, String submitterImage, Comment comment) {
+        if (!slackConfiguration.enabled) {
+            LOG.info("Doesn't send slack message, it is not enabled");
+            return;
+        }
+
         connectIfNessesary();
 
         SlackChannel channel = slack.findChannelByName(slackConfiguration.channel);
@@ -126,6 +145,10 @@ public class SlackClient {
     }
 
     public void postStatistics(Sessions sessions) {
+        if (!slackConfiguration.enabled) {
+            LOG.info("Doesn't send slack message, it is not enabled");
+            return;
+        }
 
         List<Session> allTalks = sessions.sessions;
         List<Session> submittedTalks = allTalks.stream().filter(s -> s.status == SUBMITTED).collect(toList());
