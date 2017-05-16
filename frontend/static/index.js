@@ -49,6 +49,11 @@
         return response.json();
     }
 
+    app.ports.reauthenticate.subscribe(function() {
+        localStorage.removeItem('login_token');
+        window.location = 'https://bekk.eu.auth0.com/authorize/?client_id=o49bHOfUDukdCku6Ak4DngHc2wSwv3CT&scope=openid email&response_type=token&redirect_uri=' + redirectUrl() + '&connection=Bekk';
+    });
+
     app.ports.fileSelected.subscribe(function(props) {
         var id = props.id;
         var submission = props.submission;

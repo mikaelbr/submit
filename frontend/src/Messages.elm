@@ -27,6 +27,7 @@ type Msg
     | TimeUpdatedSubmission Time.Time
     | UpdateSubmission SubmissionField
     | CommentSent (Result Http.Error Submission)
+    | Reauthenticate
 
 
 type SubmissionField

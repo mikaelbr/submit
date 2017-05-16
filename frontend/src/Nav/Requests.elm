@@ -7,33 +7,66 @@ module Nav.Requests
         , saveComment
         )
 
-import Http
+import Http exposing (Error, Request)
 import Messages
 import Decoder.Submissions
 import Decoder.Submission
 import Encoder.Submission
 import Model.Submission
 import Json.Decode exposing (Decoder)
-import Lazy
+
+
+send : (Result Error a -> Messages.Msg) -> Request a -> Cmd Messages.Msg
+send msg request =
+    Http.send msg request
+        |> Cmd.map
+            (\m ->
+                case m of
+                    Messages.SubmissionsGet (Err (Http.BadStatus res)) ->
+                        checkStatus res m
+
+                    Messages.GetSubmission (Err (Http.BadStatus res)) ->
+                        checkStatus res m
+
+                    Messages.SavedSubmission (Err (Http.BadStatus res)) ->
+                        checkStatus res m
+
+                    Messages.SubmissionsCreated (Err (Http.BadStatus res)) ->
+                        checkStatus res m
+
+                    Messages.CommentSent (Err (Http.BadStatus res)) ->
+                        checkStatus res m
+
+                    _ ->
+                        m
+            )
+
+
+checkStatus : Http.Response body -> Messages.Msg -> Messages.Msg
+checkStatus res msg =
+    if res.status.code == 403 then
+        Messages.Reauthenticate
+    else
+        msg
 
 
 getSubmissions : String -> Cmd Messages.Msg
 getSubmissions token =
-    Http.send Messages.SubmissionsGet <|
+    send Messages.SubmissionsGet <|
         jsonGet Decoder.Submissions.decoder token <|
             url [ "submissions" ]
 
 
 getSubmission : String -> String -> Cmd Messages.Msg
 getSubmission id token =
-    Http.send Messages.GetSubmission <|
+    send Messages.GetSubmission <|
         jsonGet Decoder.Submission.decoder token <|
             url [ "submissions", id ]
 
 
 saveSubmission : Model.Submission.Submission -> String -> Cmd Messages.Msg
 saveSubmission submission token =
-    Http.send Messages.SavedSubmission <|
+    send Messages.SavedSubmission <|
         jsonPut
             (Http.expectJson Decoder.Submission.decoder)
             (Http.jsonBody <| Encoder.Submission.encoder submission)
@@ -44,14 +77,14 @@ saveSubmission submission token =
 
 createSubmission : String -> Cmd Messages.Msg
 createSubmission token =
-    Http.send Messages.SubmissionsCreated <|
+    send Messages.SubmissionsCreated <|
         jsonPost (Http.expectJson Decoder.Submission.decoder) Http.emptyBody token <|
             url [ "submissions" ]
 
 
 saveComment : Model.Submission.Model -> Model.Submission.Submission -> String -> Cmd Messages.Msg
 saveComment model submission token =
-    Http.send Messages.CommentSent <|
+    send Messages.CommentSent <|
         jsonPost
             (Http.expectJson Decoder.Submission.decoder)
             (Http.jsonBody <| Encoder.Submission.encodeComment model)

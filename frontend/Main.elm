@@ -20,6 +20,7 @@ import Backend.Network exposing (RequestStatus(..))
 import Task
 import LocalStorage
 import Time
+import Auth exposing (reauthenticate)
 
 
 init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
@@ -139,6 +140,9 @@ update msg ({ login, submissions, submission } as model) =
                     model.submission
             in
                 ( { model | submission = { submission | submission = Complete s, comment = "" } }, Cmd.none )
+
+        Reauthenticate ->
+            ( model, reauthenticate () )
 
 
 updatePage : Page -> Model -> ( Model, Cmd Msg )
