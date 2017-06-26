@@ -34,6 +34,8 @@ public class SlackClient {
     private final CakeConfiguration cakeConfiguration;
     private final SlackConfiguration slackConfiguration;
 
+    private String previousSentMessage = "";
+
     @Autowired
     public SlackClient(SlackConfiguration slackConfiguration, CakeConfiguration cakeConfiguration) {
         this.slackConfiguration = slackConfiguration;
@@ -187,7 +189,11 @@ public class SlackClient {
         SlackPreparedMessage message = new SlackPreparedMessage.Builder()
                 .addAttachment(attachment)
                 .build();
-        slack.sendMessage(channel, message);
+        String messageToSendAsString = message.toString();
+        if (!messageToSendAsString.equals(previousSentMessage)) {
+            slack.sendMessage(channel, message);
+            previousSentMessage = messageToSendAsString;
+        }
 
         AuditLogger.log(SENT_SLACK_MESSAGE, "type statistics");
 
