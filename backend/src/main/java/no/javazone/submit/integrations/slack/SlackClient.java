@@ -189,7 +189,7 @@ public class SlackClient {
         SlackPreparedMessage message = new SlackPreparedMessage.Builder()
                 .addAttachment(attachment)
                 .build();
-        String messageToSendAsString = message.toString();
+        String messageToSendAsString = String.format("%d%d%d%d%d%d%d%d%d%d", draft, submitted, approved, rejected, presentations40, presentations20, lightningTalks10, workshops, totalSpeakers, uniqueSpeakers);
         if (!messageToSendAsString.equals(previousSentMessage)) {
             slack.sendMessage(channel, message);
             previousSentMessage = messageToSendAsString;
