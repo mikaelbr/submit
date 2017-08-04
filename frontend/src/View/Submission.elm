@@ -170,9 +170,8 @@ viewLength s =
 
         _ ->
             select [ onInput Length ]
-                [ option [ value "120", selected <| s.length == "120" ] [ text "2 timer" ]
-                , option [ value "240", selected <| s.length == "240" ] [ text "4 timer" ]
-                , option [ value "480", selected <| s.length == "480" ] [ text "8 timer" ]
+                [ option [ value "180", selected <| s.length == "180" ] [ text "3 timer" ]
+                , option [ value "360", selected <| s.length == "360" ] [ text "6 timer" ]
                 ]
 
 
