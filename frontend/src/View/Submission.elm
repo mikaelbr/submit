@@ -142,7 +142,7 @@ viewSubmissionDetails submission model =
                 , ul [ class "speakers" ] <|
                     List.map (viewSpeaker submission <| List.length submission.speakers) submission.speakers
                 ]
-            , div [ class <| "input-section " ++ hideIfNotEditable submission.editable ]
+            , div [ class <| "input-section " ++ hideIfNotEditable submission.editable ++ " " ++ hideIfApprovedRejected submission.status ]
                 [ h2 [] [ text "Er du ferdig eller ikke?" ]
                 , p [ class "input-description" ] [ text "Behold gjerne foredraget ditt som en kladd så lenge du vil. Ingen får se det før du flipper den magiske radio-button'en." ]
                 , p [ class "input-description input-description-strong" ] [ text "...men husk å gjøre det før deadline om du vil bli med i vurderingen!" ]
@@ -251,6 +251,15 @@ hideIfEditable editable =
 hideIfNotEditable : Bool -> String
 hideIfNotEditable editable =
     if not editable then
+        "hide"
+    else
+        ""
+
+hideIfApprovedRejected : String -> String
+hideIfApprovedRejected status =
+    if status == "APPROVED" then
+        "hide"
+    else if status == "REJECTED" then
         "hide"
     else
         ""
