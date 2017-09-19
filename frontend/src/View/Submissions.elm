@@ -55,7 +55,7 @@ viewSubmissions model submissions =
             if List.length submissions.years == 0 then
                 text ""
             else
-                p [ class "intro-text" ] [ text "Dette er alle foredragene du har sendt inn til fagdag. Foredrag der du er lagt til som foredragsholder vises også. Du kan redigere alle foredrag frem til fagdagen; eldre foredrag vises også, men her er det ikke mye vits å redigere ;)" ]
+                p [ class "intro-text" ] [ text "Dette er alle foredragene du har sendt inn til fagdag. Foredrag der du er lagt til som foredragsholder vises også. Du kan redigere alle foredrag frem til fagdagen; eldre foredrag vises også, men er låst for redigering." ]
     in
         [ div [ class "flex-header" ]
             [ h1 [ class "flex-header-element" ] [ text "Dine foredrag" ]
