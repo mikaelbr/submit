@@ -201,10 +201,6 @@ viewSpeaker submission n ( i, speaker ) =
                 [ h3 [] [ text "Epost" ]
                 , input [ type_ "text", value speaker.email, placeholder "sånn elektronisk...", onInput <| SpeakerEmail i ] []
                 ]
-            , div [ class "speaker-input-section" ]
-                [ h3 [] [ text "Kort beskrivelse av foredragsholder" ]
-                , textarea [ value speaker.bio, placeholder "Hold det kort, et par setninger er mer enn nok :)", onInput <| SpeakerBio i ] []
-                ]
             ]
 
 
