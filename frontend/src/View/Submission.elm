@@ -194,7 +194,7 @@ viewSpeaker submission n ( i, speaker ) =
                 , removeButton
                 ]
             , div [ class "speaker-input-section" ]
-                [ h3 [] [ text "Foredragsholderens navn" ]
+                [ h3 [] [ text "Foredragsholderens navn (som skrevet i CV-basen)" ]
                 , input [ type_ "text", value speaker.name, placeholder "Hei hei hei, jeg heter...", onInput <| SpeakerName i ] []
                 ]
             , div [ class "speaker-input-section" ]
