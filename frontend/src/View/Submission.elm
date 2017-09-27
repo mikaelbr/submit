@@ -80,7 +80,7 @@ viewSubmissionDetails submission model =
         , div [ class <| "edit-intro " ++ hideIfNotEditable submission.editable ]
             [ h1 [] [ text "Kjør på, beskriv foredraget ditt" ]
             , p [ class "ingress" ] [ text "Fyll inn feltene nedenfor for å sende inn ditt forslag til fagdag-foredrag. Ikke glem å markere det som innsendt når du er ferdig, så komiteen vet at du er ferdig med kladdingen." ]
-            , p [ class "ingress" ] [ text "Temaet for kommende fagdag er «Smidig 16 år – konfirmrasjon, reformasjon eller begravelse?»." ]
+            , p [ class "ingress" ] [ text "Temaet for kommende fagdag er «Smidig 16 år - konfirmasjon, reformasjon eller begravelse?»." ]
             , div [ class "help-part" ]
                 [ strong [] [ span [] [ text "13. oktober 2017" ], text "Frist for innsending" ]
                 , p [] [ text "Skriv ferdig foredrags-forslagene dine og marker de som innsendt innen denne datoen. Vi autolagrer for deg underveis så du aldri risikerer å miste noe." ]
