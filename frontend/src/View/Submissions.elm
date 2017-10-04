@@ -68,13 +68,6 @@ viewSubmissions model submissions =
                     [ p [ class "intro-text intro-text--pitch" ] [ text "Neste fagdag handler om å være smidig." ]
                     ]
                         ++ List.map (\t -> p [ class "intro-text" ] [ text t ]) introText
-
-        -- [ p [ class "intro-text" ] [ text "Dette er alle foredragene du har sendt inn til fagdag. Foredrag der du er lagt til som foredragsholder vises også. Du kan redigere alle foredrag frem til fagdagen; eldre foredrag vises også, men er låst for redigering." ]
-        -- , p [ class "intro-text" ]
-        --     [ text "Trenger du inspirasjon? Se "
-        --     , a [ href "https://admin.cfp.bekk.no" ] [ text "admin.cfp.bekk.no" ]
-        --     , text " for å se alle innsendte foredrag så langt."
-        --     ]
     in
         [ div [ class "flex-header" ]
             [ h1 [ class "flex-header-element" ] [ text "Dine foredrag" ]
