@@ -12,6 +12,15 @@ import String
 import Messages exposing (Msg(..))
 
 
+introText : List String
+introText =
+    [ "Så bakstreversk, tenker du kanskje. Er ikke alle smidige nå da, liksom? Ja, er vi egentlig det?"
+    , "Vi er en diger gjeng teknologer, designere og forretningsutviklere som hver dag er med på å lage digitale tjenester vi ønsker skal gjøre en forskjell for de selskapene og samfunnsforvalterne vi jobber for. For å lykkes, må digitale tjenester leveres kontinuerlig, være nyttige, lønnsomme, attraktive og gjennomførbare."
+    , "BEKK hoppet på smidig-toget tidlig, og har i løpet av 15 år allerede dratt kundene våre lengre enn langt opp smidig-bakken. På veien har mye skjedd. Noen vil dra det så langt som å si at \"smidig\" har blitt pervertert av Scrum, Prosjektveiviseren, Prince 2 Agile, ITIL, IBM WebSphere og fandens oldemor. BEKK vil digitalisere Norge - det krever en form for smidighet som brer seg ut og forbi den harde teknologkjernen, og omfavner design- og forretningsfagene på nye måter. Vi trenger et nytt smidig som sikrer gevinstrealisering og måloppnåelse!"
+    , "Til fagdagen 10.november ønsker vi oss presentasjoner, lyntaler og workshops som viser frem, snakker om, utforsker og utfordrer hvor smidige vi egentlig kan være, og hvordan vi kan løfte engasjementene våre for å realisere forretningsverdi i samarbeid med kundene og sluttbrukerne."
+    ]
+
+
 view : Model -> Html Msg
 view model =
     case model.submissions.submissions of
@@ -55,20 +64,25 @@ viewSubmissions model submissions =
             if List.length submissions.years == 0 then
                 text ""
             else
-                div []
-                [ p [ class "intro-text" ] [ text "Dette er alle foredragene du har sendt inn til fagdag. Foredrag der du er lagt til som foredragsholder vises også. Du kan redigere alle foredrag frem til fagdagen; eldre foredrag vises også, men er låst for redigering." ]
-                , p [ class "intro-text" ]
-                    [ text "Trenger du inspirasjon? Se "
-                    , a [ href "https://admin.cfp.bekk.no" ] [ text "admin.cfp.bekk.no" ]
-                    , text " for å se alle innsendte foredrag så langt."
+                div [] <|
+                    [ p [ class "intro-text intro-text--pitch" ] [ text "Neste fagdag handler om å være smidig." ]
                     ]
-                ]
+                        ++ List.map (\t -> p [ class "intro-text" ] [ text t ]) introText
+
+        -- [ p [ class "intro-text" ] [ text "Dette er alle foredragene du har sendt inn til fagdag. Foredrag der du er lagt til som foredragsholder vises også. Du kan redigere alle foredrag frem til fagdagen; eldre foredrag vises også, men er låst for redigering." ]
+        -- , p [ class "intro-text" ]
+        --     [ text "Trenger du inspirasjon? Se "
+        --     , a [ href "https://admin.cfp.bekk.no" ] [ text "admin.cfp.bekk.no" ]
+        --     , text " for å se alle innsendte foredrag så langt."
+        --     ]
     in
         [ div [ class "flex-header" ]
             [ h1 [ class "flex-header-element" ] [ text "Dine foredrag" ]
             , viewCreateSubmission model
             ]
         , introtext
+        , div [ class "submitted-talks" ]
+            [ a [ class "button", href "https://admin.cfp.bekk.no" ] [ text "Inspirasjon? Se innsendte forslag" ] ]
         , div [ class "submissions" ] years
         ]
 
