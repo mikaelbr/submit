@@ -65,7 +65,7 @@ viewSubmissions model submissions =
                 text ""
             else
                 div [] <|
-                    [ p [ class "intro-text intro-text--pitch" ] [ text "Neste fagdag handler om å være smidig." ]
+                    [ p [ class "intro-text intro-text--pitch" ] [ text "Neste fagdag handler om å være smidig!" ]
                     ]
                         ++ List.map (\t -> p [ class "intro-text" ] [ text t ]) introText
     in
