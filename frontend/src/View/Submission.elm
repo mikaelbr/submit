@@ -86,7 +86,7 @@ viewSubmissionDetails submission model =
                 , p [] [ text "Skriv ferdig foredrags-forslagene dine og marker de som innsendt innen denne datoen. Vi autolagrer for deg underveis så du aldri risikerer å miste noe." ]
                 ]
             , div [ class "help-part" ]
-                [ strong [] [ span [] [ text "28. oktober 2017" ], text "Foredrag blir valgt ut" ]
+                [ strong [] [ span [] [ text "28. januar 2017" ], text "Foredrag blir valgt ut" ]
                 , p [] [ text "Vi forsøker å velge ut alle foredragene innen denne tiden." ]
                 ]
             , div [ class "help-part" ]
