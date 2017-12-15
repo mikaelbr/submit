@@ -14,10 +14,8 @@ import Messages exposing (Msg(..))
 
 introText : List String
 introText =
-    [ "Så bakstreversk, tenker du kanskje. Er ikke alle smidige nå da, liksom? Ja, er vi egentlig det?"
-    , "Vi er en diger gjeng teknologer, designere og forretningsutviklere som hver dag er med på å lage digitale tjenester vi ønsker skal gjøre en forskjell for de selskapene og samfunnsforvalterne vi jobber for. For å lykkes, må digitale tjenester leveres kontinuerlig, være nyttige, lønnsomme, attraktive og gjennomførbare."
-    , "BEKK hoppet på smidig-toget tidlig, og har i løpet av 15 år allerede dratt kundene våre lengre enn langt opp smidig-bakken. På veien har mye skjedd. Noen vil dra det så langt som å si at \"smidig\" har blitt pervertert av Scrum, Prosjektveiviseren, Prince 2 Agile, ITIL, IBM WebSphere og fandens oldemor. BEKK vil digitalisere Norge - det krever en form for smidighet som brer seg ut og forbi den harde teknologkjernen, og omfavner design- og forretningsfagene på nye måter. Vi trenger et nytt smidig som sikrer gevinstrealisering og måloppnåelse!"
-    , "Til fagdagen 10.november ønsker vi oss presentasjoner, lyntaler og workshops som viser frem, snakker om, utforsker og utfordrer hvor smidige vi egentlig kan være, og hvordan vi kan løfte engasjementene våre for å realisere forretningsverdi i samarbeid med kundene og sluttbrukerne."
+    [ "Fredag, 2. mars, arrangeres Bekk Open Fagdag for 3. året på rad. Dette er en fantastisk mulighet for å vise oss frem for kunder og komme med viktige beskjeder til bransjen."
+    , "Det er ingen tema for denne fagdagen. Her står vi fritt til å sende inn hva vi brenner for mest."
     ]
 
 
@@ -65,7 +63,7 @@ viewSubmissions model submissions =
                 text ""
             else
                 div [] <|
-                    [ p [ class "intro-text intro-text--pitch" ] [ text "Neste fagdag handler om å være smidig!" ]
+                    [ p [ class "intro-text intro-text--pitch" ] [ text "Bekk Open Fagdag 2018!" ]
                     ]
                         ++ List.map (\t -> p [ class "intro-text" ] [ text t ]) introText
     in
