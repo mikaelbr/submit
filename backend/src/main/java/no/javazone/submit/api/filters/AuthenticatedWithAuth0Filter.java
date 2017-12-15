@@ -15,6 +15,7 @@ import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import static no.javazone.submit.util.AuditLogger.Event.USER_AUTHENTICATION_OK;
@@ -45,7 +46,12 @@ public class AuthenticatedWithAuth0Filter implements ContainerRequestFilter {
                 .flatMap(service::verify)
                 .orElseThrow(ForbiddenException::new);
 
-        String email = jwt.getClaim("email").asString();
+        List<String> emails = jwt.getClaim("emails").asList(String.class);
+        if (emails.size() != 1) {
+            LOG.warn("List of emails had not a single unique entry... Emails: " + emails);
+        }
+        String email = emails.get(0);
+        LOG.info("CLAIM: " + email);
         AuthenticatedUser authenticatedUser = new AuthenticatedUser(new EmailAddress(email));
 
         AuditLogger.log(USER_AUTHENTICATION_OK, "user " + authenticatedUser, "token auth0");
@@ -61,4 +67,5 @@ public class AuthenticatedWithAuth0Filter implements ContainerRequestFilter {
         String token = authHeader.replace("Bearer ", "");
         return Optional.of(token);
     }
+
 }

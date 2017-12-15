@@ -25,7 +25,7 @@
             }, null);
             localStorage.setItem('login_token', token);
         } else {
-            window.location = 'https://bekk.eu.auth0.com/authorize/?client_id=o49bHOfUDukdCku6Ak4DngHc2wSwv3CT&scope=openid email&response_type=token&redirect_uri=' + redirectUrl() + '&connection=bekk-waad';
+            window.location = 'https://bekk.eu.auth0.com/authorize/?client_id=o49bHOfUDukdCku6Ak4DngHc2wSwv3CT&scope=openid emails&response_type=token&redirect_uri=' + redirectUrl() + '&connection=bekk-waad';
             return;
         }
     }
@@ -51,7 +51,7 @@
 
     app.ports.reauthenticate.subscribe(function() {
         localStorage.removeItem('login_token');
-        window.location = 'https://bekk.eu.auth0.com/authorize/?client_id=o49bHOfUDukdCku6Ak4DngHc2wSwv3CT&scope=openid email&response_type=token&redirect_uri=' + redirectUrl() + '&connection=bekk-waad';
+        window.location = 'https://bekk.eu.auth0.com/authorize/?client_id=o49bHOfUDukdCku6Ak4DngHc2wSwv3CT&scope=openid emails&response_type=token&redirect_uri=' + redirectUrl() + '&connection=bekk-waad';
     });
 
     app.ports.fileSelected.subscribe(function(props) {
