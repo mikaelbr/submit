@@ -73,7 +73,7 @@ viewSubmissions model submissions =
             ]
         , introtext
         , div [ class "submitted-talks" ]
-            [ a [ class "button", href "https://admin.cfp.bekk.no/#/66b3aab0314044f0bc1fe9a9ba6c9d74" ] [ text "Inspirasjon? Se innsendte forslag" ] ]
+            [ a [ class "button", href "https://admin.cfp.bekk.no/#/5b7079a29bb64d36a5704e95563ad53c" ] [ text "Inspirasjon? Se innsendte forslag" ] ]
         , div [ class "submissions" ] years
         ]
 
