@@ -80,7 +80,6 @@ viewSubmissionDetails submission model =
         , div [ class <| "edit-intro " ++ hideIfNotEditable submission.editable ]
             [ h1 [] [ text "Kjør på, beskriv foredraget ditt" ]
             , p [ class "ingress" ] [ text "Fyll inn feltene nedenfor for å sende inn ditt forslag til fagdag-foredrag. Ikke glem å markere det som innsendt når du er ferdig, så komiteen vet at du er ferdig med kladdingen." ]
-            , p [ class "ingress" ] [ text "Neste fagdag er Bekk Open Fagdag 2018!" ]
             , div [ class "help-part" ]
                 [ strong [] [ span [] [ text "21. januar 2018" ], text "Frist for innsending" ]
                 , p [] [ text "Skriv ferdig foredrags-forslagene dine og marker de som innsendt innen denne datoen. Vi autolagrer for deg underveis så du aldri risikerer å miste noe." ]
